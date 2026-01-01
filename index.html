@@ -1,0 +1,3164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- 核心修復：設定瀏覽器主題色為紅色，與全螢幕背景融合 -->
+    <meta name="theme-color" content="#8E1E20">
+    <title>Jesus Vibes 2026 - 基督徒過年求生包</title>
+
+    <!-- 預留圖示標籤 -->
+    <link rel="icon" id="dynamic-favicon">
+    <link rel="apple-touch-icon" id="dynamic-apple-icon">
+    
+    <!-- 自動產生 App 圖示的腳本 -->
+    <script>
+        (function() {
+            try {
+                var canvas = document.createElement('canvas');
+                canvas.width = 192; canvas.height = 192;
+                var ctx = canvas.getContext('2d');
+                
+                // 1. 畫圓角紅色背景
+                ctx.fillStyle = '#8E1E20';
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(0, 0, 192, 192, 40);
+                } else {
+                    ctx.rect(0, 0, 192, 192);
+                }
+                ctx.fill();
+                
+                // 2. 畫金色十字架 (移除邊框，字體加大)
+                ctx.fillStyle = '#E6B450';
+                ctx.font = 'bold 110px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('✝', 96, 105);
+
+                var iconUrl = canvas.toDataURL('image/png');
+                document.getElementById('dynamic-favicon').href = iconUrl;
+                document.getElementById('dynamic-apple-icon').href = iconUrl;
+            } catch(e) { console.error("Icon gen failed", e); }
+        })();
+    </script>
+      
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+      
+    <!-- HTML2Canvas (For Screenshot Sharing) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+      
+    <!-- PapaParse (For Google Sheets CSV Parsing) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+      
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+      
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --ny-red-deep: #8E1E20;
+            --ny-red-soft: #B74646;
+            --ny-green-pine: #4A6351;
+            --ny-gold: #E6B450;
+            --ny-blue-royal: #2C3E50;
+            --ny-purple: #6A1B9A;
+            --ny-paper: #FFFDF5;
+            --text-main: #5C2828;
+            --main-font: "Nunito", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+            --title-font: "Noto Serif TC", "Songti TC", "Microsoft JhengHei", serif;
+            --nav-height: 60px;
+        }
+
+        /* 恢復背景設定 */
+        html {
+            background-color: #FFFFFF; /* 下拉回彈時顯示白色 */
+        }
+        
+        body {
+            width: 100%; 
+            height: 100%; 
+            min-height: 100vh;
+            min-height: 100dvh;
+            margin: 0; 
+            padding: 0;
+            overflow: hidden; 
+            background-color: transparent;
+            color: var(--text-main); 
+            font-family: var(--main-font);
+            overscroll-behavior: none; 
+            position: fixed; 
+            inset: 0;
+            display: flex;
+            justify-content: center; /* 內容置中 */
+        }
+
+        /* 背景層：改回全螢幕覆蓋，視覺更寬闊 */
+        #bg-layer {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -10; 
+            background: linear-gradient(160deg, #8E1E20 0%, #A63437 40%, #5E1214 100%);
+            overflow: hidden; 
+            pointer-events: none;
+            transform: translateZ(0); 
+            will-change: transform; 
+        }
+
+        /* App 主容器：只負責限制內容寬度，不再切割背景 */
+        #app-root {
+            position: relative;
+            width: 100%; 
+            max-width: 500px; /* 稍微放寬一點點 */
+            height: 100%;
+            background-color: transparent; /* 背景透明，讓全螢幕紅底透出來 */
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            z-index: 10;
+            opacity: 0; 
+            transition: opacity 0.5s ease-out;
+            box-shadow: none; /* 移除陰影，與背景融合 */
+        }
+
+        /* 4. 導覽列 */
+        #inner-nav-bar {
+            position: relative; width: 100%; height: var(--nav-height);
+            display: none; align-items: center; justify-content: space-between;
+            background: rgba(142, 30, 32, 0.98); 
+            padding: 0 16px; z-index: 100;
+            border-bottom: 1px solid rgba(230, 180, 80, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); flex-shrink: 0;
+        }
+
+        /* 5. 內容捲動區 */
+        #scroll-wrapper {
+            flex: 1; width: 100%; overflow-y: auto; overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; position: relative; padding-bottom: 40px; 
+        }
+
+        .app-container {
+            width: 100%; margin: 0 auto;
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 20px; padding-left: 16px; padding-right: 16px;
+            padding-bottom: 120px; 
+        }
+
+        /* Header Style */
+        #home-header {
+            width: 100%; text-align: center; margin-bottom: 20px;
+            transition: opacity 0.3s; margin-top: 60px; cursor: pointer;
+        }
+
+        .nav-back-btn {
+            display: flex; align-items: center; gap: 8px; color: var(--ny-gold);
+            font-weight: 700; font-size: 1rem; cursor: pointer; height: 100%;
+            user-select: none; padding-right: 15px;
+        }
+
+        .nav-title {
+            color: white; font-size: 1rem; opacity: 0.95; font-weight: 700;
+            font-family: var(--title-font); letter-spacing: 1px;
+        }
+
+        .view-container { width: 100%; animation: fadeIn 0.3s ease-out; }
+
+        .ny-card {
+            background: rgba(255, 253, 245, 0.98);
+            border-radius: 24px; border: 2px solid var(--ny-gold);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;
+            width: 100%; padding: 24px 20px; margin-bottom: 20px; margin-top: 20px;
+            transform: translateZ(0);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+             display: grid; grid-template-columns: repeat(2, 1fr);
+             gap: 16px; width: 100%; margin-top: 10px;
+        }
+
+        .menu-btn {
+            min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--ny-paper); border-radius: 24px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 6px solid #dcdcdc; box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            padding: 16px; width: 100%; position: relative; overflow: hidden;
+        }
+        .menu-btn:active { transform: translateY(4px); border-bottom-width: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+          
+        .icon-bg { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px; flex-shrink: 0;}
+
+        /* Color System */
+        .bg-ny-red { background: #FDE8E8; color: var(--ny-red-soft); border: 2px solid #FAB1B1; }
+        .bg-ny-green { background: #E8F5E9; color: var(--ny-green-pine); border: 2px solid #C8E6C9; }
+        .bg-ny-blue { background: #EBF5FB; color: var(--ny-blue-royal); border: 2px solid #AED6F1; }
+        .bg-ny-purple { background: #F3E5F5; color: #7B1FA2; border: 2px solid #E1BEE7; }
+
+        .forest-btn { flex: 1; padding: 14px; color: white; border-radius: 16px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom-width: 4px; transition: all 0.1s; letter-spacing: 1px; }
+        .forest-btn:active { transform: translateY(3px); border-bottom-width: 1px; }
+          
+        .btn-red { background: var(--ny-red-soft); border-bottom-color: #8E1E20; }
+        .btn-green { background: var(--ny-green-pine); border-bottom-color: #2F4234; }
+        .btn-gold { background: var(--ny-gold); border-bottom-color: #B38628; color: #5C2828; }
+        .btn-blue { background: #34495E; border-bottom-color: #1A252F; color: #fff; }
+        .btn-purple { background: #8E24AA; border-bottom-color: #4A148C; color: #fff; }
+
+        .story-input { 
+            width: 100%; padding: 16px; border: 2px solid var(--ny-gold); 
+            border-radius: 18px; background: #FFFEFA; outline: none; 
+            color: var(--text-main); font-size: 16px; line-height: 1.5; resize: none; 
+        } 
+        .story-input:focus { border-color: var(--ny-red-soft); box-shadow: 0 0 0 4px rgba(183, 70, 70, 0.1); }
+
+        .scratch-box { position: relative; width: 100%; height: 180px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #fff; border: 3px dashed var(--ny-red-soft); }
+        .action-group { display: flex; gap: 12px; margin-top: 24px; width: 100%; }
+
+        /* Style Options */
+        .style-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .style-pill {
+            padding: 12px 5px; border-radius: 12px; font-size: 0.95rem; font-weight: 700; text-align: center; cursor: pointer;
+            border: 2px solid transparent; background: #F5F5F5; color: #666; transition: all 0.2s;
+            user-select: none; display: flex; align-items: center; justify-content: center;
+        }
+        .style-pill.active { background: #8E24AA; color: white; box-shadow: 0 4px 10px rgba(142, 36, 170, 0.3); transform: scale(1.02); }
+          
+        .style-pill[data-style="toxic"].active { background: #C62828; }
+        .style-pill[data-style="funny"].active { background: #F9A825; color: #4E342E; }
+        .style-pill[data-style="pun"].active { background: #52525b; color: #fff; } 
+        .style-pill[data-style="gentle"].active { background: #EC407A; }
+        .style-pill[data-style="childish"].active { background: #2DD4BF; color: #000; }
+        .style-pill[data-style="drama"].active { background: #BE123C; color: #fff; }
+        .style-pill[data-style="ancient"].active { background: #795548; }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .toast { visibility: hidden; min-width: 260px; background-color: var(--ny-red-deep); color: var(--ny-gold); text-align: center; border-radius: 50px; padding: 16px 24px; position: fixed; z-index: 10000; left: 50%; bottom: 80px; transform: translateX(-50%); font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s, transform 0.3s; border: 1px solid var(--ny-gold); font-size: 0.95rem; pointer-events: none;}
+        .toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(-10px); }
+          
+        /* Decorations */
+        .streamlines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.15; background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, #E6B450 20px, #E6B450 22px); pointer-events: none; }
+        
+        .stars-container { position: absolute; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .star {
+            position: absolute; background-color: #FFF;
+            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+            opacity: 0; animation: twinkle infinite ease-in-out;
+            will-change: transform, opacity;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px #FFF; }
+        }
+          
+        .lantern-container { 
+            position: absolute; top: 0; left: 0; width: 100%; display: flex; 
+            justify-content: space-between; padding: 10px 10px 0 10px; 
+            z-index: 120; pointer-events: none; opacity: 1; visibility: visible;
+            transition: opacity 0.3s ease-in-out, visibility 0s linear 0s; 
+        }
+        .lantern-container.hide-lanterns { 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; 
+        }
+        
+        .lantern { width: 60px; height: 80px; background: #D32F2F; border-radius: 20px; border: 2px solid #5E1214; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.2); animation: swing 6s infinite ease-in-out; transform-origin: top center; will-change: transform; }
+        .lantern::before { content: ''; position: absolute; top: -5px; left: 10px; width: 36px; height: 8px; background: #E6B450; border-radius: 4px; }
+        .lantern::after { content: ''; position: absolute; bottom: -20px; left: 25px; width: 4px; height: 20px; background: #E6B450; box-shadow: 0 5px 0 #D32F2F, 0 10px 0 #D32F2F; }
+        .lantern-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #E6B450; font-weight: 900; font-size: 24px; border: 2px solid #E6B450; border-radius: 50%; width: 40px; height: 40px; line-height: 36px; text-align: center; font-family: var(--title-font); }
+        .l-left { animation-delay: 0s; } .l-right { animation-delay: 1s; }
+        @keyframes swing { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+          
+        .waves-container { position: absolute; bottom: 0; width: 100%; height: 200px; z-index: 1; pointer-events: none;}
+        .wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; background-repeat: repeat-x; background-position: bottom; background-size: 50% 100%; will-change: transform; }
+        .wave-green { bottom: -20px; height: 180px; opacity: 0.9; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%234A6351' fill-opacity='1' d='M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"); animation: waveMove 20s linear infinite; }
+        .wave-gold { bottom: -10px; height: 120px; opacity: 0.6; z-index: 1; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23E6B450' fill-opacity='1' d='M0,128L60,138.7C120,149,240,171,360,165.3C480,160,600,128,720,128C840,128,960,160,1080,176C1200,192,1320,192,1380,192L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"); animation: waveMove 15s linear infinite reverse; }
+        @keyframes waveMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        footer { margin-top: auto; color: rgba(255,255,255,0.7); font-size: 12px; padding-bottom: 20px; margin-top: 40px; text-align: center; }
+          
+        .social-link { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); margin: 0 8px; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
+        .social-link:hover { background: var(--ny-gold); color: var(--ny-red-deep); transform: translateY(-3px); border-color: var(--ny-gold); }
+
+        h1, h2, .title-font { font-family: var(--title-font); }
+          
+        /* Book Animation Styles */
+        .perspective-1000 { perspective: 1000px; }
+        .book-flip-enter { animation: bookFlipEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes bookFlipEnter { 
+            0% { opacity: 0; transform: rotateY(-90deg) scale(0.9); } 
+            100% { opacity: 1; transform: rotateY(0) scale(1); } 
+        }
+          
+        /* Poke Game Styles */
+        .poke-box {
+            position: relative; width: 100%; padding-bottom: 100%; background: #2D3436; 
+            border-radius: 12px; overflow: hidden; cursor: pointer;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); -webkit-tap-highlight-color: transparent;
+        }
+        .poke-paper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .poke-box.poked .poke-paper { opacity: 0; transform: scale(1.5); pointer-events: none; }
+        .poke-box:active .poke-paper { transform: scale(0.95); }
+
+        /* Status Indicator */
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .status-success { background-color: #4CAF50; box-shadow: 0 0 5px #4CAF50; }
+        .status-error { background-color: #F44336; box-shadow: 0 0 5px #F44336; }
+
+        /* First Aid Kit Specific Styles */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .medicine-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px; border-radius: 12px; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid transparent;
+            min-height: 90px; text-align: center; background: white;
+        }
+        .medicine-item:active { transform: scale(0.96); }
+        .medicine-item.active { border-color: #8E1E20; box-shadow: 0 0 0 2px rgba(142, 30, 32, 0.2); }
+
+        .hot-tag-btn {
+            display: inline-flex; align-items: center; padding: 8px 16px;
+            border-radius: 999px; font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+            transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            border: 1px solid transparent;
+        }
+        .hot-tag-btn:active { transform: scale(0.95); }
+        
+        .tag-money { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+        .tag-angry { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+        .tag-tired { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+        .tag-lonely { background: #FAF5FF; color: #7E22CE; border-color: #E9D5FF; }
+        .tag-lost { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+        .tag-full { background: #FFF1F2; color: #BE123C; border-color: #FECDD3; }
+        .tag-gray { background: #F3F4F6; color: #374151; border-color: #E5E7EB; }
+
+        /* Quiz Styles */
+        .quiz-option {
+            width: 100%; text-align: left; padding: 16px; 
+            border: 2px solid #E1F5FE; background: white; border-radius: 16px; 
+            margin-bottom: 12px; transition: all 0.2s; cursor: pointer;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .quiz-option:active { transform: scale(0.98); }
+        .quiz-option.selected-correct { background: #E8F5E9; border-color: #4CAF50; color: #1B5E20; }
+        .quiz-option.selected-wrong { background: #FFEBEE; border-color: #EF5350; color: #B71C1C; }
+        .quiz-circle {
+            width: 28px; height: 28px; border-radius: 50%; background: #F5F5F5; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; 
+            font-size: 14px; color: #888; flex-shrink: 0;
+        }
+        .quiz-option.selected-correct .quiz-circle { background: #4CAF50; color: white; }
+        .quiz-option.selected-wrong .quiz-circle { background: #EF5350; color: white; }
+
+        /* Heavenly Red Envelope Styles */
+        .red-envelope-container {
+            perspective: 1000px; width: 280px; height: 380px; margin: 20px auto; cursor: pointer;
+        }
+        .red-envelope {
+            width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .red-envelope.opened { transform: rotateY(180deg); }
+        
+        .envelope-front, .envelope-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .envelope-front {
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px solid #FFD700;
+        }
+        .envelope-decoration {
+            width: 80px; height: 80px; border-radius: 50%; background: #FFD700;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; font-weight: 900; color: #B71C1C; margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 4px solid #FFF8E1; font-family: var(--title-font);
+        }
+        
+        .envelope-back {
+            background: #FFF8E1; transform: rotateY(180deg);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            border: 8px solid #B71C1C;
+        }
+        
+        .verse-card {
+            width: 100%; height: 100%; background: white; border-radius: 8px;
+            display: flex; flex-direction: column; text-align: center;
+            padding: 20px 15px; border: 1px solid #FFECB3;
+            background-image: radial-gradient(#FFF8E1 1px, transparent 1px); background-size: 20px 20px;
+        }
+
+        /* Fruit Game Styles */
+        .fruit-item {
+            position: absolute; width: 72px; height: 72px; border-radius: 50%;
+            display: flex; flex-direction: column; /* Stack icon and text */
+            align-items: center; justify-content: center;
+            font-size: 16px; cursor: pointer; 
+            /* PERFORMANCE FIX: Remove box-shadow during animation to prevent lag */
+            /* box-shadow: 0 4px 8px rgba(0,0,0,0.2); */
+            border: 2px solid rgba(255,255,255,0.8);
+            animation: fall linear forwards;
+            z-index: 50; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            top: 0; 
+            /* PERFORMANCE FIX: Hint browser to optimize for transform */
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        .fruit-item:active { transform: scale(0.9); }
+        .fruit-pop { animation: pop 0.3s ease-out forwards; }
+        
+        @keyframes fall { 
+            0% { transform: translateY(-100px); } 
+            100% { transform: translateY(120vh); } 
+        }
+        
+        @keyframes pop { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        
+        .game-header {
+            background: rgba(255, 255, 255, 0.9); border-radius: 16px; padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 2px solid #FFAB91; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 10px; width: 100%; max-width: 400px;
+        }
+
+        /* Memory Game Styles */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            /* 1. 確保卡片有寬度，並佔滿 Grid 格子 */
+            width: 100%;
+            /* 2. 重置高度，改用 Padding-bottom 撐開高度 (Aspect Ratio Fallback) */
+            height: 0;
+            padding-bottom: 133.33%; /* 3:4 比例 => 4/3 * 100% = 133.33% */
+            position: relative; /* 讓內層絕對定位參考此容器 */
+        }
+        .flip-card-inner {
+            /* 3. 使用絕對定位填滿被 Padding 撐開的空間 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flip-card-front {
+            background: linear-gradient(135deg, #FFCCBC 0%, #D84315 100%);
+            color: white;
+            font-size: 24px;
+            border: 2px solid #fff;
+        }
+        .flip-card-back {
+            background-color: #FFF3E0;
+            color: #D84315;
+            transform: rotateY(180deg);
+            border: 2px solid #FFAB91;
+            font-weight: bold;
+            font-family: var(--title-font);
+            padding: 4px;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+        .flip-card-back.matched {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border-color: #A5D6A7;
+        }
+        
+        /* Solitaire Game Styles */
+        .solitaire-board {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            flex-grow: 1; /* Occupy remaining space */
+            perspective: 1000px;
+        }
+        .sol-col {
+            width: 23%;
+            height: 100%;
+            position: relative;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            border: 1px dashed rgba(255,255,255,0.3);
+            /* Allows cards to stack visually */
+        }
+        .sol-col.completed {
+            border: 2px solid #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        /* Completed overlay text */
+        .sol-col.completed::after {
+            content: '✅ 完成';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFD700;
+            font-weight: 900;
+            font-size: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 500;
+        }
+
+        .sol-card {
+            position: absolute;
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: white;
+            border-radius: 6px;
+            border: 2px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: top 0.2s, transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+            font-size: 12px;
+        }
+        .sol-card-holding {
+            position: relative;
+            width: 28%;
+            aspect-ratio: 2/3;
+            flex-shrink: 0;
+        }
+        .sol-card.selected {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 15px #FFD700;
+            border-color: #FFD700;
+            z-index: 100 !important;
+        }
+        
+        .sol-card-red { border-color: #EF5350; color: #B71C1C; background: #FFEBEE; }
+        .sol-card-blue { border-color: #42A5F5; color: #0D47A1; background: #E3F2FD; }
+        .sol-card-green { border-color: #66BB6A; color: #1B5E20; background: #E8F5E9; }
+        .sol-card-gold { border-color: #FFA726; color: #E65100; background: #FFF3E0; }
+        .sol-card-joker { border-color: #7B1FA2; color: white; background: linear-gradient(135deg, #BA68C8, #7B1FA2); font-weight: bold; }
+        .sol-card-resurrection { border-color: #FFD700; color: #5D4037; background: linear-gradient(135deg, #FFF8E1, #FFECB3); font-weight: bold; }
+        
+        .sol-number { font-size: 16px; font-weight: 900; margin-bottom: 2px; }
+        .sol-text { 
+            font-size: 9px; 
+            line-height: 1.2; 
+            white-space: pre-wrap; 
+            word-break: break-word;
+        }
+
+        /* Quiz Review List Styles */
+        #quiz-review-list {
+            margin-top: 20px;
+            text-align: left;
+            border-top: 2px dashed #e2e8f0;
+            padding-top: 15px;
+        }
+        .quiz-review-item {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        .quiz-review-q {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+        .quiz-review-ans {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .ans-label {
+            color: #64748b;
+            margin-right: 4px;
+        }
+        .ans-text.correct {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        .ans-text.wrong {
+            color: #dc2626;
+            font-weight: bold;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- App Root Container -->
+    <!-- 背景層：移出到 body 直接子層，實現全螢幕覆蓋 -->
+    <div id="bg-layer">
+        <div class="streamlines"></div>
+        <div id="stars-container" class="stars-container"></div>
+        <div class="waves-container">
+            <div class="wave wave-green"></div>
+            <div class="wave wave-gold"></div>
+        </div>
+    </div>
+
+    <!-- App Root: 負責內容佈局與寬度限制 -->
+    <div id="app-root">
+        
+        <!-- Lanterns -->
+        <div class="lantern-container">
+            <div class="lantern l-left"><div class="lantern-text">福</div></div>
+            <div class="lantern l-right"><div class="lantern-text">春</div></div>
+        </div>
+
+        <!-- Inner Nav Bar -->
+        <div id="inner-nav-bar">
+            <div class="nav-back-btn" onclick="showHome()">
+                <i class="fas fa-chevron-left"></i> 回大廳
+            </div>
+            <div class="nav-title">Jesus Vibes 2026</div>
+        </div>
+
+        <!-- Scroll Wrapper -->
+        <div id="scroll-wrapper">
+            <!-- Main Content -->
+            <div class="app-container">
+                  
+                <!-- Home Header -->
+                <header id="home-header" onclick="showHome()">
+                    <div class="flex justify-center items-center gap-4 mb-3 opacity-80 header-icon-group">
+                        <i class="fas fa-cross text-xl text-yellow-200 drop-shadow-md"></i>
+                        <span class="text-yellow-200 text-opacity-80 text-xs tracking-[0.4em] font-serif">EMMANUEL</span>
+                        <i class="fas fa-fish text-xl text-yellow-200 drop-shadow-md"></i>
+                    </div>
+                    <h1 class="text-4xl font-black text-white mb-2 drop-shadow-lg" style="text-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                        Jesus Vibes <span class="title-font ml-1 text-yellow-300">2026</span>
+                    </h1>
+                    <p class="text-yellow-100/90 text-sm font-bold tracking-[0.2em] title-font drop-shadow-md mt-2 border-t border-b border-yellow-200/30 py-2 inline-block px-4">機智的過年生活</p>
+                </header>
+
+                <!-- Home Menu (2x2 Grid) -->
+                <div id="home-menu" class="w-full">
+                    <div class="menu-grid">
+                        <!-- 1. Red Envelope -->
+                        <div onclick="showScratch()" class="menu-btn group">
+                            <div class="icon-bg bg-ny-red"><i class="fas fa-envelope-open-text"></i></div>
+                            <h2 class="text-lg font-bold text-red-800 title-font">恩典紅包</h2>
+                            <span class="text-xs text-red-400 font-bold mt-2 uppercase tracking-wide">Daily Blessing</span>
+                        </div>
+                        <!-- 2. Prayer -->
+                        <div onclick="showPrayer()" class="menu-btn group">
+                            <div class="icon-bg" style="background: linear-gradient(135deg, #3F5846 0%, #2F4234 100%); color: #E6B450; border: 1px solid #D4AF37;"><i class="fas fa-book-bible"></i></div>
+                            <h2 class="text-lg font-bold text-[#2F4234] title-font">禱告小時光</h2>
+                            <span class="text-xs text-[#4A6351] font-bold mt-2 uppercase tracking-wide">Prayer Time</span>
+                        </div>
+                        <!-- 3. Tree Hole -->
+                        <div onclick="showTalk()" class="menu-btn group">
+                            <div class="icon-bg bg-ny-green"><i class="fas fa-hand-pointer"></i></div>
+                            <h2 class="text-lg font-bold text-green-800 title-font">專治心累戳戳樂</h2>
+                            <span class="text-xs text-green-600 font-bold mt-2 uppercase tracking-wide">Soul Healing</span>
+                        </div>
+                        <!-- 4. Survival Hub -->
+                        <div onclick="showSurvivalHub()" class="menu-btn group">
+                            <div class="icon-bg bg-ny-purple"><i class="fas fa-brain"></i></div>
+                            <h2 class="text-lg font-bold text-[#4A148C] title-font">過年求生包</h2>
+                            <span class="text-xs text-[#7B1FA2] font-bold mt-2 uppercase tracking-wide">Wise Life in CNY</span>
+                            <div class="absolute top-3 right-3 text-[#7B1FA2] opacity-0 group-active:opacity-100 transition-opacity">
+                                <i class="fas fa-comment-dots"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 5. Scholar Hub (Modified Color to C100 Blue) -->
+                        <div onclick="showScholarHub()" class="menu-btn group">
+                            <div class="icon-bg" style="background: #00AEEF; color: #FFFFFF; border: 2px solid #0090C5;"><i class="fas fa-graduation-cap"></i></div>
+                            <h2 class="text-lg font-bold text-[#007EA7] title-font">天國學霸養成班</h2>
+                            <span class="text-xs text-[#00AEEF] font-bold mt-2 uppercase tracking-wide">Bible Scholar</span>
+                        </div>
+
+                        <!-- 6. Game Hub (Modified Color to Deep Orange Red) -->
+                        <div onclick="showGameHub()" class="menu-btn group">
+                            <div class="icon-bg" style="background: #FBE9E7; color: #D84315; border: 2px solid #FFAB91;"><i class="fas fa-gamepad"></i></div>
+                            <h2 class="text-lg font-bold text-[#BF360C] title-font">手指復健小學堂</h2>
+                            <span class="text-xs text-[#D84315] font-bold mt-2 uppercase tracking-wide">Mini Games</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. Scratch View -->
+                <div id="scratch-view" class="hidden view-container">
+                    <section id="card-scratch" class="ny-card p-6 text-center">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-red-700 rounded-full border-4 border-[#E6B450] flex items-center justify-center text-white shadow-xl text-xl">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="mt-6 mb-5">
+                            <h2 class="text-2xl font-bold title-font text-red-800">刮開祝福</h2>
+                        </div>
+                        <div class="scratch-wrapper bg-red-50 p-3 rounded-2xl shadow-inner border border-red-100 mb-2">
+                            <div class="scratch-box" id="scratchCard">
+                                <div class="scratch-text absolute top-0 left-0 w-full h-full flex items-center justify-center p-6 z-0 bg-[#FFFEFA]">
+                                    <span id="verseText" class="font-bold text-red-900 text-lg leading-loose title-font">Loading...</span>
+                                </div>
+                                <canvas id="scratchCanvas" class="absolute top-0 left-0 z-10 w-full h-full cursor-crosshair touch-none"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-5">
+                            <button id="fullVerseBtn" onclick="showFullVerse()" class="text-xs font-bold text-red-400 border border-red-200 rounded-full px-4 py-1 hover:bg-red-50 transition-colors hidden">
+                                <i class="fas fa-book-open mr-1"></i> 顯示完整經文
+                            </button>
+                        </div>
+
+                        <div class="action-group">
+                            <button onclick="resetScratchCard()" class="forest-btn btn-green"><i class="fas fa-sync-alt"></i> 再抽一張</button>
+                            <button onclick="shareVerse()" class="forest-btn btn-gold"><i class="fas fa-share-alt"></i> 分享祝福</button>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 2. Poke View -->
+                <div id="talk-view" class="hidden view-container">
+                    <section id="card-talk" class="ny-card p-6 text-center" style="min-height: 600px;">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-green-700 rounded-full border-4 border-[#E6B450] flex items-center justify-center text-white shadow-xl text-xl">
+                            <i class="fas fa-hand-pointer"></i>
+                        </div>
+                        <div class="mt-6 mb-4">
+                            <h2 class="text-2xl font-bold text-green-800 title-font">專治心累戳戳樂</h2>
+                            <p class="text-green-600 text-xs mt-1 font-bold">親戚攻勢太猛烈？戳一下，天父幫你補補血</p>
+                        </div>
+
+                        <div id="pokeGrid" class="grid grid-cols-3 gap-3 w-full max-w-[320px] mx-auto mb-4 bg-[#6e4837] p-3 rounded-lg border-4 border-[#8B4513] shadow-lg"></div>
+                        
+                        <button id="resetPokeBtn" onclick="initPokeGame()" class="hidden text-xs font-bold text-green-600 border border-green-300 rounded-full px-4 py-2 hover:bg-green-50 transition-colors mx-auto mb-4">
+                            <i class="fas fa-redo-alt mr-1"></i> 換一盒玩
+                        </button>
+
+                        <div id="responseArea" class="hidden bg-gradient-to-br from-green-50 to-white border-2 border-green-100 rounded-2xl p-6 text-left relative shadow-sm fade-in">
+                            <div class="flex justify-between items-end mb-3 border-b border-green-100 pb-2">
+                                <h3 id="responseTitle" class="text-xl font-bold text-green-800 title-font"></h3>
+                                <span id="responseDate" class="text-xs text-gray-400 font-bold mb-1"></span>
+                            </div>
+                            <div class="mb-4 bg-white/60 p-3 rounded-lg border-l-4 border-green-300">
+                                <div class="text-[10px] text-green-900 font-bold uppercase tracking-wider mb-1">靈修經文</div>
+                                <p id="responseRef" class="text-green-900 font-bold text-sm"></p>
+                            </div>
+                            <div class="mb-5">
+                                <p id="responseText" class="text-gray-900 text-lg leading-relaxed text-justify font-medium"></p>
+                            </div>
+                            <div class="bg-green-100/50 p-3 rounded-xl flex items-center gap-3 border border-green-200">
+                                <div class="bg-green-200 w-10 h-10 rounded-full flex items-center justify-center text-green-700 flex-shrink-0">
+                                    <i class="fas fa-music"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <div class="text-[10px] text-green-600 font-bold uppercase">今日點播</div>
+                                    <div id="responseSong" class="text-green-900 font-bold text-sm truncate"></div>
+                                </div>
+                            </div>
+                            <div class="mt-5 border-t border-green-200 pt-3">
+                                <button onclick="shareResponse()" class="share-btn-hide text-xs text-green-600 font-bold flex items-center justify-end w-full gap-2">分享這份感動 <i class="fas fa-share-alt"></i></button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 3. Prayer View -->
+                <div id="prayer-view" class="hidden view-container">
+                    <section id="card-prayer" class="ny-card p-6 text-center" style="border-color: #E6B450; background: #3F5846;">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full border-4 border-[#E6C888] flex items-center justify-center text-white shadow-xl text-xl" style="background: linear-gradient(135deg, #2F4234, #1B291F);">
+                            <i class="fas fa-book-bible"></i>
+                        </div>
+                        <div class="mt-6 mb-5">
+                            <h2 class="text-2xl font-bold text-[#E6B450] title-font">禱告小時光</h2>
+                            <p class="text-gray-200 text-xs mt-1 font-bold">翻開屬於你的禱告頁面</p>
+                        </div>
+                        <div id="prayerBookContainer" class="relative mt-8 mb-8 perspective-1000">
+                            <div id="bookCover" class="cursor-pointer transition-transform transform hover:scale-105 active:scale-95 duration-300" onclick="openPrayerBook()">
+                                <div class="w-48 h-64 mx-auto rounded-r-lg rounded-l-sm shadow-2xl flex flex-col items-center justify-center text-[#F9FBE7] relative overflow-hidden group" style="background: linear-gradient(135deg, #5E1214 0%, #8E1E20 100%); border-left: 6px solid #3E0B0C;">
+                                    <div class="absolute inset-0 border-2 border-[#E6C888]/40 m-3 rounded-r-md rounded-l-none"></div>
+                                    <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/10 via-transparent to-transparent pointer-events-none"></div>
+                                    <i class="fas fa-praying-hands text-4xl mb-4 opacity-90 group-hover:scale-110 transition-transform text-[#E6B450] drop-shadow-sm"></i>
+                                    <span class="font-bold tracking-widest title-font text-lg text-[#E6B450] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">翻開<br>禱告</span>
+                                </div>
+                                <p class="text-[#E6B450] text-xs mt-6 font-bold animate-pulse"><i class="fas fa-hand-pointer mr-1"></i> 點擊翻開領受祝福</p>
+                            </div>
+                            <div id="bookPage" class="hidden w-full bg-[#FFFEFA] rounded-lg shadow-xl border border-[#C5A059] p-6 text-left relative flex flex-col justify-center transition-all duration-300">
+                                <div class="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#E0E0E0]/50 via-transparent to-transparent rounded-l-lg pointer-events-none"></div>
+                                <div class="pl-4 border-l border-[#F0E68C] h-full flex flex-col">
+                                    <h3 id="prayerBookTitle" class="text-xl font-bold text-[#5D4037] mb-3 text-center title-font pt-2 leading-relaxed"></h3>
+                                    <div class="mb-4 relative">
+                                        <p id="prayerBookRef" class="text-sm font-bold text-[#8B6914] bg-[#FAFAF5] p-3 rounded-md border-l-4 border-[#D4AF37] italic leading-relaxed"></p>
+                                    </div>
+                                    <p id="prayerBookText" class="text-[#5D4037] leading-loose text-justify font-medium text-base mb-2"></p>
+                                    <div id="prayerBookFullContent" class="hidden mt-3 pt-3 border-t border-[#E6C888] transition-all duration-500 ease-in-out">
+                                        <p id="prayerBookFullText" class="text-[#5D4037] leading-loose text-justify font-medium text-base"></p>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <button id="prayerToggleBtn" onclick="toggleFullPrayer()" class="text-xs font-bold text-[#8B6914] bg-[#FAFAF5] px-4 py-2 rounded-full border border-[#D4AF37] hover:bg-[#F0E68C] transition-colors shadow-sm">
+                                            <i class="fas fa-book-open mr-1"></i> 📖 閱讀完整禱告
+                                        </button>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <span class="text-[#C5A059] text-xs opacity-80 font-serif tracking-widest">- AMEN -</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prayerActionButtons" class="hidden fade-in mt-4">
+                            <button onclick="openPrayerBook()" class="forest-btn mb-4 shadow-md" style="background: linear-gradient(to bottom, #E6B450, #C5A059); border-bottom-color: #8B6914; color: #3F5846;"><i class="fas fa-sync-alt"></i> 再翻一頁</button>
+                            <button onclick="sharePrayerBook()" class="text-xs text-[#E6B450] font-bold w-full gap-2 hover:text-white transition-colors py-2">分享這篇禱告 <i class="fas fa-share-alt"></i></button>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 4.1. NEW: Survival HUB (The Selection Screen) -->
+                <div id="survival-hub-view" class="hidden view-container">
+                      <section class="ny-card p-6 text-center" style="border-color: #E1BEE7; background: rgba(253, 245, 255, 0.95);">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-[#6A1B9A] rounded-full border-4 border-[#E1BEE7] flex items-center justify-center text-white shadow-xl text-xl">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="mt-6 mb-6">
+                            <h2 class="text-2xl font-bold text-[#4A148C] title-font">過年求生包</h2>
+                            <p class="text-[#7B1FA2] text-xs mt-1 font-bold">請選擇您需要的裝備</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Option 1: Survival Guide (Renamed) -->
+                            <div onclick="showSurvivalGuide()" class="bg-white p-5 rounded-2xl border-2 border-purple-200 shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-scroll"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-purple-900 text-lg mb-1">長輩應對祕籍</h3>
+                                    <p class="text-xs text-gray-500 mb-2">過年必備的話題生存指南</p>
+                                    <div class="flex justify-start">
+                                        <span id="hub-survival-status" class="text-[10px] bg-purple-50 text-purple-400 px-2 py-0.5 rounded-full border border-purple-100">載入中...</span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right ml-auto text-purple-300"></i>
+                            </div>
+
+                            <!-- Option 2: The NEW Bible First Aid Kit -->
+                            <div onclick="showFirstAid()" class="bg-white p-5 rounded-2xl border-2 border-red-200 shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-medkit"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-red-900 text-lg mb-1">聖經急救箱</h3>
+                                    <p class="text-xs text-gray-500 mb-2">針對情緒與狀態的屬天處方籤</p>
+                                    <div class="flex justify-start">
+                                        <span id="hub-firstaid-status" class="text-[10px] bg-red-50 text-red-400 px-2 py-0.5 rounded-full border border-red-100">載入中...</span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right ml-auto text-red-300"></i>
+                            </div>
+                        </div>
+                      </section>
+                </div>
+
+                <!-- 4.2. Survival Guide (Modified) -->
+                <div id="survival-view" class="hidden view-container">
+                    <section id="card-survival" class="ny-card p-6 text-center" style="border-color: #E1BEE7; background: rgba(253, 245, 255, 0.95);">
+                        <!-- Back to Hub Button -->
+                         <div class="text-left mb-2 -mt-2">
+                            <button onclick="showSurvivalHub()" class="text-xs font-bold text-[#6A1B9A] bg-purple-100 px-3 py-1 rounded-full"><i class="fas fa-arrow-left"></i> 返回選單</button>
+                        </div>
+
+                        <div class="mt-2 mb-2 flex items-center justify-center gap-2">
+                            <h2 class="text-xl font-bold text-[#4A148C] title-font">長輩應對祕籍</h2>
+                        </div>
+                        
+                        <!-- Status Display -->
+                        <div class="text-[10px] text-purple-400 mb-4 font-bold tracking-wider">
+                            <i class="fas fa-book-reader mr-1"></i> <span id="survival-count-display">祕籍頁數：0</span>
+                        </div>
+
+                        <!-- Disclaimer / Intro -->
+                        <div id="survival-intro" class="mt-2">
+                            <div class="bg-purple-50 p-6 rounded-2xl border-2 border-purple-100 mb-6">
+                                <i class="fas fa-robot text-4xl text-purple-300 mb-3"></i>
+                                <h3 class="font-bold text-purple-900 text-lg mb-2">使用前請詳閱公開說明書</h3>
+                                <p class="text-purple-800 text-sm leading-relaxed font-medium">
+                                    本區內容由 AI 生成，僅供娛樂參考。<br>
+                                    若有神回覆請笑納，若不合適笑笑就好。<br>
+                                    <span class="block mt-2 font-bold text-purple-600">過年求生，開心至上，勿太認真！🧧</span>
+                                </p>
+                            </div>
+                            <button onclick="startSurvival()" class="forest-btn btn-purple shadow-lg w-full">
+                                <i class="fas fa-check-circle"></i> 我準備好了
+                            </button>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div id="survival-content" class="hidden space-y-4">
+                            <div class="style-options">
+                                <div class="style-pill active" onclick="selectStyle(this, 'toxic')" data-style="toxic">🐍 犀利風</div>
+                                <div class="style-pill" onclick="selectStyle(this, 'funny')" data-style="funny">🤣 幽默風</div>
+                                <div class="style-pill" onclick="selectStyle(this, 'pun')" data-style="pun">⚔️ 俠客風</div>
+                                <div class="style-pill" onclick="selectStyle(this, 'gentle')" data-style="gentle">🕊️ 溫柔風</div>
+                                <div class="style-pill" onclick="selectStyle(this, 'drama')" data-style="drama">🎭 八點檔風</div>
+                                <div class="style-pill" onclick="selectStyle(this, 'ancient')" data-style="ancient">📜 古偶風</div>
+                            </div>
+                            <div class="relative text-left mt-2" id="survival-input-container">
+                                <textarea id="survivalInput" rows="2" placeholder="請輸入問題「關鍵字」 (例如：結婚、薪水)，字數精簡更準確！" class="story-input text-gray-700 placeholder-purple-300/70" style="border-color: #E1BEE7;"></textarea>
+                            </div>
+                            <button onclick="getSurvivalResponse()" class="forest-btn btn-purple w-full shadow-lg shadow-purple-900/10"><i class="fas fa-shield-alt"></i> 生成神回覆</button>
+                            <div id="survivalResponseArea" class="hidden mt-6 bg-gradient-to-br from-purple-50 to-white border-2 border-purple-100 rounded-2xl p-6 text-left relative shadow-sm">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="text-[#6A1B9A] text-xs font-bold title-font flex items-center"><i class="fas fa-comment-dots mr-2 bg-purple-100 p-1.5 rounded-full"></i> 建議回覆：</h3>
+                                    <span id="styleBadge" class="text-[10px] px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold">毒舌版</span>
+                                </div>
+                                <p id="survivalText" class="text-[#4A148C] font-bold text-lg leading-relaxed mb-3"></p>
+                                <div class="mt-4 border-t border-purple-200 pt-3">
+                                    <button onclick="shareSurvival()" class="text-xs text-[#6A1B9A] font-bold hover:text-purple-700 flex items-center justify-end w-full gap-2 py-1">
+                                    複製這句去戰鬥 <i class="fas fa-copy bg-purple-100 p-1.5 rounded-full"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 4.3. Bible First Aid Kit View -->
+                <div id="first-aid-view" class="hidden view-container">
+                      <section class="ny-card p-4 text-center" style="border-color: #FECACA; background: #FFFEFA;">
+                        <!-- Back to Hub Button -->
+                         <div class="text-left mb-2 -mt-2 flex justify-between items-center">
+                            <button onclick="showSurvivalHub()" class="text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full"><i class="fas fa-arrow-left"></i> 返回選單</button>
+                            <!-- Stock Status -->
+                            <span class="text-[10px] text-red-400 font-bold tracking-wider"><i class="fas fa-pills mr-1"></i> <span id="first-aid-count-display">藥局庫存：0</span></span>
+                        </div>
+
+                        <!-- User's Module Content Starts Here -->
+                        <div id="first-aid-app" class="w-full">
+                            <!-- 1. 急救箱互動區 -->
+                            <div id="categoriesContainer" class="mb-6">
+                                <h4 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider flex items-center justify-center gap-2">
+                                    <i class="fas fa-medkit text-[#E6B450]"></i> 你的專屬急救箱
+                                </h4>
+                                
+                                <!-- 狀態 1: 關閉的箱子 -->
+                                <div id="firstAidKitClosed" class="w-full flex flex-col items-center justify-center py-6 cursor-pointer group transition-transform active:scale-95" onclick="openFirstAidKit()">
+                                    <div class="relative w-36 h-28 bg-red-600 rounded-xl border-4 border-red-800 shadow-xl flex items-center justify-center">
+                                        <div class="absolute -top-4 w-12 h-6 border-4 border-red-800 rounded-t-lg bg-red-700"></div>
+                                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-red-600 text-3xl font-black shadow-sm">
+                                            <i class="fas fa-plus"></i>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-red-800 text-sm font-bold tracking-widest animate-pulse">點擊打開急救箱</p>
+                                </div>
+
+                                <!-- 狀態 2: 打開的箱子 (藥罐列表) -->
+                                <div id="firstAidKitOpened" class="hidden w-full bg-gray-50 rounded-xl p-4 border-2 border-gray-200 shadow-inner">
+                                    <div id="categoryList" class="grid grid-cols-2 gap-3">
+                                        <div class="text-center w-full py-4 text-gray-400 text-xs col-span-2">
+                                            <i class="fas fa-spinner fa-spin mr-2"></i> 藥局補貨中...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. 急救 OK 繃 (熱門標籤) -->
+                            <div id="hotTagsContainer" class="mb-6">
+                                <div class="flex justify-between items-center mb-3 px-1">
+                                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
+                                        <i class="fas fa-band-aid text-[#E6B450] text-lg"></i> 急救 OK 繃
+                                    </h4>
+                                    <span class="text-[10px] text-gray-400 font-bold flex items-center animate-pulse">
+                                        <i class="fas fa-hand-point-left mr-1"></i> 左滑找解方
+                                    </span>
+                                </div>
+                                
+                                <div class="relative -mx-4 group">
+                                    <div id="hotTagsList" class="flex overflow-x-auto gap-3 px-4 pb-4 no-scrollbar scroll-smooth" style="-webkit-overflow-scrolling: touch;">
+                                        <!-- JS 將自動產生標籤 -->
+                                    </div>
+                                    <!-- 右側漸層與提示箭頭 -->
+                                    <div class="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white via-white/90 to-transparent pointer-events-none flex items-center justify-end pr-2 pb-4 z-10">
+                                        <div onclick="event.stopPropagation(); document.getElementById('hotTagsList').scrollBy({left: 150, behavior: 'smooth'})" class="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-[#E6B450] text-sm animate-bounce border border-orange-100 cursor-pointer pointer-events-auto hover:bg-gray-50 transition-transform">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. 搜尋結果列表 -->
+                            <div id="searchResultsList" class="space-y-4 pb-4">
+                                <!-- 結果將顯示於此 -->
+                            </div>
+                        </div>
+                        <!-- Module Ends -->
+                      </section>
+                </div>
+
+                <!-- 5. Scholar Hub View (Modified Color to C100 Blue) -->
+                <div id="scholar-hub-view" class="hidden view-container">
+                      <section class="ny-card p-6 text-center" style="border-color: #00AEEF; background: #E0F7FA;">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-[#00AEEF] rounded-full border-4 border-[#81D4FA] flex items-center justify-center text-white shadow-xl text-xl">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="mt-6 mb-6">
+                            <h2 class="text-2xl font-bold text-[#006064] title-font">天國學霸養成班</h2>
+                            <p class="text-[#0097A7] text-xs mt-1 font-bold">測測看，你的屬靈知識庫有多少？</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Quiz 1 -->
+                            <div onclick="startQuiz('quiz1', '聖經大會考')" class="bg-white p-5 rounded-2xl border-2 border-[#81D4FA] shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#E1F5FE] text-[#00AEEF] flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-[#006064] text-lg mb-1">聖經大會考</h3>
+                                    <p class="text-xs text-gray-500">限時1分鐘！看看你能答對幾題</p>
+                                </div>
+                                <i class="fas fa-chevron-right ml-auto text-[#4DD0E1]"></i>
+                            </div>
+
+                            <!-- Quiz 2 -->
+                            <div onclick="startQuiz('quiz3', '遇見彌賽亞')" class="bg-white p-5 rounded-2xl border-2 border-[#81D4FA] shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#E1F5FE] text-[#00AEEF] flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-cross"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-[#006064] text-lg mb-1">遇見彌賽亞</h3>
+                                    <p class="text-xs text-gray-500">關於耶穌生平的深度探索</p>
+                                </div>
+                                <i class="fas fa-chevron-right ml-auto text-[#4DD0E1]"></i>
+                            </div>
+
+                            <!-- Quiz 3 -->
+                            <div onclick="startQuiz('quiz2', '聖經冷知識')" class="bg-white p-5 rounded-2xl border-2 border-[#81D4FA] shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#E1F5FE] text-[#00AEEF] flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-snowflake"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-[#006064] text-lg mb-1">聖經冷知識</h3>
+                                    <p class="text-xs text-gray-500">那些你可能沒注意到的有趣細節</p>
+                                </div>
+                                <i class="fas fa-chevron-right ml-auto text-[#4DD0E1]"></i>
+                            </div>
+                        </div>
+
+                        <!-- 警語 -->
+                        <div class="mt-6 text-xs text-[#006064]/70 bg-[#E0F7FA]/50 p-4 rounded-xl border border-[#81D4FA]/30 leading-relaxed text-justify">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            <span class="font-bold">溫馨提醒：</span>本單元題目由 AI 輔助生成，僅供趣味測驗參考。正確解答請以《聖經》原文為準，若發現內容有誤，歡迎 <a href="https://line.me/R/ti/p/@469cjlho" target="_blank" class="underline font-bold hover:text-[#00AEEF]">加入 LINE 官方帳號</a> 告知我們，感謝您的協助！
+                        </div>
+                      </section>
+                </div>
+
+                <!-- NEW: Universal Quiz View -->
+                <div id="quiz-view" class="hidden view-container">
+                    <section class="ny-card p-6 text-center" style="border-color: #00AEEF; background: #FFFEFA; min-height: 500px;">
+                        <div class="text-left mb-4 -mt-2 flex justify-between items-center">
+                            <button onclick="showScholarHub()" class="text-xs font-bold text-[#00AEEF] bg-blue-50 px-3 py-1 rounded-full"><i class="fas fa-arrow-left"></i> 放棄測驗</button>
+                            <span id="quiz-progress" class="text-xs font-bold text-[#006064]">1 / 10</span>
+                            <span id="quiz-timer" class="hidden text-xl font-black text-red-500">60</span>
+                        </div>
+
+                        <div id="quiz-content">
+                            <div class="mb-2 text-left">
+                                <span id="quiz-category-tag" class="text-[10px] bg-[#E1F5FE] text-[#0277BD] px-2 py-1 rounded-full font-bold tracking-wide">類別</span>
+                            </div>
+                            <h3 id="quiz-question" class="text-xl font-bold text-[#006064] text-left leading-relaxed mb-6 font-serif">題目載入中...</h3>
+                            
+                            <div id="quiz-options" class="space-y-3">
+                                <!-- Options will be injected here -->
+                            </div>
+
+                            <div id="quiz-feedback" class="hidden mt-4 p-4 rounded-xl text-left bg-gray-50 border-2 border-gray-100">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div id="feedback-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"></div>
+                                    <span id="feedback-title" class="font-bold text-sm"></span>
+                                </div>
+                                <!-- 修改：將 p 改為 div 以支援 HTML 內容 -->
+                                <div id="feedback-content" class="text-sm text-gray-600 leading-relaxed"></div>
+                                <button onclick="nextQuestion()" id="next-q-btn" class="mt-4 w-full bg-[#00AEEF] text-white font-bold py-3 rounded-xl shadow-md active:scale-95 transition-transform">下一題</button>
+                            </div>
+                        </div>
+
+                        <div id="quiz-result" class="hidden">
+                            <div class="py-8">
+                                <i class="fas fa-trophy text-6xl text-yellow-400 mb-4 block drop-shadow-md"></i>
+                                <h3 class="text-2xl font-bold text-[#006064] mb-2">測驗完成！</h3>
+                                <p class="text-gray-500 text-sm mb-6">你的天國學霸指數</p>
+                                <div class="text-5xl font-black text-[#00AEEF] mb-6"><span id="final-score">0</span><span class="text-lg text-gray-400 ml-1">分</span></div>
+                                
+                                <!-- Quiz Review Area -->
+                                <div id="quiz-review-list" class="hidden">
+                                    <!-- Dynamic review items -->
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3 mt-6">
+                                    <button onclick="showScholarHub()" class="py-3 rounded-xl font-bold text-[#00AEEF] bg-[#E1F5FE]">返回選單</button>
+                                    <button onclick="restartQuiz()" class="py-3 rounded-xl font-bold text-white bg-[#00AEEF] shadow-lg">再測一次</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 6. Game Hub View (Modified Color to Deep Orange Red) -->
+                <div id="game-hub-view" class="hidden view-container">
+                      <section class="ny-card p-6 text-center" style="border-color: #FF7043; background: #FBE9E7;">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-[#D84315] rounded-full border-4 border-[#FFAB91] flex items-center justify-center text-white shadow-xl text-xl">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <div class="mt-6 mb-6">
+                            <h2 class="text-2xl font-bold text-[#BF360C] title-font">手指復健小學堂</h2>
+                            <p class="text-[#D84315] text-xs mt-1 font-bold">過年滑手機，不如來練練手指靈活度！</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Game 1 -->
+                            <div onclick="startFruitGame()" class="bg-white p-5 rounded-2xl border-2 border-[#FFAB91] shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#FFCCBC] text-[#D84315] flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-apple-alt"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-[#BF360C] text-lg mb-1">聖靈果子大作戰</h3>
+                                    <p class="text-xs text-gray-500">接住從天而降的屬靈果子 (小心壞果子!)</p>
+                                </div>
+                                <i class="fas fa-play ml-auto text-[#FF8A65]"></i>
+                            </div>
+
+                            <!-- Game 2 -->
+                            <div onclick="initMemoryGame()" class="bg-white p-5 rounded-2xl border-2 border-[#FFAB91] shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#FFCCBC] text-[#D84315] flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-[#BF360C] text-lg mb-1">腦力全開翻翻樂</h3>
+                                    <p class="text-xs text-gray-500">考驗記憶力的經文配對</p>
+                                </div>
+                                <i class="fas fa-play ml-auto text-[#FF8A65]"></i>
+                            </div>
+
+                            <!-- Game 3: Solitaire -->
+                            <div onclick="initMiracleSolitaire()" class="bg-white p-5 rounded-2xl border-2 border-[#FFAB91] shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#FFCCBC] text-[#D84315] flex items-center justify-center text-xl flex-shrink-0">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                                <div class="text-left w-full">
+                                    <h3 class="font-bold text-[#BF360C] text-lg mb-1">神蹟奇事連連看</h3>
+                                    <p class="text-xs text-gray-500">耶穌神蹟接龍挑戰 (含復活牌)</p>
+                                </div>
+                                <i class="fas fa-play ml-auto text-[#FF8A65]"></i>
+                            </div>
+                        </div>
+                      </section>
+                </div>
+
+                <!-- NEW: Fruit Game View -->
+                <div id="fruit-game-view" class="hidden view-container">
+                    <section class="ny-card p-0 overflow-hidden relative" style="border-color: #FFAB91; background: #FFF3E0; height: 600px;">
+                        <!-- Game Header -->
+                        <div class="absolute top-0 left-0 w-full z-20 p-4 flex justify-between items-start pointer-events-none">
+                            <button onclick="exitFruitGame()" class="pointer-events-auto w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-gray-500 text-sm">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="game-header pointer-events-auto">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase">時間</span>
+                                    <span id="fruit-timer" class="text-2xl font-black text-[#D84315]">60</span>
+                                </div>
+                                <div class="w-px h-8 bg-gray-300 mx-4"></div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase">目標</span>
+                                    <span class="text-lg font-bold text-[#BF360C]"><span id="fruit-score" class="text-2xl font-black">0</span>/20</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Game Area -->
+                        <div id="fruit-game-area" class="w-full h-full relative overflow-hidden cursor-pointer">
+                            <!-- Overlay: Start -->
+                            <div id="fruit-start-overlay" class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center text-white p-6 text-center">
+                                <div class="w-20 h-20 bg-[#FFCCBC] rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce text-[#D84315] border-4 border-white">
+                                    <i class="fas fa-apple-alt"></i>
+                                </div>
+                                <h2 class="text-3xl font-bold mb-2 title-font text-[#FFAB91]">聖靈果子大作戰</h2>
+                                <p class="text-sm opacity-90 mb-6 leading-relaxed">
+                                    在 60 秒內收集 20 顆聖靈果子！<br>
+                                    <span class="text-yellow-300 font-bold">小心！</span> 點到壞果子會扣 5 秒喔！
+                                </p>
+                                <button onclick="startGameLoop()" class="bg-[#D84315] text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform">
+                                    <i class="fas fa-play mr-2"></i> 開始挑戰
+                                </button>
+                            </div>
+
+                            <!-- Overlay: Game Over (Time's Up) -->
+                            <div id="fruit-gameover-overlay" class="hidden absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center text-white p-6 text-center">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- NEW: Memory Game View -->
+                <div id="memory-game-view" class="hidden view-container">
+                    <section class="ny-card p-0 overflow-hidden relative" style="border-color: #FFAB91; background: #FFF3E0; height: 100%;">
+                        <div class="absolute top-0 left-0 w-full z-20 p-4 flex justify-between items-start pointer-events-none">
+                            <button onclick="exitMemoryGame()" class="pointer-events-auto w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-gray-500 text-sm">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="game-header pointer-events-auto">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase">關卡</span>
+                                    <span id="memory-level-display" class="text-xl font-black text-[#D84315]">1/3</span>
+                                </div>
+                                <div class="w-px h-8 bg-gray-300 mx-4"></div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase">時間</span>
+                                    <span id="memory-timer" class="text-2xl font-black text-[#BF360C]">30</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Game Grid Container -->
+                        <!-- 修改：將 pt-20 改為 pt-32，增加頂部空間，避免標題擋住第一排卡片 -->
+                        <div class="w-full h-full pt-32 pb-4 px-4 overflow-y-auto" style="-webkit-overflow-scrolling: touch;">
+                            <div id="memory-game-grid" class="grid gap-2 w-full max-w-md mx-auto">
+                                <!-- Cards will be injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Overlays -->
+                        <div id="memory-overlay" class="absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center text-white p-6 text-center hidden">
+                            <div id="memory-overlay-content">
+                                <!-- Dynamic Content -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- NEW: Solitaire Game View -->
+                <div id="solitaire-game-view" class="hidden view-container">
+                    <!-- 修改：將 height: 100% 改為 min-height: 600px; height: 80vh; 確保在任何裝置上都有高度 -->
+                    <section class="ny-card p-0 overflow-hidden relative" style="border-color: #FFAB91; background: #4E342E; min-height: 600px; height: 80vh;">
+                        <div class="absolute top-0 left-0 w-full z-20 p-4 flex justify-between items-start pointer-events-none">
+                            <button onclick="exitMiracleSolitaire()" class="pointer-events-auto w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-gray-500 text-sm">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="game-header pointer-events-auto" style="background: rgba(255,255,255,0.95); width: auto;">
+                                <span class="text-sm font-bold text-[#D84315]">神蹟奇事連連看</span>
+                            </div>
+                        </div>
+
+                        <!-- Solitaire Board (Flex Layout Fix) -->
+                        <div class="w-full h-full pt-16 pb-4 flex flex-col justify-between">
+                            <!-- Board Area -->
+                            <div id="solitaire-board" class="flex-1 w-full px-2 flex justify-around relative">
+                                <!-- Generated by JS -->
+                            </div>
+                            
+                            <!-- Controls Area (Fixed height) -->
+                            <div class="h-32 w-full px-4 flex items-end justify-between shrink-0 z-20">
+                                <!-- Deck Counter -->
+                                <div id="sol-deck" onclick="dealSolitaireCards()" class="w-20 h-28 bg-red-800 border-2 border-yellow-400 rounded-lg shadow-xl cursor-pointer flex flex-col items-center justify-center relative">
+                                     <div class="absolute -top-3 bg-yellow-400 text-red-900 text-xs font-bold px-2 py-1 rounded-full border border-red-900">發牌</div>
+                                     <i class="fas fa-layer-group text-2xl text-yellow-400 mb-1"></i>
+                                     <div id="sol-deck-count" class="text-white text-xs font-bold">50</div>
+                                </div>
+                                
+                                <!-- Holding Area -->
+                                <div id="sol-holding" class="flex-1 ml-4 flex gap-2 h-28 items-end justify-start overflow-visible">
+                                    <!-- Dynamic Cards -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Toast -->
+                        <div id="solitaire-message" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm font-bold bg-black/70 px-4 py-2 rounded-full hidden pointer-events-none z-50">
+                            提示訊息
+                        </div>
+
+                        <!-- Start Overlay -->
+                        <div id="solitaire-start-overlay" class="absolute inset-0 bg-black/85 z-50 flex flex-col items-center justify-center text-white p-8 text-center">
+                            <h2 class="text-3xl font-bold mb-4 text-[#FFAB91]">神蹟奇事連連看</h2>
+                            <div class="text-left text-sm opacity-90 mb-6 space-y-2 bg-white/10 p-4 rounded-xl border border-white/20">
+                                <p>🔹 <span class="text-yellow-400 font-bold">排列規則</span>：將牌由小到大排列 (1→12)。</p>
+                                <p>🔹 <span class="text-yellow-400 font-bold">消除</span>：集齊同一顏色 1-12 即可消除。</p>
+                                <p>🔹 <span class="text-yellow-400 font-bold">👑復活牌</span>：拖曳至某列，該列直接完成！(需至少有一張牌)</p>
+                                <p>🔹 <span class="text-yellow-400 font-bold">👻鬼牌</span>：小心！放入某列會炸飛所有牌！</p>
+                                <p>🔹 <span class="text-yellow-400 font-bold">發牌</span>：點擊左下角牌庫，隨機發三張。</p>
+                            </div>
+                            <button onclick="startSolitaireGame()" class="bg-[#D84315] text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform cursor-pointer pointer-events-auto">
+                                <i class="fas fa-play mr-2"></i> 開始接龍
+                            </button>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- NEW: Heavenly Red Envelope View -->
+                <div id="heavenly-envelope-view" class="hidden view-container">
+                    <div class="w-full h-full flex flex-col items-center pt-10">
+                        <div class="mb-4 text-center">
+                            <h2 class="text-3xl font-bold text-[#FFD700] title-font drop-shadow-md">恭喜過關！</h2>
+                            <p class="text-white text-sm mt-1 opacity-90">天父為你預備了一個大紅包</p>
+                        </div>
+                        
+                        <div class="red-envelope-container" onclick="openRedEnvelope()">
+                            <div class="red-envelope" id="redEnvelopeCard">
+                                <!-- Front -->
+                                <div class="envelope-front">
+                                    <div class="envelope-decoration">福</div>
+                                    <div class="text-[#FFD700] font-bold text-xl tracking-widest title-font mt-2 border-t border-b border-[#FFD700] py-1 px-4">天國大紅包</div>
+                                    <p class="text-[#FFCCBC] text-xs mt-4 animate-pulse">點擊開啟祝福</p>
+                                </div>
+                                <!-- Back (Card) -->
+                                <div class="envelope-back">
+                                    <div class="verse-card" id="verseCardContent">
+                                        <div class="mb-2">
+                                            <span id="env-category" class="text-[10px] bg-[#B71C1C] text-white px-2 py-1 rounded-full font-bold tracking-wide">恩典</span>
+                                        </div>
+                                        <div class="flex-1 flex flex-col justify-center overflow-y-auto no-scrollbar">
+                                            <h3 id="env-chinese" class="text-xl font-bold text-[#B71C1C] leading-relaxed mb-3 font-serif">載入中...</h3>
+                                            <p id="env-english" class="text-xs text-gray-500 italic leading-relaxed mb-2 font-serif whitespace-pre-wrap break-words"></p>
+                                        </div>
+                                        <div class="mt-auto pt-3 border-t border-[#FFECB3]">
+                                            <p id="env-ref" class="text-sm font-bold text-[#F57F17]"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="envelope-actions" class="hidden mt-6 w-full px-10 flex gap-3 fade-in">
+                            <button onclick="showGameHub()" class="forest-btn btn-blue shadow-lg"><i class="fas fa-gamepad"></i> 回遊戲</button>
+                            <button onclick="shareEnvelope()" class="forest-btn btn-gold shadow-lg"><i class="fas fa-share-alt"></i> 分享</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer>
+                    <div class="flex justify-center mb-5">
+                        <a href="https://www.facebook.com/profile.php?id=100068500932557" target="_blank" class="social-link">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="https://www.instagram.com/forever.believe.in.jesus/" target="_blank" class="social-link">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="https://www.threads.net/@forever.believe.in.jesus" target="_blank" class="social-link">
+                            <i class="fab fa-threads text-lg"></i>
+                        </a>
+                    </div>
+
+                    <!-- 官方 LINE 連結 -->
+                    <div class="mb-3">
+                        <a href="https://line.me/R/ti/p/@469cjlho" target="_blank" class="inline-flex items-center gap-2 px-5 py-2 bg-[#8E1E20] text-[#E6B450] rounded-full text-sm font-bold shadow-lg hover:bg-[#A63437] transition-transform active:scale-95 border border-[#E6B450]/50">
+                            <i class="fab fa-line text-xl"></i>
+                            <span>加入 LINE 回饋與鼓勵</span>
+                        </a>
+                    </div>
+
+                    <!-- 新增：聯絡我們 連結 (修正為 target="_blank") -->
+                    <div class="mb-8">
+                        <a href="mailto:newthingsinthelittlelight@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2 bg-[#E6B450] text-[#8E1E20] rounded-full text-sm font-bold shadow-lg hover:bg-[#FBC02D] transition-transform active:scale-95 border border-[#8E1E20]/20">
+                            <i class="fas fa-envelope text-xl"></i>
+                            <span>聯絡我們</span>
+                        </a>
+                    </div>
+
+                    <p>2026 God is with you | 新年快樂 Happy New Year</p>
+                    <p class="mt-1 opacity-80">© 耶穌加油站</p>
+                    <div id="dataStatus" class="mt-2 text-[10px] opacity-60 flex justify-center items-center gap-2">
+                        <!-- Status Indicators injected by JS -->
+                    </div>
+                    <div id="debugInfo" class="text-[9px] text-red-300/50 mt-1"></div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Share Card for Prayer (Updated for Green Theme) -->
+    <div id="prayerShareHidden" class="fixed top-0 left-0 -z-50 w-[320px] bg-[#FFFEFA] p-8 border-4 border-[#3F5846] rounded-xl opacity-0 pointer-events-none">
+        <div class="text-center border-b border-[#E6C888] pb-4 mb-4">
+            <h3 class="text-2xl font-bold text-[#3F5846] title-font">禱告小時光</h3>
+        </div>
+        <h4 id="sharePrayerTitle" class="text-xl font-bold text-[#5D4037] mb-3 text-center title-font"></h4>
+        <p id="sharePrayerRef" class="text-sm font-bold text-[#8B6914] bg-[#FAFAF5] p-2 rounded mb-4 text-center"></p>
+        <p id="sharePrayerText" class="text-[#333] text-lg leading-relaxed text-justify font-medium"></p>
+        <div class="mt-6 text-center text-[#C5A059] text-xs tracking-widest font-serif">- AMEN -</div>
+        <div class="mt-2 text-center text-gray-300 text-[10px]">Jesus Vibes 2026</div>
+    </div>
+
+    <!-- Hidden Share Card for Poke/Mood (Positioned Off-screen) -->
+    <div id="pokeShareHidden" style="position: fixed; left: -9999px; top: 0; width: 320px; background-color: #F0FDF4; padding: 24px; border: 4px solid #4A6351; border-radius: 12px; z-index: 50;">
+        <div class="text-center border-b-2 border-green-200 pb-3 mb-4">
+            <h3 class="text-2xl font-bold text-[#2F4234] title-font">恩典戳戳樂</h3>
+            <p class="text-xs text-green-600 font-bold mt-1 tracking-widest">SOUL HEALING</p>
+        </div>
+         
+        <h4 id="sharePokeTitle" class="text-xl font-bold text-[#14532d] mb-2 text-center title-font"></h4>
+         
+        <!-- Ref -->
+        <div class="bg-white border-l-4 border-green-600 p-3 rounded mb-4">
+             <p id="sharePokeRef" class="text-sm font-bold text-green-800"></p>
+        </div>
+
+        <!-- Text -->
+        <p id="sharePokeText" class="text-[#333] text-lg leading-relaxed text-justify font-medium mb-4"></p>
+         
+        <!-- Song -->
+        <div class="flex items-center gap-3 bg-green-100 p-3 rounded-lg">
+             <div class="text-green-700 text-lg"><i class="fas fa-music"></i></div>
+             <div class="text-xs font-bold text-green-800" id="sharePokeSong"></div>
+        </div>
+
+        <div class="mt-6 text-center text-green-800/40 text-[10px] tracking-widest">Jesus Vibes 2026</div>
+    </div>
+
+    <!-- Hidden Share Card for Envelope -->
+    <div id="envelopeShareHidden" class="fixed top-0 left-0 -z-50 w-[320px] bg-[#B71C1C] p-6 border-4 border-[#FFD700] rounded-xl opacity-0 pointer-events-none">
+        <div class="bg-white rounded-lg p-6 text-center border-2 border-[#FFD700]">
+            <div class="mb-4">
+                <span id="shareEnvCategory" class="text-xs bg-[#B71C1C] text-white px-3 py-1 rounded-full font-bold tracking-wide"></span>
+            </div>
+            <h3 id="shareEnvChinese" class="text-xl font-bold text-[#B71C1C] leading-relaxed mb-4 font-serif"></h3>
+            <p id="shareEnvEnglish" class="text-xs text-gray-500 italic leading-snug mb-4 font-serif"></p>
+            <div class="pt-4 border-t border-[#FFECB3]">
+                <p id="shareEnvRef" class="text-sm font-bold text-[#F57F17]"></p>
+            </div>
+        </div>
+        <div class="mt-4 text-center text-[#FFD700] text-xs font-bold tracking-widest">Jesus Vibes 2026 天國大紅包</div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">訊息已複製到剪貼簿！</div>
+
+    <script>
+        const survivalInput = document.getElementById('survivalInput');
+        if (survivalInput) {
+            survivalInput.addEventListener('focus', () => {
+                setTimeout(() => {
+                   survivalInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                }, 300);
+            });
+        }
+          
+        // --- 3. Data Logic (Global) ---
+          
+        let lastVerseIndex = -1;
+        let currentVerseData = null; 
+        const YOUR_GOOGLE_SHEET_CSV_URL_VERSES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=0&single=true&output=csv"; 
+        const YOUR_GOOGLE_SHEET_CSV_URL_MOOD = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1438404823&single=true&output=csv";
+        const YOUR_GOOGLE_SHEET_CSV_URL_PRAYER = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2131834293&single=true&output=csv";
+        // Fixed URL for Survival Guide
+        const YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=712066461&single=true&output=csv";
+        // Fixed URL for First Aid
+        const YOUR_FIRST_AID_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2001152991&single=true&output=csv";
+        // NEW: Heavenly Envelope URL
+        const YOUR_HEAVENLY_ENVELOPE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=729851481&single=true&output=csv";
+
+        // --- QUIZ URLs ---
+        const QUIZ1_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1484195012&single=true&output=csv"; // 聖經大會考
+        const QUIZ2_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1420570073&single=true&output=csv"; // 聖經冷知識
+        const QUIZ3_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1503258725&single=true&output=csv"; // 遇見彌賽亞
+
+        // Default Data
+        let verses = [{ short: "耶和華是我的牧者，我必不致缺乏。(詩篇 23:1)", full: "耶和華是我的牧者，我必不致缺乏。（詩篇 23:1）" }];
+        let moodDatabase = [{ date: "2025/1/1", keywords: ["被神看見"], title: "神的心意是好的", text: "你很重要...", ref: "馬太福音1:1-25", song: "【開我的雙眼 Open My Eyes】| PPC", link: "https://youtu.be/XdXopI_eld4" }];
+        const defaultResponses = [{ title: "耶穌聽見了", text: "親愛的...", ref: "腓立比書 4:6-7", song: "【安靜 Be Still】| 約書亞樂團", link: "https://www.youtube.com/results?search_query=安靜+Be+Still+約書亞樂團" }];
+        let randomPrayerDatabase = [{ date: "1/1", title: "新的一年...", ref: "詩篇 118:24", text: "親愛的主...", fullText: "親愛的主..." }];
+        let survivalDatabase = [];
+        let firstAidDatabase = [];
+        let heavenlyEnvelopeDatabase = []; // New Database
+        // Quiz Data
+        let scholarDatabase = { quiz1: [], quiz2: [], quiz3: [] };
+
+        // Bible Books Data for Memory Game
+        const BIBLE_BOOKS = [
+            "創世記", "出埃及記", "利未記", "民數記", "申命記", "約書亞記", "士師記", "路得記", "撒母耳記上", "撒母耳記下",
+            "列王紀上", "列王紀下", "歷代志上", "歷代志下", "以斯拉記", "尼希米記", "以斯帖記", "約伯記", "詩篇", "箴言",
+            "傳道書", "雅歌", "以賽亞書", "耶利米書", "耶利米哀歌", "以西結書", "但以理書", "何西阿書", "約珥書", "阿摩司書",
+            "俄巴底亞書", "約拿書", "彌迦書", "那鴻書", "哈巴谷書", "西番雅書", "哈該書", "撒迦利亞書", "瑪拉基書",
+            "馬太福音", "馬可福音", "路加福音", "約翰福音", "使徒行傳", "羅馬書", "哥林多前書", "哥林多後書", "加拉太書",
+            "以弗所書", "腓立比書", "歌羅西書", "帖撒羅尼迦前書", "帖撒羅尼迦後書", "提摩太前書", "提摩太後書", "提多書",
+            "腓利門書", "希伯來書", "雅各書", "彼得前書", "彼得後書", "約翰一書", "約翰二書", "約翰三書", "猶大書", "啟示錄"
+        ];
+
+        // Miracles for Solitaire (1-12)
+        const MIRACLES_LIST = [
+            "變水為酒\n約翰福音2", 
+            "醫治大臣之子\n約翰福音4", 
+            "醫治癱子\n馬可福音2", 
+            "平靜風和海\n馬可福音4", 
+            "趕出群鬼\n馬可福音5", 
+            "醫治血漏\n馬可福音5", 
+            "五餅二魚\n約翰福音6", 
+            "耶穌履海\n馬太福音14", 
+            "醫治瞎眼\n約翰福音9", 
+            "拉撒路復活\n約翰福音11", 
+            "無花果樹\n馬太福音21", 
+            "醫治大痲瘋\n路加福音17"
+        ];
+
+        // Default Survival Response Fallback
+        const defaultSurvivalResponse = {
+            toxic: ["這題跳過。", "下一題。"], 
+            funny: ["哎呀，訊號不好～"], 
+            pun: ["江湖路遠，此事不必再提。"], 
+            gentle: ["謝謝關心，我們聊點開心的吧。"], 
+            drama: ["你走開！我不想看到你！"], // New Default for Drama
+            ancient: ["天機不可洩漏。"]
+        };
+          
+        function loadAllData() {
+            if(YOUR_GOOGLE_SHEET_CSV_URL_VERSES) fetchData('verses', YOUR_GOOGLE_SHEET_CSV_URL_VERSES);
+            if(YOUR_GOOGLE_SHEET_CSV_URL_MOOD) fetchData('mood', YOUR_GOOGLE_SHEET_CSV_URL_MOOD);
+            if(YOUR_GOOGLE_SHEET_CSV_URL_PRAYER) fetchData('prayer', YOUR_GOOGLE_SHEET_CSV_URL_PRAYER);
+            if(YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL) fetchData('survival', YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL);
+            if(YOUR_FIRST_AID_CSV_URL) fetchFirstAidData(YOUR_FIRST_AID_CSV_URL);
+            if(YOUR_HEAVENLY_ENVELOPE_CSV_URL) fetchData('heavenlyEnvelope', YOUR_HEAVENLY_ENVELOPE_CSV_URL); // New Fetch
+            
+            // Load Quizzes
+            fetchData('quiz1', QUIZ1_URL);
+            fetchData('quiz2', QUIZ2_URL);
+            fetchData('quiz3', QUIZ3_URL);
+        }
+
+        async function fetchData(type, url) {
+            try {
+                // Add cache: 'no-store' to ensure fresh data
+                const response = await fetch(url + `&t=${new Date().getTime()}`, { 
+                    redirect: 'follow',
+                    cache: 'no-store'
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const text = await response.text();
+                if (text.trim().startsWith('<!DOCTYPE html>')) { updateStatus(type, false); return; }
+
+                Papa.parse(text, {
+                    header: true, skipEmptyLines: true, transformHeader: h => h.trim(),
+                    complete: function(results) { processData(type, results.data); updateStatus(type, true); },
+                    error: function(err) { console.error(`Error parsing ${type}:`, err); updateStatus(type, false); }
+                });
+            } catch (e) { console.error(`Fetch failed for ${type}:`, e); updateStatus(type, false); }
+        }
+
+        // --- 1. SMART COLUMN MATCHING ---
+        function getValue(row, keyOptions) {
+            const rowKeys = Object.keys(row);
+            
+            // 1. Try exact match first for all options (Priority)
+            for (const option of keyOptions) {
+                if (row[option] !== undefined) return row[option];
+            }
+
+            // 2. Try normalized exact match (Case insensitive, trim, BOM removal)
+            for (const option of keyOptions) {
+                const target = option.trim().toLowerCase().replace(/[()]/g, '');
+                // Handle BOM or invisible characters in keys
+                const exactMatch = rowKeys.find(k => {
+                    // Remove BOM \uFEFF and other common invisible chars
+                    const cleanKey = k.replace(/^\uFEFF/, '').trim().toLowerCase().replace(/[()]/g, '');
+                    return cleanKey === target;
+                });
+                if (exactMatch) return row[exactMatch];
+            }
+
+            // 3. Try fuzzy match (includes) - ONLY if strict failed
+            for (const option of keyOptions) {
+                const target = option.trim().toLowerCase().replace(/[()]/g, '');
+                const fuzzyMatch = rowKeys.find(k => {
+                    const cleanKey = k.replace(/^\uFEFF/, '').trim().toLowerCase().replace(/[()]/g, '');
+                    return cleanKey.includes(target);
+                });
+                if (fuzzyMatch) return row[fuzzyMatch];
+            }
+            return '';
+        }
+
+        // Utility for normalization (Full-width to Half-width and cleanup)
+        function normalizeAnswer(str) {
+            if(!str) return '';
+            // Remove BOM and invisible chars first
+            let s = str.replace(/[\uFEFF\u200B\u200C\u200D\u2060\u180E]/g, '');
+            // Full-width to Half-width
+            s = s.replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/\u3000/g, ' ');
+            s = s.trim().toUpperCase();
+            
+            // 1. Check for single letter pattern like "A" or "(A)" or "A." or "A)"
+            // Matches A, B, C, D at start or surrounded by non-word chars
+            const letterMatch = s.match(/^[\(\[\s]*([A-D])[\)\]\.\s]*$/); 
+            if(letterMatch) return letterMatch[1]; 
+            
+            // 2. If it's a number 1, 2, 3, 4
+            const numMatch = s.match(/^[\(\[\s]*([1-4])[\)\]\.\s]*$/);
+            if(numMatch) {
+                return ['A', 'B', 'C', 'D'][parseInt(numMatch[1]) - 1];
+            }
+
+            // 3. If no clear letter, return cleaned string for text comparison
+            // Remove decorations to make text comparison robust
+            return s.replace(/[\(\)\.\,\s\"\'\-\_]/g, ''); 
+        }
+
+        // Helper for text comparison (used in double-check)
+        function normalizeTextForComparison(str) {
+            if(!str) return '';
+            let s = str.replace(/[\uFEFF\u200B\u200C\u200D\u2060\u180E]/g, '');
+            s = s.replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/\u3000/g, ' ');
+            return s.replace(/[\(\)\.\,\s\"\'\-\_]/g, '').trim().toUpperCase();
+        }
+
+        function processData(type, data) {
+            if (!data || data.length === 0) return;
+            
+            if(type === 'verses') {
+                verses = data.map(r => {
+                    let fullT = getValue(r, ['full', '完整', '完整經文']).trim();
+                    const match = fullT.match(/[\(\uff08](.*?)[\)\uff09]$/);
+                    if (match && match[1] && fullT.startsWith(match[1].trim())) fullT = fullT.substring(match[1].trim().length).replace(/^[:：\s\.,]+/, '').trim();
+                    return { short: getValue(r, ['short', '短句', '經文']).trim(), full: fullT };
+                }).filter(r => r.short && r.full);
+            } else if (type === 'mood') {
+                moodDatabase = data.map(r => ({
+                    date: getValue(r, ['date', '日期']).trim(),
+                    keywords: getValue(r, ['keywords', '關鍵字']) ? getValue(r, ['keywords', '關鍵字']).split(/[,，|、\s]+/).filter(k=>k) : [],
+                    title: getValue(r, ['title', '標題']).trim(), text: getValue(r, ['text', '內容', '回應']).trim(), ref: getValue(r, ['ref', '經文', '出處']).trim(), song: getValue(r, ['song', '詩歌']).trim() || "遇見你，我就遇見幸福", link: getValue(r, ['link', '連結']).trim() || "https://youtu.be/XdXopI_eld4"
+                }));
+            } else if (type === 'prayer') {
+                randomPrayerDatabase = data.map(r => ({ title: getValue(r, ['title', '標題']).trim(), ref: getValue(r, ['ref', '經文']).trim(), text: getValue(r, ['text', '短禱告']).trim(), fullText: getValue(r, ['fullText', '完整禱告']).trim() })).filter(r => r.title);
+            } else if (type === 'survival') {
+                survivalDatabase = data.map(r => ({
+                    keywords: getValue(r, ['keywords', '關鍵字', '問題']).split(/[,，|、\s]+/).filter(k=>k),
+                    toxic: getValue(r, ['犀利風', 'toxic']).split('|').filter(s=>s.trim()),
+                    funny: getValue(r, ['幽默風', 'funny']).split('|').filter(s=>s.trim()),
+                    pun: getValue(r, ['俠客風', 'pun']).split('|').filter(s=>s.trim()),
+                    gentle: getValue(r, ['溫柔風', 'gentle']).split('|').filter(s=>s.trim()),
+                    drama: getValue(r, ['八點檔風', '八點檔', 'drama']).split('|').filter(s=>s.trim()),
+                    ancient: getValue(r, ['古偶風', 'ancient']).split('|').filter(s=>s.trim())
+                }));
+                const count = survivalDatabase.length;
+                document.getElementById('hub-survival-status').innerText = `已載入 ${count} 招`;
+                document.getElementById('survival-count-display').innerText = `祕籍頁數：${count}`;
+            } else if (type === 'quiz1' || type === 'quiz2' || type === 'quiz3') {
+                // Process Quiz Data
+                scholarDatabase[type] = data.map(r => {
+                    let answerRaw = getValue(r, ['正確答案', 'Correct Answer', 'Answer', 'ans']);
+                    
+                    // Fallback Logic
+                    if (answerRaw.length > 5) {
+                        if (r['正確答案']) answerRaw = r['正確答案'];
+                        else if (r['Correct Answer']) answerRaw = r['Correct Answer'];
+                        else if (r['Answer']) answerRaw = r['Answer'];
+                    }
+
+                    return {
+                        category: getValue(r, ['類別', 'category']),
+                        question: getValue(r, ['題目', 'question', 'q']),
+                        options: [
+                            getValue(r, ['選項A', 'Option A', 'A']) || '',
+                            getValue(r, ['選項B', 'Option B', 'B']) || '',
+                            getValue(r, ['選項C', 'Option C', 'C']) || '',
+                            getValue(r, ['選項D', 'Option D', 'D']) || ''
+                        ], 
+                        // Fix: Normalize answer (Full-width to Half-width, Trim, Upper)
+                        answer: normalizeAnswer(answerRaw),
+                        note: getValue(r, ['備註', 'Note', 'Explanation', '解析', '正確答案解析'])
+                    };
+                }).filter(q => q.question && q.answer);
+            } else if (type === 'heavenlyEnvelope') {
+                // New Processing Logic
+                heavenlyEnvelopeDatabase = data.map(r => ({
+                    ref: getValue(r, ['經文出處', 'Reference', 'ref']),
+                    category: getValue(r, ['分類', 'Category', 'cat']),
+                    chinese: getValue(r, ['中文經文(和合本)', '中文經文', 'Chinese Verse']),
+                    english: getValue(r, ['EnglishVerse(KJV)', 'EnglishVerse', 'English'])
+                })).filter(r => r.chinese);
+            }
+        }
+
+        function updateStatus(type, success) {
+            const statusDiv = document.getElementById('dataStatus'); if(!statusDiv) return;
+            const dotId = `status-${type}`; let dot = document.getElementById(dotId);
+            if(!dot) { dot = document.createElement('div'); dot.id = dotId; dot.className = 'status-dot'; statusDiv.appendChild(dot); }
+            dot.className = `status-dot ${success ? 'status-success' : 'status-error'}`;
+        }
+         
+        function updateDebugInfo(msg) {
+            const debugEl = document.getElementById('debugInfo');
+            if(debugEl) {
+                const current = debugEl.innerText;
+                debugEl.innerText = current ? `${current} | ${msg}` : msg;
+            }
+        }
+          
+        // -------------------------
+        // 4. View Navigation Logic
+        // -------------------------
+
+        let currentStyle = 'toxic';
+        let views = { 
+            menu: document.getElementById('home-menu'), 
+            scratch: document.getElementById('scratch-view'), 
+            talk: document.getElementById('talk-view'),
+            prayer: document.getElementById('prayer-view'),
+            survivalHub: document.getElementById('survival-hub-view'),
+            survivalGuide: document.getElementById('survival-view'),
+            firstAid: document.getElementById('first-aid-view'),
+            scholarHub: document.getElementById('scholar-hub-view'),
+            gameHub: document.getElementById('game-hub-view'),
+            quizView: document.getElementById('quiz-view'),
+            fruitGame: document.getElementById('fruit-game-view'), 
+            memoryGame: document.getElementById('memory-game-view'), 
+            solitaireGame: document.getElementById('solitaire-game-view'), // New Solitaire View
+            heavenlyEnvelope: document.getElementById('heavenly-envelope-view')
+        };
+        const homeHeader = document.getElementById('home-header');
+        const innerNavBar = document.getElementById('inner-nav-bar');
+
+        function hideAllViews() { Object.values(views).forEach(el => { if(el) { el.classList.add('hidden'); el.classList.remove('fade-in'); } }); }
+        function forceScrollReset() { const wrapper = document.getElementById('scroll-wrapper'); if(wrapper) wrapper.scrollTop = 0; }
+
+        function showHome() { 
+            hideAllViews(); views.menu.classList.remove('hidden'); views.menu.classList.add('fade-in'); 
+            homeHeader.style.display = 'block'; innerNavBar.style.display = 'none'; forceScrollReset(); 
+            document.querySelector('.lantern-container').classList.remove('hide-lanterns');
+        }
+          
+        function showScratch() { 
+            hideAllViews(); views.scratch.classList.remove('hidden'); views.scratch.classList.add('fade-in'); 
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
+            setTimeout(initScratchCard, 200); document.querySelector('.lantern-container').classList.add('hide-lanterns');
+        }
+          
+        function showPrayer() { 
+            hideAllViews(); views.prayer.classList.remove('hidden'); views.prayer.classList.add('fade-in'); 
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
+            document.querySelector('.lantern-container').classList.add('hide-lanterns');
+            // Reset Prayer View
+            document.getElementById('bookCover').classList.remove('hidden'); document.getElementById('bookPage').classList.add('hidden'); document.getElementById('prayerActionButtons').classList.add('hidden'); document.getElementById('prayerToggleBtn').innerHTML = '<i class="fas fa-book-open mr-1"></i> 📖 閱讀完整禱告';
+        }
+          
+        function showTalk() { 
+            hideAllViews(); views.talk.classList.remove('hidden'); views.talk.classList.add('fade-in'); 
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
+            document.querySelector('.lantern-container').classList.add('hide-lanterns'); initPokeGame();
+        }
+
+        // --- NEW: Survival Hub Logic ---
+        function showSurvivalHub() {
+            hideAllViews(); views.survivalHub.classList.remove('hidden'); views.survivalHub.classList.add('fade-in');
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
+            document.querySelector('.lantern-container').classList.add('hide-lanterns');
+        }
+
+        function showSurvivalGuide() { 
+            hideAllViews(); views.survivalGuide.classList.remove('hidden'); views.survivalGuide.classList.add('fade-in'); 
+            document.getElementById('survival-intro').classList.remove('hidden');
+            document.getElementById('survival-content').classList.add('hidden');
+            document.getElementById('survivalInput').value = '';
+            document.getElementById('survivalText').innerText = '';
+        }
+
+        function showFirstAid() {
+            hideAllViews(); views.firstAid.classList.remove('hidden'); views.firstAid.classList.add('fade-in');
+            initFirstAidUI();
+        }
+        
+        // --- NEW: Scholar & Game Hub Logic ---
+        function showScholarHub() {
+            hideAllViews(); views.scholarHub.classList.remove('hidden'); views.scholarHub.classList.add('fade-in');
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
+            document.querySelector('.lantern-container').classList.add('hide-lanterns');
+        }
+
+        function showGameHub() {
+            hideAllViews(); views.gameHub.classList.remove('hidden'); views.gameHub.classList.add('fade-in');
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
+            document.querySelector('.lantern-container').classList.add('hide-lanterns');
+        }
+          
+        function startSurvival() {
+            document.getElementById('survival-intro').classList.add('hidden');
+            document.getElementById('survival-content').classList.remove('hidden');
+        }
+
+        // --- NEW: Heavenly Envelope Logic ---
+        function showHeavenlyEnvelope() {
+            hideAllViews(); views.heavenlyEnvelope.classList.remove('hidden'); views.heavenlyEnvelope.classList.add('fade-in');
+            homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset();
+            document.querySelector('.lantern-container').classList.add('hide-lanterns');
+            
+            // Reset Envelope State
+            const card = document.getElementById('redEnvelopeCard');
+            const actions = document.getElementById('envelope-actions');
+            card.classList.remove('opened');
+            actions.classList.add('hidden');
+        }
+
+        function simulateGameWin(gameName) {
+            showToast(`🎮 正在載入 ${gameName}...`);
+            setTimeout(() => {
+                showToast("🎉 遊戲通關！準備領取大紅包！");
+                setTimeout(showHeavenlyEnvelope, 1500);
+            }, 1000);
+        }
+
+        function openRedEnvelope() {
+            const card = document.getElementById('redEnvelopeCard');
+            if(card.classList.contains('opened')) return; // Prevent re-opening
+            
+            // Pick a random verse
+            if(!heavenlyEnvelopeDatabase.length) {
+                showToast("紅包資料載入中，請稍後...");
+                return;
+            }
+            
+            const verse = heavenlyEnvelopeDatabase[Math.floor(Math.random() * heavenlyEnvelopeDatabase.length)];
+            
+            // Fill Data
+            document.getElementById('env-category').innerText = verse.category || "祝福";
+            document.getElementById('env-chinese').innerText = verse.chinese || "願主賜福保護你";
+            document.getElementById('env-english').innerText = verse.english || "";
+            document.getElementById('env-ref').innerText = verse.ref || "";
+
+            // Animate
+            card.classList.add('opened');
+            
+            // Show actions after animation
+            setTimeout(() => {
+                document.getElementById('envelope-actions').classList.remove('hidden');
+            }, 800);
+        }
+
+        function shareEnvelope() {
+            const cat = document.getElementById('env-category').innerText;
+            const chi = document.getElementById('env-chinese').innerText;
+            const eng = document.getElementById('env-english').innerText;
+            const ref = document.getElementById('env-ref').innerText;
+            
+            document.getElementById('shareEnvCategory').innerText = cat;
+            document.getElementById('shareEnvChinese').innerText = chi;
+            document.getElementById('shareEnvEnglish').innerText = eng;
+            document.getElementById('shareEnvRef').innerText = ref;
+            
+            const shareCard = document.getElementById('envelopeShareHidden');
+            shareCard.style.opacity = '1';
+            
+            captureAndShare('envelopeShareHidden', 'Jesus Vibes 2026', `🧧 我的天國大紅包 🧧\n\n【${cat}】\n${chi}\n\n${eng}\n\n📖 ${ref}`).then(() => {
+                shareCard.style.opacity = '0';
+            });
+        }
+
+        window.selectStyle = function(el, style) {
+            currentStyle = style;
+            document.querySelectorAll('.style-pill').forEach(pill => { pill.classList.remove('active'); });
+            el.classList.add('active');
+        }
+
+        /* --------------------------
+            EXISTING LOGIC: Scratch, Poke, Prayer, Survival Guide
+            -------------------------- */
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const verseTextDiv = document.getElementById('verseText');
+        let isDrawing = false; let lastPoint = null;
+        function initScratchCard() {
+            const container = document.querySelector('.scratch-box'); if (!container || container.offsetWidth === 0) return;
+            canvas.width = container.offsetWidth; canvas.height = container.offsetHeight;
+            ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#C0C0C0'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#A9A9A9'; for(let i=0; i<20; i++) { ctx.beginPath(); ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*3+1, 0, Math.PI*2); ctx.fill(); }
+            ctx.fillStyle = '#666'; ctx.font = 'bold 24px "Noto Serif TC", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText("✨ 刮開領受 ✨", canvas.width/2, canvas.height/2);
+            let newIndex = (verses.length > 1) ? Math.floor(Math.random() * verses.length) : 0; 
+            currentVerseData = verses[newIndex]; verseTextDiv.innerText = currentVerseData.full; 
+            ctx.globalCompositeOperation = 'destination-out';
+        }
+        function getBrushPos(e) { const rect = canvas.getBoundingClientRect(); return { x: (e.touches ? e.touches[0].clientX : e.clientX) - rect.left, y: (e.touches ? e.touches[0].clientY : e.clientY) - rect.top }; }
+        function startDraw(e) { isDrawing = true; lastPoint = getBrushPos(e); ctx.beginPath(); ctx.globalCompositeOperation = 'destination-out'; ctx.arc(lastPoint.x, lastPoint.y, 25, 0, Math.PI * 2); ctx.fill(); }
+        function stopDraw() { isDrawing = false; lastPoint = null; }
+        function scratch(e) { if (!isDrawing) return; e.preventDefault(); const currentPoint = getBrushPos(e); ctx.beginPath(); ctx.globalCompositeOperation = 'destination-out'; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 50; if (lastPoint) { ctx.moveTo(lastPoint.x, lastPoint.y); ctx.lineTo(currentPoint.x, currentPoint.y); ctx.stroke(); } lastPoint = currentPoint; }
+        canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('touchstart', startDraw, {passive: false});
+        window.addEventListener('mouseup', stopDraw); window.addEventListener('touchend', stopDraw);
+        canvas.addEventListener('mousemove', scratch); canvas.addEventListener('touchmove', scratch, {passive: false});
+        function resetScratchCard() { const btn = document.querySelector('.action-group .btn-green i'); btn.classList.add('fa-spin'); verseTextDiv.style.opacity = '0'; canvas.style.opacity = '0'; setTimeout(() => { initScratchCard(); canvas.style.opacity = '1'; setTimeout(() => { verseTextDiv.style.opacity = '1'; btn.classList.remove('fa-spin'); }, 50); }, 300); }
+
+        function initPokeGame() {
+            document.getElementById('responseArea').classList.add('hidden'); document.getElementById('resetPokeBtn').classList.add('hidden');
+            const grid = document.getElementById('pokeGrid'); grid.innerHTML = ''; 
+            const icons = ['fa-gift', 'fa-star', 'fa-heart', 'fa-music', 'fa-fish', 'fa-dove', 'fa-bible', 'fa-praying-hands', 'fa-church', 'fa-lightbulb', 'fa-smile', 'fa-sun'].sort(() => Math.random() - 0.5);
+            const colors = ['bg-red-500', 'bg-orange-500', 'bg-amber-400', 'bg-yellow-400', 'bg-lime-500', 'bg-green-500', 'bg-emerald-500', 'bg-teal-500', 'bg-cyan-500', 'bg-sky-500', 'bg-blue-500', 'bg-violet-500'];
+            for(let i=0; i<12; i++) {
+                const box = document.createElement('div'); box.className = 'poke-box';
+                box.innerHTML = `<div class="poke-paper ${colors[i]} flex flex-col items-center justify-center text-white"><i class="fas ${icons[i]} text-2xl opacity-80"></i><span class="text-[10px] mt-1 font-bold opacity-60">Poke</span></div>`;
+                box.onclick = () => { if(box.classList.contains('poked')) return; box.classList.add('poked'); setTimeout(() => { getRandomMoodResponse(); document.getElementById('resetPokeBtn').classList.remove('hidden'); }, 300); };
+                grid.appendChild(box);
+            }
+        }
+        function getRandomMoodResponse() {
+            const area = document.getElementById('responseArea'); area.classList.remove('hidden');
+            document.getElementById('scroll-wrapper').scrollTo({ top: area.getBoundingClientRect().top + document.getElementById('scroll-wrapper').scrollTop - 80, behavior: 'smooth' });
+            document.getElementById('responseText').innerText = '...';
+            setTimeout(() => {
+                const item = (moodDatabase && moodDatabase.length) ? moodDatabase[Math.floor(Math.random() * moodDatabase.length)] : defaultResponses[0];
+                document.getElementById('responseTitle').innerText = item.title;
+                document.getElementById('responseDate').innerText = item.date || 'Today';
+                document.getElementById('responseText').innerText = item.text;
+                document.getElementById('responseRef').innerText = item.ref;
+                
+                // Modified logic for song link
+                const songEl = document.getElementById('responseSong');
+                if (item.link) {
+                    songEl.innerHTML = `<a href="${item.link}" target="_blank" class="flex items-center gap-1 hover:text-green-600 transition-colors cursor-pointer">
+                        <span class="truncate">${item.song}</span> 
+                        <i class="fas fa-play-circle text-green-500"></i>
+                    </a>`;
+                } else {
+                    songEl.innerText = item.song;
+                }
+            }, 600);
+        }
+
+        function openPrayerBook() {
+            if (!randomPrayerDatabase.length) return;
+            document.getElementById('bookCover').classList.add('hidden'); document.getElementById('bookPage').classList.remove('hidden');
+            const item = randomPrayerDatabase[Math.floor(Math.random() * randomPrayerDatabase.length)];
+            document.getElementById('prayerBookTitle').innerText = item.title; document.getElementById('prayerBookRef').innerText = item.ref;
+            document.getElementById('prayerBookText').innerText = item.text; document.getElementById('prayerBookFullText').innerText = item.fullText;
+            document.getElementById('prayerBookFullContent').classList.add('hidden');
+            setTimeout(() => document.getElementById('prayerActionButtons').classList.remove('hidden'), 600);
+        }
+        function toggleFullPrayer() {
+            const el = document.getElementById('prayerBookFullContent'); const btn = document.getElementById('prayerToggleBtn');
+            el.classList.toggle('hidden'); btn.innerHTML = el.classList.contains('hidden') ? '<i class="fas fa-book-open mr-1"></i> 📖 閱讀完整禱告' : '<i class="fas fa-chevron-up mr-1"></i> 收起完整禱告';
+        }
+
+        // --- 2. RELAXED SEARCH MATCHING ---
+        function getMatchScore(input, keyword) {
+            let cleanIn = input.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "").toLowerCase(); 
+            let cleanKey = keyword.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "").toLowerCase();
+            if (cleanIn.includes(cleanKey) || cleanKey.includes(cleanIn)) return 1.0;
+            let matchCount = 0; 
+            for (let char of cleanKey) if (cleanIn.includes(char)) matchCount++;
+            return matchCount / cleanKey.length;
+        }
+
+        function getSurvivalResponse() {
+            const inputVal = document.getElementById('survivalInput').value.trim(); if (!inputVal) return;
+            const styleBadge = document.getElementById('styleBadge'); const textEl = document.getElementById('survivalText');
+            document.getElementById('survivalResponseArea').classList.remove('hidden');
+            const styleNames = { 'toxic': '🐍 犀利風', 'funny': '🤣 幽默風', 'pun': '⚔️ 俠客風', 'gentle': '🕊️ 溫柔風', 'drama': '🎭 八點檔風', 'ancient': '📜 古偶風' };
+            styleBadge.innerText = styleNames[currentStyle]; textEl.innerText = '思考中...';
+            setTimeout(() => {
+                let bestMatch = null; let bestScore = 0;
+                for (const item of survivalDatabase) {
+                    if (!item[currentStyle]) continue;
+                    for (const k of item.keywords) {
+                        const score = getMatchScore(inputVal, k);
+                        if (score > bestScore) { bestScore = score; bestMatch = item; }
+                    }
+                }
+                let result = "";
+                if (bestMatch && bestScore > 0.4) {
+                    const ans = bestMatch[currentStyle]; result = Array.isArray(ans) ? ans[Math.floor(Math.random()*ans.length)] : ans;
+                } else {
+                    const pool = defaultSurvivalResponse[currentStyle]; result = pool[Math.floor(Math.random()*pool.length)];
+                }
+                textEl.innerText = result;
+            }, 800);
+        }
+
+        /* --------------------------
+            NEW MODULE: Bible First Aid Kit Logic (FIXED)
+            -------------------------- */
+        const customSearchLogic = {
+            "沒錢": (item) => item.category === "職場財富" || item.keywords.some(k => ["錢", "富足", "供應", "缺乏", "財物"].some(w => k.includes(w))),
+            "水逆": (item) => ["逆境翻盤", "新年轉運", "出入平安"].includes(item.category) || item.keywords.some(k => ["順利", "平安", "災害", "保守", "運氣"].some(w => k.includes(w))),
+            "睡不著": (item) => ["睡眠安息", "情緒急救"].includes(item.category) || item.keywords.some(k => ["失眠", "安息", "躺臥", "睡眠"].some(w => k.includes(w))),
+            "被催婚": (item) => item.category === "單身應對" || item.keywords.some(k => ["催婚", "等候", "定時", "結婚"].some(w => k.includes(w))),
+            "孤單": (item) => item.category === "面對孤單" || item.keywords.some(k => ["孤單", "同在", "朋友", "邊緣"].some(w => k.includes(w))),
+            "不想上班": (item) => ["職場智慧", "未來方向"].includes(item.category) || item.keywords.some(k => ["工作", "能力", "老闆", "懶惰"].some(w => k.includes(w))),
+            "胖": (item) => ["飲食健康", "節制自律", "自我接納"].includes(item.category) || item.keywords.some(k => ["減肥", "身體", "肚腹"].some(w => k.includes(w))),
+            "小人": (item) => ["人際界線", "逆境翻盤"].includes(item.category) || item.keywords.some(k => ["小人", "仇敵", "陷害", "被罵"].some(w => k.includes(w))),
+            "麻將輸": (item) => ["職場財富", "逆境翻盤"].includes(item.category) || item.keywords.some(k => ["運氣", "富足"].some(w => k.includes(w))),
+            "手氣背": (item) => item.category === "新年轉運" || item.keywords.some(k => ["機會", "得勝", "新事"].some(w => k.includes(w))),
+            "塞車": (item) => ["忍耐等候", "出入平安"].includes(item.category) || item.keywords.some(k => ["忍耐", "保守", "道路"].some(w => k.includes(w))),
+            "暈車": (item) => item.category === "平安健康" || item.keywords.some(k => ["醫治", "健壯"].some(w => k.includes(w))),
+            "紅包太多": (item) => ["慷慨給予", "財務智慧"].includes(item.category) || item.keywords.some(k => ["施捨", "給予", "種"].some(w => k.includes(w))),
+            "沒紅包": (item) => item.category === "經濟供應" || item.keywords.some(k => ["賞賜", "禮物", "產業"].some(w => k.includes(w))),
+            "大掃除": (item) => item.keywords.some(k => ["懶惰", "力量", "做工", "疲乏"].some(w => k.includes(w))),
+            "爛在沙發": (item) => item.category === "節制自律" || item.keywords.some(k => ["休息", "光陰"].some(w => k.includes(w))),
+            "親戚吵": (item) => item.category === "人際界線" || item.keywords.some(k => ["閉嘴", "安靜", "言語", "口舌"].some(w => k.includes(w))),
+            "問成績": (item) => item.category === "拒絕比較" || item.keywords.some(k => ["價值", "比較", "為首"].some(w => k.includes(w))),
+            "小孩尖叫": (item) => item.category === "家庭教養" || item.keywords.some(k => ["忍耐", "教養", "兒女"].some(w => k.includes(w))),
+            "吃太撐": (item) => item.category === "飲食健康" || item.keywords.some(k => ["肚腹", "節制"].some(w => k.includes(w))),
+            "喝掛": (item) => item.keywords.some(k => ["酒", "清醒", "醉"].some(w => k.includes(w)))
+        };
+
+        const hotTags = [
+            { label: "💸 缺錢", query: "沒錢", class: "tag-money" },
+            { label: "😰 水逆", query: "水逆", class: "tag-money" },
+            { label: "🐼 睡不著", query: "睡不著", class: "tag-tired" },
+            { label: "💍 被催婚", query: "被催婚", class: "tag-lonely" },
+            { label: "🍂 覺得孤單", query: "孤單", class: "tag-lonely" },
+            { label: "👋 想離職", query: "不想上班", class: "tag-lost" },
+            { label: "🐷 減肥失敗", query: "胖", class: "tag-full" },
+            { label: "😤 遇到小人", query: "小人", class: "tag-gray" },
+            { label: "🀄️ 麻將一直輸", query: "麻將輸", class: "tag-money" },
+            { label: "🃏 手氣背到爆", query: "手氣背", class: "tag-money" },
+            { label: "🚗 塞車好痛苦", query: "塞車", class: "tag-tired" },
+            { label: "🤢 暈車想吐", query: "暈車", class: "tag-tired" },
+            { label: "💸 紅包包太多", query: "紅包太多", class: "tag-money" },
+            { label: "🧧 沒領到紅包", query: "沒紅包", class: "tag-money" },
+            { label: "🧹 大掃除好累", query: "大掃除", class: "tag-tired" },
+            { label: "🛌 只想爛在沙發", query: "爛在沙發", class: "tag-tired" },
+            { label: "🙉 親戚太吵", query: "親戚吵", class: "tag-gray" },
+            { label: "🎓 被問成績/薪水", query: "問成績", class: "tag-lonely" },
+            { label: "👶 小孩失控尖叫", query: "小孩尖叫", class: "tag-gray" },
+            { label: "🍖 吃太撐", query: "吃太撐", class: "tag-full" },
+            { label: "🍺 喝掛了", query: "喝掛", class: "tag-full" }
+        ];
+
+        const categoryVisuals = {
+            "職場財富": { icon: "fa-coins", bg: "bg-yellow-100", text: "text-yellow-700", border: "border-yellow-200" },
+            "人際家庭": { icon: "fa-users", bg: "bg-pink-100", text: "text-pink-700", border: "border-pink-200" },
+            "情緒急救": { icon: "fa-heart-pulse", bg: "bg-red-100", text: "text-red-700", border: "border-red-200" },
+            "未來方向": { icon: "fa-compass", bg: "bg-blue-100", text: "text-blue-700", border: "border-blue-200" },
+            "平安健康": { icon: "fa-shield-heart", bg: "bg-green-100", text: "text-green-700", border: "border-green-200" },
+            "信心勇氣": { icon: "fa-crown", bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200" }
+        };
+
+        function initFirstAidUI() {
+            const list = document.getElementById('hotTagsList');
+            if(list && list.children.length === 0) {
+                list.innerHTML = hotTags.map(tag => `<div class="hot-tag-btn ${tag.class}" onclick="renderSearchResults('${tag.query}', false, true)">${tag.label}</div>`).join('');
+            }
+        }
+
+        async function fetchFirstAidData(url) {
+            try {
+                if(!url) { updateStatus('first-aid', false); return; }
+                const response = await fetch(url + `&t=${new Date().getTime()}`, { redirect: 'follow', cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const text = await response.text();
+                if (text.trim().startsWith('<!DOCTYPE html>')) { updateStatus('first-aid', false); return; }
+                Papa.parse(text, {
+                    header: true, skipEmptyLines: true, transformHeader: h => h.trim(),
+                    complete: function(results) { processFirstAidData(results.data); updateStatus('first-aid', true); },
+                    error: function(err) { updateStatus('first-aid', false); }
+                });
+            } catch (e) { updateStatus('first-aid', false); }
+        }
+
+        function processFirstAidData(data) {
+            firstAidDatabase = data.map(r => {
+                let cat = (getValue(r, ['歸屬六大類', 'category', 'Main Category'])).trim();
+                let txt = (getValue(r, ['經文內容 (Content)', '經文內容', 'content', 'text'])).trim();
+                let rawCat = (getValue(r, ['分類 (Category)', '分類', 'category', 'title'])).trim(); 
+                let ref = (getValue(r, ['出處 (Reference)', '出處', 'reference', 'ref'])).trim();
+                let kw = (getValue(r, ['關鍵字 (Keywords)', '關鍵字', 'keywords'])).trim();
+                if (!txt) return null;
+                if (!ref) {
+                     const match = txt.match(/[\(\（](.*?)[\)\）]$/);
+                     if (match) { ref = match[1]; txt = txt.substring(0, match.index).trim(); } 
+                     else { ref = "聖經"; }
+                }
+                return { category: cat, originalCategory: rawCat || cat, keywords: kw ? kw.split(/[,，\s]+/) : [], text: txt, ref: ref };
+            }).filter(item => item !== null);
+            const count = firstAidDatabase.length;
+            document.getElementById('hub-firstaid-status').innerText = `已載入 ${count} 帖`;
+            document.getElementById('first-aid-count-display').innerText = `藥局庫存：${count} 帖`;
+        }
+
+        window.openFirstAidKit = function() {
+            document.getElementById('firstAidKitClosed').classList.add('hidden');
+            document.getElementById('firstAidKitOpened').classList.remove('hidden');
+            renderFirstAidCategories();
+        }
+
+        function renderFirstAidCategories() {
+            const listContainer = document.getElementById('categoryList');
+            if (!firstAidDatabase.length) { listContainer.innerHTML = '<div class="col-span-2 text-center text-red-400">藥局補貨中...</div>'; return; }
+            const categories = [...new Set(firstAidDatabase.map(item => item.category))];
+            listContainer.innerHTML = categories.map(cat => {
+                const visual = categoryVisuals[cat] || { icon: 'fa-pills', bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' };
+                return `<div class="medicine-item ${visual.bg} ${visual.border} group" onclick="renderSearchResults('${cat}', true)">
+                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center ${visual.text} text-xl mb-2 shadow-sm group-hover:scale-110 transition-transform"><i class="fas ${visual.icon}"></i></div>
+                        <span class="text-xs font-bold ${visual.text} tracking-wide">${cat}</span></div>`;
+            }).join('');
+        }
+
+        window.renderSearchResults = function(query, isCategoryFilter = false, isTagFilter = false) {
+            const resultsList = document.getElementById('searchResultsList');
+            resultsList.innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin"></i> 搜尋中...</div>';
+            setTimeout(() => {
+                let matches = [];
+                if (isTagFilter && customSearchLogic[query]) { matches = firstAidDatabase.filter(customSearchLogic[query]); } 
+                else if (isCategoryFilter) { matches = firstAidDatabase.filter(item => item.category === query); } 
+                else if (isTagFilter) { matches = firstAidDatabase.filter(item => item.keywords.some(k => k.includes(query)) || item.category.includes(query)); }
+                if (matches.length === 0) { resultsList.innerHTML = '<div class="text-center py-10 text-gray-400">找不到相關處方，請試試其他分類。</div>'; return; }
+                resultsList.innerHTML = matches.map(item => `
+                    <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm mb-3">
+                        <p class="text-gray-700 text-base leading-relaxed mb-3 font-medium text-justify">${item.text}</p>
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-3">
+                            <div class="flex items-center flex-wrap gap-2">
+                                <span class="text-xs text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded">${item.ref}</span>
+                                ${item.originalCategory ? `<span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-1 rounded-full border border-gray-200">💊 ${item.originalCategory}</span>` : ''}
+                            </div>
+                            <button class="text-gray-400 hover:text-red-800 transition-colors" onclick="copyText('${item.text} - ${item.ref}')"><i class="far fa-copy"></i></button>
+                        </div>
+                    </div>`).join('');
+                resultsList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+        
+        window.copyText = function(text) { copyTextToClipboard(text).then(() => showToast("已複製經文！")); }
+        function showToast(message) { const toast = document.getElementById("toast"); toast.innerText = message; toast.className = "toast show"; setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3500); }
+        function copyTextToClipboard(text) { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text); return new Promise((resolve, reject) => { const textArea = document.createElement("textarea"); textArea.value = text; textArea.style.position = "fixed"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { const successful = document.execCommand('copy'); if (successful) resolve(); else reject(); } catch (err) { reject(err); } document.body.removeChild(textArea); }); }
+        
+        async function captureAndShare(elementId, title, textFallback) {
+            const element = document.getElementById(elementId); if (!element) { showToast("發生錯誤"); return; }
+            showToast("📷 正在製作祝福卡片...");
+            try {
+                const wasHidden = element.classList.contains('hidden');
+                if(wasHidden && elementId !== 'prayerShareHidden') element.classList.remove('hidden');
+                const canvas = await html2canvas(element, { scale: 3, backgroundColor: '#ffffff', useCORS: true, logging: false, ignoreElements: (node) => node.classList && (node.classList.contains('action-group') || node.classList.contains('back-btn') || node.classList.contains('share-btn-hide')) });
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], "blessing_2026.png", { type: "image/png" });
+                    if (navigator.share && navigator.canShare({ files: [file] })) { await navigator.share({ title: title, text: textFallback, files: [file] }); }
+                    else { const link = document.createElement('a'); link.download = 'blessing_2026.png'; link.href = canvas.toDataURL(); link.click(); }
+                }, 'image/png');
+            } catch (err) { copyTextToClipboard(textFallback + "\n\n👉 " + window.location.href).then(() => showToast("已複製文字！")); }
+        }
+        
+        function shareVerse() { const verse = document.getElementById('verseText').innerText; if (verse === 'Loading...') return; captureAndShare('card-scratch', 'Jesus Vibes 2026', `✨ 我的 2026 新春祝福 ✨\n\n「${verse}」`); }
+        function shareResponse() { const text = document.getElementById('responseText').innerText; const ref = document.getElementById('responseRef').innerText; const title = document.getElementById('responseTitle').innerText; const song = document.getElementById('responseSong').innerText; document.getElementById('sharePokeTitle').innerText = title; document.getElementById('sharePokeRef').innerText = ref; document.getElementById('sharePokeText').innerText = text; document.getElementById('sharePokeSong').innerText = song; captureAndShare('pokeShareHidden', 'Jesus Vibes 2026', `🌲 給你的恩典回應 🌲\n\n【${title}】\n${text}\n\n📖 ${ref}\n🎵 ${song}`); }
+        function sharePrayerBook() { const title = document.getElementById('prayerBookTitle').innerText; const ref = document.getElementById('prayerBookRef').innerText; const text = document.getElementById('prayerBookFullContent').classList.contains('hidden') ? document.getElementById('prayerBookText').innerText : document.getElementById('prayerBookFullText').innerText; document.getElementById('sharePrayerTitle').innerText = title; document.getElementById('sharePrayerRef').innerText = ref; document.getElementById('sharePrayerText').innerText = text; const shareCard = document.getElementById('prayerShareHidden'); shareCard.style.opacity = '1'; captureAndShare('prayerShareHidden', 'Jesus Vibes 2026', `🕊️ 我的禱告小時光 🕊️\n\n【${title}】\n${ref}\n\n${text}\n\n- Amen -`).then(() => shareCard.style.opacity = '0'); }
+        function shareSurvival() { const text = document.getElementById('survivalText').innerText; copyTextToClipboard(`🧨 機智的過年生活\n\nA: 「${text}」`).then(() => showToast("已複製！")); }
+
+        function initStars() { const container = document.getElementById('stars-container'); if(!container) return; for (let i = 0; i < 20; i++) { const star = document.createElement('div'); star.classList.add('star'); star.style.left = `${Math.random() * 100}%`; star.style.top = `${Math.random() * 60}%`; const size = Math.random() * 8 + 4; star.style.width = `${size}px`; star.style.height = `${size}px`; star.style.animationDuration = `${Math.random() * 2 + 1}s`; star.style.animationDelay = `${Math.random() * 2}s`; container.appendChild(star); } }
+        window.showFullVerse = function() {
+            if(!currentVerseData) return;
+            const verseTextDiv = document.getElementById('verseText'); const btn = document.getElementById('fullVerseBtn');
+            if(btn.innerText.includes('完整')) { verseTextDiv.innerText = currentVerseData.full; btn.innerHTML = '<i class="fas fa-compress-arrows-alt mr-1"></i> 顯示精簡經文'; } 
+            else { verseTextDiv.innerText = currentVerseData.short; btn.innerHTML = '<i class="fas fa-book-open mr-1"></i> 顯示完整經文'; }
+        }
+
+        /* --------------------------
+            QUIZ LOGIC
+            -------------------------- */
+        let currentQuizData = [];
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let activeQuizType = '';
+        let quizTimerInterval = null;
+        let quizTimeLeft = 60;
+        let quizHistory = [];
+
+        window.startQuiz = function(quizKey, quizName) {
+            activeQuizType = quizKey;
+            currentQuizData = scholarDatabase[quizKey];
+            
+            if (!currentQuizData || currentQuizData.length === 0) {
+                showToast("考卷運送中，請稍後再試！");
+                return;
+            }
+            
+            // Randomize Question Pool
+            currentQuizData = currentQuizData.sort(() => 0.5 - Math.random());
+            currentQuizIndex = 0;
+            quizScore = 0;
+            quizHistory = []; // Reset history
+
+            hideAllViews();
+            views.quizView.classList.remove('hidden');
+            views.quizView.classList.add('fade-in');
+            
+            // Reset UI
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
+            document.querySelector('.nav-title').innerText = quizName || "測驗進行中";
+            document.getElementById('quiz-review-list').classList.add('hidden'); // Hide review initially
+            
+            // Mode Specific Setup
+            if (activeQuizType === 'quiz1') {
+                // Time Attack Mode
+                document.getElementById('quiz-progress').classList.add('hidden');
+                document.getElementById('quiz-timer').classList.remove('hidden');
+                document.getElementById('quiz-timer').innerText = "60";
+                
+                quizTimeLeft = 60;
+                clearInterval(quizTimerInterval);
+                quizTimerInterval = setInterval(() => {
+                    quizTimeLeft--;
+                    document.getElementById('quiz-timer').innerText = quizTimeLeft;
+                    if(quizTimeLeft <= 10) document.getElementById('quiz-timer').classList.add('animate-pulse');
+                    else document.getElementById('quiz-timer').classList.remove('animate-pulse');
+
+                    if (quizTimeLeft <= 0) {
+                        clearInterval(quizTimerInterval);
+                        showQuizResult();
+                    }
+                }, 1000);
+            } else {
+                // Standard Mode
+                document.getElementById('quiz-progress').classList.remove('hidden');
+                document.getElementById('quiz-timer').classList.add('hidden');
+                currentQuizData = currentQuizData.slice(0, 10); // Limit to 10 questions for non-exam mode
+            }
+            
+            renderQuestion();
+        };
+
+        function renderQuestion() {
+            // Check index for Standard Mode
+            if (activeQuizType !== 'quiz1' && currentQuizIndex >= currentQuizData.length) {
+                showQuizResult();
+                return;
+            }
+            
+            // For Time Attack, if we run out of unique questions, reshuffle? 
+            // Or just check bounds. The pool is usually large enough. 
+            // If index overflows in exam mode, wrap around.
+            let qIndex = currentQuizIndex;
+            if (activeQuizType === 'quiz1') {
+                 qIndex = currentQuizIndex % currentQuizData.length;
+            }
+
+            const q = currentQuizData[qIndex];
+            
+            if (activeQuizType !== 'quiz1') {
+                document.getElementById('quiz-progress').innerText = `${currentQuizIndex + 1} / 10`;
+            }
+            
+            document.getElementById('quiz-category-tag').innerText = q.category || '綜合';
+            document.getElementById('quiz-question').innerText = q.question;
+            
+            // Render Options
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            const labels = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                if(!opt) return;
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.onclick = () => checkAnswer(idx, btn);
+                btn.innerHTML = `
+                    <div class="quiz-circle">${labels[idx]}</div>
+                    <span class="font-bold text-gray-700 text-sm flex-1">${opt}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Hide Feedback
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            if (activeQuizType !== 'quiz1') {
+                document.getElementById('next-q-btn').innerText = (currentQuizIndex === 9) ? '查看成績' : '下一題';
+            }
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if (document.querySelector('.quiz-option.selected-correct') || document.querySelector('.quiz-option.selected-wrong')) return;
+
+            let qIndex = currentQuizIndex;
+            if (activeQuizType === 'quiz1') qIndex = currentQuizIndex % currentQuizData.length;
+            
+            const q = currentQuizData[qIndex];
+            const labels = ['A', 'B', 'C', 'D'];
+            const selectedLabel = labels[selectedIndex];
+            const selectedText = (q.options[selectedIndex] || '').trim();
+            
+            let correctLabel = (q.answer || '').trim(); 
+
+            let isCorrect = (selectedLabel === correctLabel);
+
+            if (!isCorrect) {
+                 const normSelectedText = normalizeTextForComparison(selectedText);
+                 const normCorrectLabel = normalizeTextForComparison(correctLabel);
+                 if (normSelectedText && normCorrectLabel && normSelectedText === normCorrectLabel) {
+                     isCorrect = true;
+                     correctLabel = selectedLabel; 
+                 }
+            }
+
+            // Record History
+            quizHistory.push({
+                q: q.question,
+                userAns: selectedText,
+                correctAns: isCorrect ? selectedText : q.options[labels.indexOf(correctLabel)] || correctLabel, // Try to find text of correct label
+                isCorrect: isCorrect
+            });
+
+            if (isCorrect) {
+                btnElement.classList.add('selected-correct');
+                quizScore += (activeQuizType === 'quiz1' ? 1 : 10); // 1 point per Q in exam, 10 pts in standard
+            } else {
+                btnElement.classList.add('selected-wrong');
+                const options = document.querySelectorAll('.quiz-option');
+                options.forEach((opt, idx) => {
+                    if (labels[idx] === correctLabel) opt.classList.add('selected-correct');
+                });
+            }
+
+            // Mode Specific Post-Answer Logic
+            if (activeQuizType === 'quiz1') {
+                // Time Attack: Auto Advance after short delay
+                setTimeout(() => {
+                    currentQuizIndex++;
+                    renderQuestion();
+                }, 500); // 0.5s delay
+            } else {
+                // Standard Mode: Show Feedback Button
+                // Get Full Correct Answer Text
+                const correctIndex = labels.indexOf(correctLabel);
+                const correctOptionText = q.options[correctIndex] || '';
+                const fullAnswerString = `${correctLabel}. ${correctOptionText}`;
+                
+                showFeedback(isCorrect, q.note, fullAnswerString);
+            }
+        }
+
+        function showFeedback(isCorrect, note, fullCorrectAnswer) {
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const iconEl = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            const contentEl = document.getElementById('feedback-content');
+
+            feedbackEl.classList.remove('hidden');
+            feedbackEl.className = `mt-4 p-4 rounded-xl text-left border-2 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`;
+            
+            iconEl.className = `w-6 h-6 rounded-full flex items-center justify-center text-white text-xs ${isCorrect ? 'bg-green-500' : 'bg-red-500'}`;
+            iconEl.innerHTML = isCorrect ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
+            
+            titleEl.innerHTML = isCorrect ? '答對了！' : '答錯了！';
+            titleEl.className = `font-bold text-sm ${isCorrect ? 'text-green-700' : 'text-red-700'}`;
+            
+            // 構建顯示內容：正確答案 + 解析
+            let htmlContent = `<div class="mt-2 font-bold text-base text-gray-800">正確答案：<span class="text-[#006064]">${fullCorrectAnswer}</span></div>`;
+            
+            if (note) {
+                htmlContent += `<div class="mt-2 text-xs text-gray-500 border-t border-gray-200 pt-2 leading-relaxed">💡 ${note}</div>`;
+            }
+            
+            contentEl.innerHTML = htmlContent;
+            
+            setTimeout(() => {
+                feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        window.nextQuestion = function() {
+            currentQuizIndex++;
+            renderQuestion();
+        }
+
+        function showQuizResult() {
+            clearInterval(quizTimerInterval);
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            const scoreEl = document.getElementById('final-score');
+            if (activeQuizType === 'quiz1') {
+                scoreEl.innerText = `${quizScore} 題`; // Show count
+                renderReviewList();
+            } else {
+                scoreEl.innerText = quizScore; // Show points
+                document.getElementById('quiz-review-list').classList.add('hidden'); // Hide review for standard mode (optional)
+            }
+        }
+
+        function renderReviewList() {
+            const list = document.getElementById('quiz-review-list');
+            list.classList.remove('hidden');
+            list.innerHTML = `<h4 class="text-sm font-bold text-gray-500 mb-3 border-b pb-2">📜 考卷檢討</h4>`;
+            
+            quizHistory.forEach((item, i) => {
+                list.innerHTML += `
+                    <div class="quiz-review-item">
+                        <div class="quiz-review-q">${i+1}. ${item.q}</div>
+                        <div class="quiz-review-ans">
+                            <div><span class="ans-label">你的答案:</span> <span class="ans-text ${item.isCorrect ? 'correct' : 'wrong'}">${item.userAns}</span></div>
+                        </div>
+                        ${!item.isCorrect ? `<div class="quiz-review-ans mt-1"><div><span class="ans-label">正確答案:</span> <span class="ans-text correct">${item.correctAns}</span></div></div>` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        window.restartQuiz = function() {
+            startQuiz(activeQuizType, document.querySelector('.nav-title').innerText);
+        }
+
+        /* --------------------------
+            FRUIT GAME LOGIC
+            -------------------------- */
+        let fruitGameScore = 0;
+        let fruitGameTime = 60;
+        let fruitGameActive = false;
+        let fruitInterval = null;
+        let timerInterval = null;
+        
+        // Definition of fruits (Good vs Bad pairs)
+        const fruitsData = [
+            { id: 1, type: 'good', icon: 'fa-heart', color: 'text-red-500', name: '仁愛' },
+            { id: 1, type: 'bad', icon: 'fa-heart-crack', color: 'text-red-600', name: '破碎' },
+            
+            { id: 2, type: 'good', icon: 'fa-face-laugh-beam', color: 'text-yellow-400', name: '喜樂' },
+            { id: 2, type: 'bad', icon: 'fa-face-angry', color: 'text-yellow-500', name: '生氣' },
+            
+            { id: 3, type: 'good', icon: 'fa-dove', color: 'text-blue-400', name: '和平' },
+            { id: 3, type: 'bad', icon: 'fa-crow', color: 'text-blue-500', name: '紛爭' }, // using crow as dark bird
+            
+            { id: 4, type: 'good', icon: 'fa-hourglass-half', color: 'text-purple-400', name: '忍耐' },
+            { id: 4, type: 'bad', icon: 'fa-bomb', color: 'text-purple-600', name: '暴躁' },
+            
+            { id: 5, type: 'good', icon: 'fa-hand-holding-heart', color: 'text-pink-400', name: '恩慈' },
+            { id: 5, type: 'bad', icon: 'fa-hand-middle-finger', color: 'text-pink-600', name: '刻薄' }, // Not in FA free, use fist
+            { id: 5, type: 'bad', icon: 'fa-hand-fist', color: 'text-pink-600', name: '暴力' },
+
+            { id: 6, type: 'good', icon: 'fa-star', color: 'text-orange-400', name: '良善' },
+            { id: 6, type: 'bad', icon: 'fa-virus', color: 'text-orange-500', name: '邪惡' },
+            
+            { id: 7, type: 'good', icon: 'fa-handshake', color: 'text-teal-400', name: '信實' },
+            { id: 7, type: 'bad', icon: 'fa-mask', color: 'text-teal-600', name: '虛假' },
+            
+            { id: 8, type: 'good', icon: 'fa-feather', color: 'text-gray-400', name: '溫柔' },
+            { id: 8, type: 'bad', icon: 'fa-gavel', color: 'text-gray-600', name: '定罪' },
+            
+            { id: 9, type: 'good', icon: 'fa-user-shield', color: 'text-green-500', name: '節制' },
+            { id: 9, type: 'bad', icon: 'fa-pizza-slice', color: 'text-green-600', name: '放縱' }
+        ];
+
+        window.startFruitGame = function() {
+            hideAllViews();
+            views.fruitGame.classList.remove('hidden');
+            views.fruitGame.classList.add('fade-in');
+            homeHeader.style.display = 'none'; 
+            innerNavBar.style.display = 'flex'; 
+            document.querySelector('.nav-title').innerText = "聖靈果子大作戰";
+            
+            // Reset UI
+            document.getElementById('fruit-start-overlay').classList.remove('hidden');
+            document.getElementById('fruit-gameover-overlay').classList.add('hidden');
+            document.getElementById('fruit-score').innerText = '0';
+            document.getElementById('fruit-timer').innerText = '60';
+            document.getElementById('fruit-game-area').innerHTML = `
+                <div id="fruit-start-overlay" class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center text-white p-6 text-center">
+                    <div class="w-20 h-20 bg-[#FFCCBC] rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce text-[#D84315] border-4 border-white">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2 title-font text-[#FFAB91]">聖靈果子大作戰</h2>
+                    <p class="text-sm opacity-90 mb-6 leading-relaxed">
+                        在 60 秒內收集 20 顆聖靈果子！<br>
+                        <span class="text-yellow-300 font-bold">小心！</span> 點到壞果子會扣 5 秒喔！
+                    </p>
+                    <button onclick="startGameLoop()" class="bg-[#D84315] text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform">
+                        <i class="fas fa-play mr-2"></i> 開始挑戰
+                    </button>
+                </div>
+            `; // Re-inject start overlay to be sure
+        }
+
+        window.startGameLoop = function() {
+            document.getElementById('fruit-start-overlay').classList.add('hidden');
+            fruitGameScore = 0;
+            fruitGameTime = 60;
+            fruitGameActive = true;
+            document.getElementById('fruit-score').innerText = '0';
+            document.getElementById('fruit-timer').innerText = '60';
+            
+            // Timer Loop
+            timerInterval = setInterval(() => {
+                if(!fruitGameActive) return;
+                fruitGameTime--;
+                document.getElementById('fruit-timer').innerText = fruitGameTime;
+                if(fruitGameTime <= 10) document.getElementById('fruit-timer').classList.add('text-red-600', 'animate-pulse');
+                else document.getElementById('fruit-timer').classList.remove('text-red-600', 'animate-pulse');
+                
+                if(fruitGameTime <= 0) {
+                    endFruitGame();
+                }
+            }, 1000);
+
+            // Spawner Loop
+            fruitInterval = setInterval(spawnFruit, 700); // Spawn every 0.7s
+        }
+
+        function spawnFruit() {
+            if(!fruitGameActive) return;
+            const gameArea = document.getElementById('fruit-game-area');
+            const fruitData = fruitsData[Math.floor(Math.random() * fruitsData.length)];
+            
+            const fruit = document.createElement('div');
+            fruit.className = `fruit-item bg-white ${fruitData.color}`;
+            
+            // Updated innerHTML to include text
+            fruit.innerHTML = `
+                <div class="flex flex-col items-center justify-center pointer-events-none w-full h-full">
+                    <i class="fas ${fruitData.icon} text-2xl mb-0.5"></i>
+                    <span class="text-[10px] font-bold leading-none">${fruitData.name}</span>
+                </div>
+            `;
+            
+            // Random Position
+            const startX = Math.random() * (gameArea.offsetWidth - 72); // Adjusted for wider fruit
+            fruit.style.left = `${startX}px`;
+            
+            // Random Fall Speed (3.5s to 6.5s) - Slower speed
+            const duration = 3.5 + Math.random() * 3;
+            fruit.style.animationDuration = `${duration}s`;
+            
+            // Click Handler
+            fruit.onmousedown = (e) => handleFruitClick(e, fruit, fruitData);
+            fruit.ontouchstart = (e) => handleFruitClick(e, fruit, fruitData);
+            
+            // Cleanup after animation
+            fruit.addEventListener('animationend', () => {
+                if(fruit.parentNode) fruit.remove();
+            });
+
+            gameArea.appendChild(fruit);
+        }
+
+        function handleFruitClick(e, el, data) {
+            if(!fruitGameActive) return;
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if(el.classList.contains('clicked')) return;
+            el.classList.add('clicked');
+            
+            // Visual Feedback
+            el.style.animation = 'none'; // Stop falling
+            el.classList.add('fruit-pop'); // Pop animation
+            
+            if(data.type === 'good') {
+                fruitGameScore++;
+                document.getElementById('fruit-score').innerText = fruitGameScore;
+                el.style.backgroundColor = '#E8F5E9'; // Light Green bg
+                // Removed immediate win condition
+            } else {
+                // Bad Fruit
+                fruitGameTime -= 5;
+                showToast("⚠️ 踩到地雷！時間 -5秒");
+                document.getElementById('fruit-timer').innerText = fruitGameTime;
+                document.getElementById('fruit-timer').classList.add('text-red-600');
+                if(navigator.vibrate) navigator.vibrate(200);
+                el.style.backgroundColor = '#FFEBEE'; // Light Red bg
+            }
+            
+            setTimeout(() => { if(el.parentNode) el.remove(); }, 300);
+        }
+
+        function endFruitGame() {
+            fruitGameActive = false;
+            clearInterval(fruitInterval);
+            clearInterval(timerInterval);
+            
+            const area = document.getElementById('fruit-game-area');
+            const overlay = document.createElement('div');
+            overlay.id = "fruit-gameover-overlay";
+            overlay.className = "absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center text-white p-6 text-center fade-in";
+            
+            if(fruitGameScore >= 20) {
+                // Win
+                overlay.innerHTML = `
+                    <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce border-4 border-white text-red-600 shadow-xl">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2 text-yellow-300">恭喜過關！</h2>
+                    <p class="text-sm opacity-90 mb-6 font-bold">你收集了 ${fruitGameScore} 顆聖靈果子！<br>太棒了！</p>
+                    <button onclick="showHeavenlyEnvelope()" class="bg-red-600 text-yellow-100 px-8 py-3 rounded-full font-bold text-lg shadow-lg animate-pulse mb-3 border-2 border-yellow-400">
+                        <i class="fas fa-gift mr-2"></i> 領取天國大紅包
+                    </button>
+                    <button onclick="exitFruitGame()" class="text-sm text-gray-400 underline mt-2">回遊戲大廳</button>
+                `;
+            } else {
+                // Fail
+                overlay.innerHTML = `
+                    <i class="fas fa-hourglass-end text-5xl text-gray-400 mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">時間到！</h2>
+                    <p class="text-sm opacity-80 mb-6">目前得分：${fruitGameScore}/20<br>差一點點就成功了，再試一次吧！</p>
+                    <button onclick="resetFruitGame()" class="bg-white text-[#D84315] px-6 py-2 rounded-full font-bold shadow-lg mb-3">
+                        <i class="fas fa-redo mr-2"></i> 再接再厲
+                    </button>
+                    <button onclick="exitFruitGame()" class="text-sm text-gray-400 underline">放棄離開</button>
+                `;
+            }
+            area.appendChild(overlay);
+        }
+
+        window.resetFruitGame = function() {
+            // Clear existing fruits
+            const fruits = document.querySelectorAll('.fruit-item');
+            fruits.forEach(f => f.remove());
+            // Remove overlays
+            const overlays = document.querySelectorAll('#fruit-gameover-overlay');
+            overlays.forEach(o => o.remove());
+            
+            startGameLoop();
+        }
+
+        window.exitFruitGame = function() {
+            fruitGameActive = false;
+            clearInterval(fruitInterval);
+            clearInterval(timerInterval);
+            showGameHub();
+        }
+
+        /* --------------------------
+            MEMORY GAME LOGIC (3 Levels)
+            -------------------------- */
+        let memoryLevel = 1;
+        let memoryTime = 30;
+        let memoryTimer = null;
+        let memoryFlipped = [];
+        let memoryMatched = 0;
+        let memoryTotalPairs = 0;
+        let memoryActive = false;
+
+        window.initMemoryGame = function() {
+            hideAllViews();
+            views.memoryGame.classList.remove('hidden');
+            views.memoryGame.classList.add('fade-in');
+            homeHeader.style.display = 'none';
+            innerNavBar.style.display = 'flex';
+            document.querySelector('.nav-title').innerText = "腦力全開翻翻樂";
+            
+            memoryLevel = 1;
+            startMemoryLevel(1);
+        }
+
+        function startMemoryLevel(level) {
+            memoryLevel = level;
+            memoryFlipped = [];
+            memoryMatched = 0;
+            memoryActive = false; // Wait for user to start or simple delay? Let's auto start with overlay
+            
+            let cardCount, timeLimit;
+            if(level === 1) { cardCount = 8; timeLimit = 30; }
+            else if(level === 2) { cardCount = 16; timeLimit = 60; }
+            else { cardCount = 32; timeLimit = 120; }
+            
+            memoryTotalPairs = cardCount / 2;
+            memoryTime = timeLimit;
+            
+            // Show Overlay
+            const overlay = document.getElementById('memory-overlay');
+            const content = document.getElementById('memory-overlay-content');
+            overlay.classList.remove('hidden');
+            content.innerHTML = `
+                <div class="text-4xl mb-4">🧠</div>
+                <h2 class="text-3xl font-bold mb-2 text-[#FFAB91]">第 ${level} 關</h2>
+                <p class="text-sm opacity-90 mb-6">
+                    ${cardCount} 張牌 ( ${memoryTotalPairs} 對 )<br>
+                    限時 ${timeLimit} 秒
+                </p>
+                <button onclick="runMemoryLevel()" class="bg-[#D84315] text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform">
+                    <i class="fas fa-play mr-2"></i> 開始記憶
+                </button>
+            `;
+            
+            // Prepare Grid
+            const grid = document.getElementById('memory-game-grid');
+            grid.innerHTML = '';
+            
+            // Select random books
+            const shuffledBooks = BIBLE_BOOKS.sort(() => 0.5 - Math.random()).slice(0, memoryTotalPairs);
+            const gameCards = [...shuffledBooks, ...shuffledBooks].sort(() => 0.5 - Math.random());
+            
+            // Set grid cols based on level
+            if(level === 1) grid.className = "grid grid-cols-4 gap-2 w-full max-w-sm mx-auto";
+            else if(level === 2) grid.className = "grid grid-cols-4 gap-2 w-full max-w-sm mx-auto";
+            else grid.className = "grid grid-cols-4 gap-2 w-full max-w-md mx-auto mb-20"; // Add margin for scroll
+            
+            // Render Cards
+            gameCards.forEach((book, index) => {
+                const card = document.createElement('div');
+                card.className = 'flip-card aspect-[3/4]'; // Aspect ratio for card shape
+                card.innerHTML = `
+                    <div class="flip-card-inner" id="card-${index}" onclick="flipCard(${index}, '${book}')">
+                        <div class="flip-card-front"><i class="fas fa-book-bible"></i></div>
+                        <div class="flip-card-back">${book}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            document.getElementById('memory-level-display').innerText = `${level}/3`;
+            document.getElementById('memory-timer').innerText = timeLimit;
+        }
+
+        window.runMemoryLevel = function() {
+            document.getElementById('memory-overlay').classList.add('hidden');
+            memoryActive = true;
+            
+            clearInterval(memoryTimer);
+            memoryTimer = setInterval(() => {
+                if(!memoryActive) return;
+                memoryTime--;
+                document.getElementById('memory-timer').innerText = memoryTime;
+                
+                if(memoryTime <= 10) document.getElementById('memory-timer').classList.add('text-red-600', 'animate-pulse');
+                else document.getElementById('memory-timer').classList.remove('text-red-600', 'animate-pulse');
+                
+                if(memoryTime <= 0) {
+                    endMemoryGame(false);
+                }
+            }, 1000);
+        }
+
+        window.flipCard = function(index, book) {
+            if(!memoryActive) return;
+            const cardInner = document.getElementById(`card-${index}`);
+            
+            // Prevent flipping matched or currently flipped cards, or if 2 cards already flipped
+            if(cardInner.parentElement.classList.contains('flipped') || 
+               cardInner.querySelector('.flip-card-back').classList.contains('matched') ||
+               memoryFlipped.length >= 2) return;
+               
+            // Flip it
+            cardInner.parentElement.classList.add('flipped');
+            memoryFlipped.push({ index, book });
+            
+            if(memoryFlipped.length === 2) {
+                checkMemoryMatch();
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [card1, card2] = memoryFlipped;
+            
+            if(card1.book === card2.book) {
+                // Match
+                memoryMatched++;
+                document.getElementById(`card-${card1.index}`).querySelector('.flip-card-back').classList.add('matched');
+                document.getElementById(`card-${card2.index}`).querySelector('.flip-card-back').classList.add('matched');
+                memoryFlipped = [];
+                
+                if(memoryMatched === memoryTotalPairs) {
+                    endMemoryGame(true);
+                }
+            } else {
+                // No Match
+                setTimeout(() => {
+                    document.getElementById(`card-${card1.index}`).parentElement.classList.remove('flipped');
+                    document.getElementById(`card-${card2.index}`).parentElement.classList.remove('flipped');
+                    memoryFlipped = [];
+                }, 1000);
+            }
+        }
+
+        function endMemoryGame(win) {
+            memoryActive = false;
+            clearInterval(memoryTimer);
+            
+            const overlay = document.getElementById('memory-overlay');
+            const content = document.getElementById('memory-overlay-content');
+            overlay.classList.remove('hidden');
+            
+            if(win) {
+                if(memoryLevel < 3) {
+                    content.innerHTML = `
+                        <div class="text-4xl mb-4">🌟</div>
+                        <h2 class="text-3xl font-bold mb-2 text-green-400">闖關成功！</h2>
+                        <p class="text-sm opacity-90 mb-6">準備進入下一關挑戰！</p>
+                        <button onclick="startMemoryLevel(${memoryLevel + 1})" class="bg-green-600 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg">
+                            <i class="fas fa-arrow-right mr-2"></i> 下一關
+                        </button>
+                    `;
+                } else {
+                    content.innerHTML = `
+                        <div class="text-4xl mb-4">🏆</div>
+                        <h2 class="text-3xl font-bold mb-2 text-yellow-400">完全制霸！</h2>
+                        <p class="text-sm opacity-90 mb-6">太厲害了！快去領取你的獎賞！</p>
+                        <button onclick="showHeavenlyEnvelope()" class="bg-yellow-500 text-red-900 px-8 py-3 rounded-full font-bold text-lg shadow-lg animate-bounce">
+                            <i class="fas fa-gift mr-2"></i> 領取天國大紅包
+                        </button>
+                    `;
+                }
+            } else {
+                content.innerHTML = `
+                    <div class="text-4xl mb-4">⏳</div>
+                    <h2 class="text-3xl font-bold mb-2">時間到！</h2>
+                    <p class="text-sm opacity-90 mb-6">別氣餒，再試一次吧！</p>
+                    <button onclick="startMemoryLevel(${memoryLevel})" class="bg-white text-gray-800 px-6 py-2 rounded-full font-bold shadow-lg mb-3">
+                        <i class="fas fa-redo mr-2"></i> 重玩本關
+                    </button>
+                    <div class="mt-2">
+                        <button onclick="exitMemoryGame()" class="text-sm underline">放棄離開</button>
+                    </div>
+                `;
+            }
+        }
+
+        window.exitMemoryGame = function() {
+            memoryActive = false;
+            clearInterval(memoryTimer);
+            showGameHub();
+        }
+
+        /* --------------------------
+            SOLITAIRE GAME LOGIC
+            -------------------------- */
+        let solDeck = [];
+        let solColumns = [[], [], [], []];
+        let solStock = [];
+        let solHolding = []; // The 3 cards currently visible for play
+        let solActiveCard = null; // Currently selected card from HOLDING
+        let solCompletedCols = 0;
+        let solColumnStates = [false, false, false, false];
+        
+        const SOL_COLORS = ['red', 'blue', 'green', 'gold'];
+
+        window.initMiracleSolitaire = function() {
+            hideAllViews();
+            views.solitaireGame.classList.remove('hidden');
+            views.solitaireGame.classList.add('fade-in');
+            homeHeader.style.display = 'none';
+            innerNavBar.style.display = 'flex';
+            document.querySelector('.nav-title').innerText = "神蹟奇事連連看";
+            
+            document.getElementById('solitaire-start-overlay').classList.remove('hidden');
+        }
+
+        window.startSolitaireGame = function() {
+            document.getElementById('solitaire-start-overlay').classList.add('hidden');
+            solColumns = [[], [], [], []];
+            solColumnStates = [false, false, false, false];
+            solStock = [];
+            solHolding = [];
+            solCompletedCols = 0;
+            createSolitaireDeck();
+            
+            renderSolitaireBoard();
+        }
+
+        function createSolitaireDeck() {
+            solDeck = [];
+            // Create 1-12 for each color
+            SOL_COLORS.forEach(color => {
+                for(let i=1; i<=12; i++) {
+                    solDeck.push({
+                        id: `card-${color}-${i}`,
+                        color: color,
+                        rank: i,
+                        text: MIRACLES_LIST[i-1]
+                    });
+                }
+            });
+            // Add Resurrection Card (Rank 13)
+            solDeck.push({
+                id: 'card-resurrection',
+                color: 'resurrection',
+                rank: 13,
+                text: '復活得勝\n👑'
+            });
+             // Add Ghost Card (Rank 0)
+            solDeck.push({
+                id: 'card-ghost',
+                color: 'joker',
+                rank: 0,
+                text: '撒旦破壞\n👻'
+            });
+            
+            // Shuffle
+            solDeck.sort(() => 0.5 - Math.random());
+            
+            // All goes to stock pile (face down)
+            solStock = [...solDeck];
+        }
+
+        window.dealSolitaireCards = function() {
+            // Check if stock is empty
+            if(solStock.length === 0 && solHolding.length === 0) {
+                 showSolMessage("沒有牌了！");
+                 return;
+            }
+
+            // Recycle current holding cards to bottom of stock
+            if (solHolding.length > 0) {
+                // Put them back at the bottom of the deck (or random insertion?)
+                // Standard practice: recycle to bottom
+                solStock = [...solHolding, ...solStock]; 
+                solHolding = [];
+            }
+            
+            // Draw up to 3 cards
+            let drawCount = Math.min(3, solStock.length);
+            for(let i=0; i<drawCount; i++) {
+                solHolding.push(solStock.pop()); // Take from "top" (end of array)
+            }
+            
+            // Deselect any active card
+            solActiveCard = null;
+            
+            renderSolitaireBoard();
+        }
+
+        function renderSolitaireBoard() {
+            // Update Deck Count
+            document.getElementById('sol-deck-count').innerText = solStock.length;
+            
+            // Render Holding Area
+            const holdingDiv = document.getElementById('sol-holding');
+            holdingDiv.innerHTML = '';
+            solHolding.forEach((card, idx) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = `sol-card sol-card-holding sol-card-${card.color} ${solActiveCard && solActiveCard.id === card.id ? 'selected' : ''}`;
+                cardEl.onclick = () => selectHoldingCard(card);
+                
+                let rankDisplay = card.rank;
+                if(card.rank === 13) rankDisplay = '👑';
+                if(card.rank === 0) rankDisplay = '👻';
+                
+                cardEl.innerHTML = `
+                    <div class="sol-number">${rankDisplay}</div>
+                    <div class="sol-text text-[9px] leading-tight">${card.text}</div>
+                `;
+                holdingDiv.appendChild(cardEl);
+            });
+
+            // Render Board Columns
+            const board = document.getElementById('solitaire-board');
+            board.innerHTML = '';
+            
+            solColumns.forEach((col, colIndex) => {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'sol-col';
+                // Add click listener to column to receive card
+                colDiv.onclick = () => handleColumnClick(colIndex);
+                
+                // If column is completed, add class
+                if (solColumnStates[colIndex]) {
+                    colDiv.classList.add('completed');
+                } else {
+                    // Render placeholder if empty and not completed
+                    if (col.length === 0) {
+                       colDiv.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-bold border-2 border-dashed border-white/20 rounded-lg pointer-events-none">${colIndex + 1}</div>`;
+                    }
+    
+                    col.forEach((card, cardIndex) => {
+                        const cardDiv = document.createElement('div');
+                        let rankDisplay = card.rank;
+                        
+                        cardDiv.className = `sol-card sol-card-${card.color}`;
+                        // Stack spacing
+                        cardDiv.style.top = `${cardIndex * 28}px`; 
+                        cardDiv.style.zIndex = cardIndex;
+                        
+                        cardDiv.innerHTML = `
+                            <div class="sol-number">${rankDisplay}</div>
+                            <div class="sol-text">${card.text}</div>
+                        `;
+                        colDiv.appendChild(cardDiv);
+                    });
+                }
+                
+                board.appendChild(colDiv);
+            });
+            
+            // Check Win
+            if(solCompletedCols >= 4) { // 4 Colors
+                setTimeout(showHeavenlyEnvelope, 1000);
+            }
+        }
+
+        function selectHoldingCard(card) {
+            if (solActiveCard && solActiveCard.id === card.id) {
+                solActiveCard = null; // Deselect
+            } else {
+                solActiveCard = card;
+            }
+            renderSolitaireBoard();
+        }
+
+        function handleColumnClick(colIndex) {
+            // Check if completed
+            if (solColumnStates[colIndex]) return;
+
+            if (!solActiveCard) return; // No card selected to move
+
+            const targetCol = solColumns[colIndex];
+            const topCard = targetCol.length > 0 ? targetCol[targetCol.length - 1] : null;
+            
+            // --- GHOST CARD LOGIC ---
+            if (solActiveCard.rank === 0) {
+                // Ghost Card played on ANY column
+                showSolMessage("👻 哎呀！鬼牌炸掉了這一列！");
+                
+                // Return all cards in this column to stock (bottom)
+                // Note: We need to shuffle them back in? Prompt says "回到牌庫". Usually shuffle is implied or put at bottom.
+                // Let's put at bottom for simplicity.
+                if (targetCol.length > 0) {
+                     solStock = [...targetCol, ...solStock];
+                     solColumns[colIndex] = []; // Clear column
+                }
+                
+                // The Ghost card itself also goes back to stock? Or is consumed?
+                // "若不小心將鬼牌放到任何一列，則該列已排列的牌將全部回到牌庫" -> Implicitly ghost goes away or stays?
+                // Usually bad cards are traps. Let's put Ghost back into stock to haunt again.
+                solStock.unshift(solActiveCard); // Put ghost at 'bottom' (start of array is bottom for pop?) No, pop takes from end. unshift adds to start.
+                // Wait, pop() takes from end. So unshift() puts at "bottom" of deck.
+                
+                // Remove from holding
+                removeActiveCardFromHolding();
+                solActiveCard = null;
+                renderSolitaireBoard();
+                return;
+            }
+
+            // --- RESURRECTION CARD LOGIC ---
+            if (solActiveCard.rank === 13) {
+                 // Must play on a column with at least 1 card to know the color
+                 // Prompt: "復活能將讓該列直接完成"
+                 // If column is empty, we don't know which color to complete.
+                 
+                 if (targetCol.length === 0) {
+                     showSolMessage("❌ 需先放置一張牌確認顏色！");
+                     return;
+                 }
+                 
+                 // Complete this column!
+                 showSolMessage("👑 復活大能！該列完成！");
+                 
+                 // Mark column as completed
+                 solColumnStates[colIndex] = true;
+                 solCompletedCols++;
+                 
+                 // Remove Resurrection card (Consumed)
+                 removeActiveCardFromHolding();
+                 solActiveCard = null;
+                 
+                 // Filter out remaining cards of this color from Deck and Holding?
+                 // To prevent confusion, we should probably just leave them. They become junk.
+                 // Or we can leave a visual marker "DONE".
+                 // For simplicity: just score++.
+                 
+                 renderSolitaireBoard();
+                 return;
+            }
+
+            // --- NORMAL CARD LOGIC ---
+            let isValid = false;
+
+            if (targetCol.length === 0) {
+                // Empty column: Must start with Rank 1
+                if (solActiveCard.rank === 1) {
+                    isValid = true;
+                } else {
+                    showSolMessage("❌ 必須從 1 開始！");
+                }
+            } else {
+                // Non-empty: Must match Color AND be Rank + 1
+                if (solActiveCard.color === topCard.color) {
+                    if (solActiveCard.rank === topCard.rank + 1) {
+                        isValid = true;
+                    } else {
+                         showSolMessage(`❌ 數字需連號 (現在是 ${topCard.rank})`);
+                    }
+                } else {
+                    showSolMessage("❌ 顏色不符！");
+                }
+            }
+
+            if (isValid) {
+                // Move card
+                targetCol.push(solActiveCard);
+                removeActiveCardFromHolding();
+                
+                // Check if column completed (12)
+                if (solActiveCard.rank === 12) {
+                    showSolMessage("🌟 該列完成！");
+                    solColumnStates[colIndex] = true;
+                    solCompletedCols++;
+                    // Optional: Visual cleanup? Or leave 1-12 stack visible?
+                    // Prompt says "直到完成1-12". Keeping them visible is satisfying.
+                    // To prevent overflow, maybe collapse them?
+                    // Let's leave them.
+                }
+                
+                solActiveCard = null;
+                renderSolitaireBoard();
+            }
+        }
+
+        function removeActiveCardFromHolding() {
+            const idx = solHolding.findIndex(c => c.id === solActiveCard.id);
+            if (idx > -1) {
+                solHolding.splice(idx, 1);
+            }
+        }
+
+        function showSolMessage(msg) {
+            const el = document.getElementById('solitaire-message');
+            el.innerText = msg;
+            el.classList.remove('hidden');
+            el.classList.add('animate-bounce');
+            setTimeout(() => {
+                el.classList.add('hidden');
+                el.classList.remove('animate-bounce');
+            }, 2000);
+        }
+
+        window.exitMiracleSolitaire = function() {
+            solColumns = [[], [], [], []]; // Clear
+            showGameHub();
+        }
+
+        // --- 1. 核心修復：視覺補償法與畫面閃爍修復 (Moved to Bottom) ---
+        window.addEventListener('load', () => {
+            if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+            const wrapper = document.getElementById('scroll-wrapper');
+            if(wrapper) wrapper.scrollTop = 0;
+            const appRoot = document.getElementById('app-root');
+            if(appRoot) appRoot.style.opacity = '1';
+            showHome(); // 確保邏輯執行
+            loadAllData();
+            initStars();
+        });
+
+        window.addEventListener('resize', () => {
+            const bgLayer = document.getElementById('bg-layer');
+            if(bgLayer) { bgLayer.style.height = window.innerHeight + 'px'; }
+        });
+    </script>
+</body>
+</html>
