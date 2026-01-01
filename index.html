@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <!-- 核心修復：設定瀏覽器主題色為白色，與背景一致 -->
     <meta name="theme-color" content="#FFFFFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Jesus Vibes 2026 - 基督徒過年求生包</title>
 
-    <!-- App 圖示 (使用靜態 SVG Data URI，確保手機加入主畫面時能正確抓取) -->
-    <!-- 紅底圓角矩形 + 金色十字架 -->
+    <!-- App 圖示：瀏覽器用 SVG -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M216 60h80v140h140v80H296v172h-80V280H76v-80h140V60z'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M216 60h80v140h140v80H296v172h-80V280H76v-80h140V60z'/%3E%3C/svg%3E">
+    <!-- App 圖示：手機主畫面用 (將由 JS 自動生成 PNG 覆蓋此處，解決 iOS 不支援 SVG 的問題) -->
+    <link rel="apple-touch-icon" id="dynamic-app-icon" href="">
       
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -960,9 +962,9 @@
                                 <!-- 狀態 2: 打開的箱子 (藥罐列表) -->
                                 <div id="firstAidKitOpened" class="hidden w-full bg-gray-50 rounded-xl p-4 border-2 border-gray-200 shadow-inner">
                                     <div id="categoryList" class="grid grid-cols-2 gap-3">
-                                        <div class="text-center w-full py-4 text-gray-400 text-xs col-span-2">
-                                            <i class="fas fa-spinner fa-spin mr-2"></i> 藥局補貨中...
-                                        </div>
+                                            <div class="text-center w-full py-4 text-gray-400 text-xs col-span-2">
+                                                <i class="fas fa-spinner fa-spin mr-2"></i> 藥局補貨中...
+                                            </div>
                                     </div>
                                 </div>
                             </div>
@@ -1400,9 +1402,9 @@
             <h3 class="text-2xl font-bold text-[#2F4234] title-font">恩典戳戳樂</h3>
             <p class="text-xs text-green-600 font-bold mt-1 tracking-widest">SOUL HEALING</p>
         </div>
-         
+          
         <h4 id="sharePokeTitle" class="text-xl font-bold text-[#14532d] mb-2 text-center title-font"></h4>
-         
+          
         <!-- Ref -->
         <div class="bg-white border-l-4 border-green-600 p-3 rounded mb-4">
              <p id="sharePokeRef" class="text-sm font-bold text-green-800"></p>
@@ -1410,7 +1412,7 @@
 
         <!-- Text -->
         <p id="sharePokeText" class="text-[#333] text-lg leading-relaxed text-justify font-medium mb-4"></p>
-         
+          
         <!-- Song -->
         <div class="flex items-center gap-3 bg-green-100 p-3 rounded-lg">
              <div class="text-green-700 text-lg"><i class="fas fa-music"></i></div>
@@ -2063,9 +2065,9 @@
                 let kw = (getValue(r, ['關鍵字 (Keywords)', '關鍵字', 'keywords'])).trim();
                 if (!txt) return null;
                 if (!ref) {
-                     const match = txt.match(/[\(\（](.*?)[\)\）]$/);
-                     if (match) { ref = match[1]; txt = txt.substring(0, match.index).trim(); } 
-                     else { ref = "聖經"; }
+                      const match = txt.match(/[\(\（](.*?)[\)\）]$/);
+                      if (match) { ref = match[1]; txt = txt.substring(0, match.index).trim(); } 
+                      else { ref = "聖經"; }
                 }
                 return { category: cat, originalCategory: rawCat || cat, keywords: kw ? kw.split(/[,，\s]+/) : [], text: txt, ref: ref };
             }).filter(item => item !== null);
@@ -2942,7 +2944,7 @@
                     if (col.length === 0) {
                        colDiv.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-bold border-2 border-dashed border-white/20 rounded-lg pointer-events-none">${colIndex + 1}</div>`;
                     }
-    
+   
                     col.forEach((card, cardIndex) => {
                         const cardDiv = document.createElement('div');
                         let rankDisplay = card.rank;
@@ -3003,8 +3005,7 @@
                 // The Ghost card itself also goes back to stock? Or is consumed?
                 // "若不小心將鬼牌放到任何一列，則該列已排列的牌將全部回到牌庫" -> Implicitly ghost goes away or stays?
                 // Usually bad cards are traps. Let's put Ghost back into stock to haunt again.
-                solStock.unshift(solActiveCard); // Put ghost at 'bottom' (start of array is bottom for pop?) No, pop takes from end. unshift adds to start.
-                // Wait, pop() takes from end. So unshift() puts at "bottom" of deck.
+                solStock.unshift(solActiveCard); // Put ghost at 'bottom' of deck (start of array for unshift, actually wait pop takes from end. unshift adds to start. so start is bottom)
                 
                 // Remove from holding
                 removeActiveCardFromHolding();
@@ -3118,6 +3119,10 @@
             if(wrapper) wrapper.scrollTop = 0;
             const appRoot = document.getElementById('app-root');
             if(appRoot) appRoot.style.opacity = '1';
+            
+            // --- FIX: Generate PNG Icon for iOS Home Screen ---
+            generateAppIcons();
+            
             showHome(); // 確保邏輯執行
             loadAllData();
             initStars();
@@ -3127,6 +3132,41 @@
             const bgLayer = document.getElementById('bg-layer');
             if(bgLayer) { bgLayer.style.height = window.innerHeight + 'px'; }
         });
+
+        // Function to generate PNG icon from Canvas for iOS Home Screen support
+        function generateAppIcons() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            // Background (Red with rounded corners - imitating squircle)
+            ctx.fillStyle = '#8E1E20';
+            ctx.beginPath();
+            // Simplified rounded rect path
+            const r = 100; const w = 512; const h = 512;
+            ctx.moveTo(r, 0); ctx.lineTo(w-r, 0); ctx.quadraticCurveTo(w, 0, w, r);
+            ctx.lineTo(w, h-r); ctx.quadraticCurveTo(w, h, w-r, h);
+            ctx.lineTo(r, h); ctx.quadraticCurveTo(0, h, 0, h-r);
+            ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0);
+            ctx.fill();
+
+            // Cross (Gold) - Recreating the SVG path geometry
+            // Vert: x=216, y=60, w=80, h=392 
+            // Horz: x=76, y=200, w=360, h=80 
+            ctx.fillStyle = '#E6B450';
+            ctx.fillRect(216, 60, 80, 392); // Vertical bar
+            ctx.fillRect(76, 200, 360, 80); // Horizontal bar
+
+            // Convert to PNG Data URL
+            const pngUrl = canvas.toDataURL('image/png');
+
+            // Update Apple Touch Icon Link
+            const appleIcon = document.getElementById('dynamic-app-icon');
+            if (appleIcon) {
+                appleIcon.href = pngUrl;
+            }
+        }
     </script>
 </body>
 </html>
