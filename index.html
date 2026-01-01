@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- 核心修復：設定瀏覽器主題色為白色，避免狀態列變紅 -->
+    <!-- 核心修復：設定瀏覽器主題色為白色，與背景一致 -->
     <meta name="theme-color" content="#FFFFFF">
     <title>Jesus Vibes 2026 - 基督徒過年求生包</title>
 
-    <!-- App 圖示修復：使用靜態編碼的 SVG Data URI -->
-    <!-- 這能確保手機「加入主畫面」時能抓到正確的紅底金十字架圖示，無需等待 JS 執行 -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M226 60h60v140h140v60H286v192h-60V260H86v-60h140V60z'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M226 60h60v140h140v60H286v192h-60V260H86v-60h140V60z'/%3E%3C/svg%3E">
+    <!-- App 圖示 (使用靜態 SVG Data URI，確保手機加入主畫面時能正確抓取) -->
+    <!-- 紅底圓角矩形 + 金色十字架 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M216 60h80v140h140v80H296v172h-80V280H76v-80h140V60z'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M216 60h80v140h140v80H296v172h-80V280H76v-80h140V60z'/%3E%3C/svg%3E">
       
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,7 +47,7 @@
             --nav-height: 60px;
         }
 
-        /* 確保全域背景為白色 */
+        /* 背景設定為白色 */
         html {
             background-color: #FFFFFF;
         }
@@ -60,7 +60,7 @@
             margin: 0; 
             padding: 0;
             overflow: hidden; 
-            background-color: #FFFFFF; /* 雙重保險 */
+            background-color: transparent;
             color: var(--text-main); 
             font-family: var(--main-font);
             overscroll-behavior: none; 
@@ -70,9 +70,9 @@
             justify-content: center; /* 內容置中 */
         }
 
-        /* 背景層：限制在 App 容器內，避免溢出到瀏覽器背景 */
+        /* 背景層：改回全螢幕覆蓋，視覺更寬闊 */
         #bg-layer {
-            position: absolute; 
+            position: fixed; 
             top: 0; 
             left: 0; 
             width: 100%; 
@@ -85,20 +85,20 @@
             will-change: transform; 
         }
 
-        /* App 主容器：限制最大寬度，模擬手機體驗，並添加陰影區隔 */
+        /* App 主容器：限制最大寬度，模擬手機體驗 */
         #app-root {
             position: relative;
             width: 100%; 
             max-width: 500px; 
             height: 100%;
-            background-color: var(--ny-red-deep); /* 只有這裡顯示紅色背景 */
+            background-color: transparent; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
             z-index: 10;
             opacity: 0; 
             transition: opacity 0.5s ease-out;
-            box-shadow: 0 0 40px rgba(0,0,0,0.1); /* 增加陰影讓它與白底區隔 */
+            box-shadow: none; 
         }
 
         /* 4. 導覽列 */
