@@ -3,45 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- 核心修復：設定瀏覽器主題色為紅色，與全螢幕背景融合 -->
-    <meta name="theme-color" content="#8E1E20">
+    <!-- 核心修復：設定瀏覽器主題色為白色，避免狀態列變紅 -->
+    <meta name="theme-color" content="#FFFFFF">
     <title>Jesus Vibes 2026 - 基督徒過年求生包</title>
 
-    <!-- 預留圖示標籤 -->
-    <link rel="icon" id="dynamic-favicon">
-    <link rel="apple-touch-icon" id="dynamic-apple-icon">
-    
-    <!-- 自動產生 App 圖示的腳本 -->
-    <script>
-        (function() {
-            try {
-                var canvas = document.createElement('canvas');
-                canvas.width = 192; canvas.height = 192;
-                var ctx = canvas.getContext('2d');
-                
-                // 1. 畫圓角紅色背景
-                ctx.fillStyle = '#8E1E20';
-                ctx.beginPath();
-                if (ctx.roundRect) {
-                    ctx.roundRect(0, 0, 192, 192, 40);
-                } else {
-                    ctx.rect(0, 0, 192, 192);
-                }
-                ctx.fill();
-                
-                // 2. 畫金色十字架 (移除邊框，字體加大)
-                ctx.fillStyle = '#E6B450';
-                ctx.font = 'bold 110px serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('✝', 96, 105);
-
-                var iconUrl = canvas.toDataURL('image/png');
-                document.getElementById('dynamic-favicon').href = iconUrl;
-                document.getElementById('dynamic-apple-icon').href = iconUrl;
-            } catch(e) { console.error("Icon gen failed", e); }
-        })();
-    </script>
+    <!-- App 圖示修復：使用靜態編碼的 SVG Data URI -->
+    <!-- 這能確保手機「加入主畫面」時能抓到正確的紅底金十字架圖示，無需等待 JS 執行 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M226 60h60v140h140v60H286v192h-60V260H86v-60h140V60z'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%238E1E20'/%3E%3Cpath fill='%23E6B450' d='M226 60h60v140h140v60H286v192h-60V260H86v-60h140V60z'/%3E%3C/svg%3E">
       
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -78,9 +47,9 @@
             --nav-height: 60px;
         }
 
-        /* 恢復背景設定 */
+        /* 確保全域背景為白色 */
         html {
-            background-color: #FFFFFF; /* 下拉回彈時顯示白色 */
+            background-color: #FFFFFF;
         }
         
         body {
@@ -91,7 +60,7 @@
             margin: 0; 
             padding: 0;
             overflow: hidden; 
-            background-color: transparent;
+            background-color: #FFFFFF; /* 雙重保險 */
             color: var(--text-main); 
             font-family: var(--main-font);
             overscroll-behavior: none; 
@@ -101,9 +70,9 @@
             justify-content: center; /* 內容置中 */
         }
 
-        /* 背景層：改回全螢幕覆蓋，視覺更寬闊 */
+        /* 背景層：限制在 App 容器內，避免溢出到瀏覽器背景 */
         #bg-layer {
-            position: fixed; 
+            position: absolute; 
             top: 0; 
             left: 0; 
             width: 100%; 
@@ -116,20 +85,20 @@
             will-change: transform; 
         }
 
-        /* App 主容器：只負責限制內容寬度，不再切割背景 */
+        /* App 主容器：限制最大寬度，模擬手機體驗，並添加陰影區隔 */
         #app-root {
             position: relative;
             width: 100%; 
-            max-width: 500px; /* 稍微放寬一點點 */
+            max-width: 500px; 
             height: 100%;
-            background-color: transparent; /* 背景透明，讓全螢幕紅底透出來 */
+            background-color: var(--ny-red-deep); /* 只有這裡顯示紅色背景 */
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
             z-index: 10;
             opacity: 0; 
             transition: opacity 0.5s ease-out;
-            box-shadow: none; /* 移除陰影，與背景融合 */
+            box-shadow: 0 0 40px rgba(0,0,0,0.1); /* 增加陰影讓它與白底區隔 */
         }
 
         /* 4. 導覽列 */
@@ -635,7 +604,6 @@
 <body>
 
     <!-- App Root Container -->
-    <!-- 背景層：移出到 body 直接子層，實現全螢幕覆蓋 -->
     <div id="bg-layer">
         <div class="streamlines"></div>
         <div id="stars-container" class="stars-container"></div>
