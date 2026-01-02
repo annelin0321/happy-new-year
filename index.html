@@ -1374,13 +1374,36 @@
                     </div>
 
                     <p>2026 God is with you | 新年快樂 Happy New Year</p>
-                    <p class="mt-1 opacity-80">© 耶穌加油站</p>
+                    <p class="mt-1 opacity-80">© 耶穌加油站 x 微光新事</p>
                     <div id="dataStatus" class="mt-2 text-[10px] opacity-60 flex justify-center items-center gap-2">
                         <!-- Status Indicators injected by JS -->
                     </div>
                     <div id="debugInfo" class="text-[9px] text-red-300/50 mt-1"></div>
                 </footer>
             </div>
+        </div>
+    </div>
+
+    <!-- Limited Edition Notice Overlay -->
+    <div id="limited-notice-overlay" class="fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-6 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-[#FFFDF5] rounded-2xl p-6 max-w-sm w-full text-center border-4 border-[#8E1E20] relative shadow-2xl transform scale-95 transition-transform duration-300">
+            <!-- Decoration -->
+            <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-[#E6B450] rounded-full border-4 border-[#8E1E20] flex items-center justify-center text-[#8E1E20] text-xl shadow-lg">
+                <i class="fas fa-bullhorn"></i>
+            </div>
+            
+            <h3 class="mt-6 text-2xl font-bold text-[#8E1E20] title-font mb-2">🐎 2026 新春限定版</h3>
+            
+            <div class="space-y-3 text-[#5C2828] text-sm leading-relaxed font-medium">
+                <p>👋 嗨！歡迎使用 <span class="font-bold text-[#E6B450] bg-[#8E1E20] px-1 rounded">Jesus Vibes</span></p>
+                <p>本服務為<strong class="text-[#D32F2F]">過年期間限定</strong>特別企劃，將開放至 <strong class="text-[#D32F2F] text-lg border-b-2 border-[#E6B450]">2月28日</strong> 止。</p>
+                <p>願大家在春節期間，有智慧回應長輩、有喜樂面對親友，天天充滿屬天的 Vibes！</p>
+                <p class="font-bold text-lg mt-2 text-[#D32F2F]">新年快樂！平安喜樂！🧧</p>
+            </div>
+
+            <button onclick="closeLimitedNotice()" class="mt-6 w-full py-3 bg-[#8E1E20] text-[#E6B450] rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-transform">
+                🚀 開始體驗
+            </button>
         </div>
     </div>
 
@@ -3112,6 +3135,37 @@
             showGameHub();
         }
 
+        // --- Limited Version Notice Functions ---
+        window.showLimitedNotice = function() {
+            // Check session storage to show only once per session
+            if(sessionStorage.getItem('seenLimitedNotice')) return;
+            
+            const overlay = document.getElementById('limited-notice-overlay');
+            if(overlay) {
+                overlay.classList.remove('hidden');
+                // Small delay to allow CSS transition to work
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    overlay.querySelector('div').classList.remove('scale-95');
+                    overlay.querySelector('div').classList.add('scale-100');
+                }, 10);
+            }
+        }
+
+        window.closeLimitedNotice = function() {
+            const overlay = document.getElementById('limited-notice-overlay');
+            if(overlay) {
+                overlay.classList.add('opacity-0');
+                overlay.querySelector('div').classList.remove('scale-100');
+                overlay.querySelector('div').classList.add('scale-95');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    // Set flag in session storage
+                    sessionStorage.setItem('seenLimitedNotice', 'true');
+                }, 300);
+            }
+        }
+
         // --- 1. 核心修復：視覺補償法與畫面閃爍修復 (Moved to Bottom) ---
         window.addEventListener('load', () => {
             if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -3124,6 +3178,10 @@
             generateAppIcons();
             
             showHome(); // 確保邏輯執行
+            
+            // Show Limited Notice on Load
+            setTimeout(showLimitedNotice, 500); // Slight delay for smoother entrance after home loads
+
             loadAllData();
             initStars();
         });
