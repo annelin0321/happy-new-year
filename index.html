@@ -1407,6 +1407,21 @@
         </div>
     </div>
 
+    <!-- Expiration Notice Overlay -->
+    <div id="expired-notice-overlay" class="fixed inset-0 bg-black/95 z-[300] flex items-center justify-center p-6 hidden">
+        <div class="bg-[#FFFDF5] rounded-2xl p-8 max-w-sm w-full text-center border-4 border-[#8E1E20] relative shadow-2xl">
+            <div class="mb-4 text-6xl">👋</div>
+            <h3 class="text-3xl font-bold text-[#8E1E20] title-font mb-4">活動已圓滿結束</h3>
+            <div class="space-y-4 text-[#5C2828] text-base leading-relaxed font-medium">
+                <p>感謝大家這段時間的陪伴！</p>
+                <p>Jesus Vibes 2026 新春限定企劃<br>已於 2月28日 劃下句點。</p>
+                <p>願上帝的祝福在接下來的日子裡<br>繼續充滿你的生活！</p>
+                <p class="font-bold text-xl mt-4 text-[#D32F2F]">我們明年見！❤️</p>
+            </div>
+            <div class="mt-8 text-sm text-gray-400">© 耶穌加油站 x 微光新事</div>
+        </div>
+    </div>
+
     <!-- Hidden Share Card for Prayer (Updated for Green Theme) -->
     <div id="prayerShareHidden" class="fixed top-0 left-0 -z-50 w-[320px] bg-[#FFFEFA] p-8 border-4 border-[#3F5846] rounded-xl opacity-0 pointer-events-none">
         <div class="text-center border-b border-[#E6C888] pb-4 mb-4">
@@ -3166,6 +3181,21 @@
             }
         }
 
+        // --- Auto Expiration Logic ---
+        function checkExpiration() {
+            const now = new Date();
+            // Deadline: March 1st, 2026 00:01:00 (Local Time)
+            const deadline = new Date('2026-03-01T00:01:00');
+
+            if (now >= deadline) {
+                // Show Expiration Overlay
+                document.getElementById('expired-notice-overlay').classList.remove('hidden');
+            } else {
+                // If not expired, proceed to show Limited Notice (if applicable)
+                setTimeout(showLimitedNotice, 500); 
+            }
+        }
+
         // --- 1. 核心修復：視覺補償法與畫面閃爍修復 (Moved to Bottom) ---
         window.addEventListener('load', () => {
             if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -3179,8 +3209,8 @@
             
             showHome(); // 確保邏輯執行
             
-            // Show Limited Notice on Load
-            setTimeout(showLimitedNotice, 500); // Slight delay for smoother entrance after home loads
+            // Check Expiration first, then show notice if valid
+            checkExpiration();
 
             loadAllData();
             initStars();
