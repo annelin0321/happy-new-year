@@ -661,7 +661,7 @@
                         </div>
                         <!-- 2. Prayer -->
                         <div onclick="showPrayer()" class="menu-btn group">
-                            <div class="icon-bg" style="background: linear-gradient(135deg, #3F5846 0%, #2F4234 100%); color: #E6B450; border: 1px solid #D4AF37;"><i class="fas fa-book-bible"></i></div>
+                            <div class="icon-bg" style="background: linear-gradient(135deg, #3F5846) 0%, #2F4234 100%); color: #E6B450; border: 1px solid #D4AF37;"><i class="fas fa-book-bible"></i></div>
                             <h2 class="text-lg font-bold text-[#2F4234] title-font">禱告小時光</h2>
                             <span class="text-xs text-[#4A6351] font-bold mt-2 uppercase tracking-wide">Prayer Time</span>
                         </div>
@@ -776,7 +776,7 @@
                 <!-- 3. Prayer View -->
                 <div id="prayer-view" class="hidden view-container">
                     <section id="card-prayer" class="ny-card p-6 text-center" style="border-color: #E6B450; background: #3F5846;">
-                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full border-4 border-[#E6C888] flex items-center justify-center text-white shadow-xl text-xl" style="background: linear-gradient(135deg, #2F4234, #1B291F);">
+                        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 rounded-full border-4 border-[#E6C888] flex items-center justify-center text-white shadow-xl text-xl w-14 h-14" style="background: linear-gradient(135deg, #2F4234, #1B291F);">
                             <i class="fas fa-book-bible"></i>
                         </div>
                         <div class="mt-6 mb-5">
@@ -1987,6 +1987,33 @@
             return matchCount / cleanKey.length;
         }
 
+        // NEW: Synonym Expansion (增加同義詞聯想，讓搜尋更聰明)
+        function expandSynonyms(input) {
+            let s = input;
+            const mappings = [
+                // 生育相關
+                { keys: ["小孩", "孩子", "寶寶", "孫", "懷孕", "肚皮", "生", "喜訊", "二胎", "動靜", "不生", "卵子", "精子", "凍卵", "傳宗接代"], add: "生小孩 孩子 孫子 生育 生孩子 懷孕 生不生" },
+                // 感情婚姻 (優化：加入「交」、「談」等核心關聯詞)
+                { keys: ["對象", "男友", "女友", "另一半", "伴侶", "嫁", "娶", "婚", "朋友", "相親", "單身", "沒人要", "眼光", "挑", "交", "談", "帶回", "追", "穩定", "沒交", "男盆友", "女盆友"], add: "結婚 對象 男友 女友 感情 有沒有交 交男朋友 交女朋友" },
+                // 工作薪資
+                { keys: ["薪", "賺", "錢", "年終", "獎金", "月入", "待遇", "發財", "股票", "投資", "包多少", "發紅包"], add: "薪水 錢 收入" },
+                { keys: ["工作", "高就", "職業", "在哪做", "公司", "發展", "升遷", "失業", "待業", "老闆"], add: "工作 職業" },
+                // 外貌身材
+                { keys: ["胖", "瘦", "身材", "重了", "肥", "圓", "減肥", "吃", "腫", "氣色"], add: "胖 瘦 身材 外表" },
+                // 學業成績
+                { keys: ["成績", "考", "名次", "學校", "排名", "班上", "畢業", "第幾名", "台大", "國立"], add: "成績 考試 學業" },
+                // 資產
+                { keys: ["房", "車", "買", "置產", "頭期款"], add: "買房 買車 資產" }
+            ];
+            
+            mappings.forEach(m => {
+                if (m.keys.some(k => input.includes(k))) {
+                    s += " " + m.add;
+                }
+            });
+            return s;
+        }
+
         function getSurvivalResponse() {
             const inputVal = document.getElementById('survivalInput').value.trim(); if (!inputVal) return;
             const styleBadge = document.getElementById('styleBadge'); const textEl = document.getElementById('survivalText');
@@ -1994,11 +2021,14 @@
             const styleNames = { 'toxic': '🐍 犀利風', 'funny': '🤣 幽默風', 'pun': '⚔️ 俠客風', 'gentle': '🕊️ 溫柔風', 'drama': '🎭 八點檔風', 'ancient': '📜 古偶風' };
             styleBadge.innerText = styleNames[currentStyle]; textEl.innerText = '思考中...';
             setTimeout(() => {
+                // 使用擴展後的輸入進行匹配
+                const searchInput = expandSynonyms(inputVal); 
+
                 let bestMatch = null; let bestScore = 0;
                 for (const item of survivalDatabase) {
                     if (!item[currentStyle]) continue;
                     for (const k of item.keywords) {
-                        const score = getMatchScore(inputVal, k);
+                        const score = getMatchScore(searchInput, k);
                         if (score > bestScore) { bestScore = score; bestMatch = item; }
                     }
                 }
@@ -2103,7 +2133,7 @@
                 let kw = (getValue(r, ['關鍵字 (Keywords)', '關鍵字', 'keywords'])).trim();
                 if (!txt) return null;
                 if (!ref) {
-                      const match = txt.match(/[\(\（](.*?)[\)\）]$/);
+                      const match = txt.match(/[\(\（](.*?)[\)\維持]$/);
                       if (match) { ref = match[1]; txt = txt.substring(0, match.index).trim(); } 
                       else { ref = "聖經"; }
                 }
