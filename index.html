@@ -914,6 +914,8 @@
                                 <textarea id="survivalInput" rows="2" placeholder="請輸入問題「關鍵字」 (例如：結婚、薪水)，字數精簡更準確！" class="story-input text-gray-700 placeholder-purple-300/70" style="border-color: #E1BEE7;"></textarea>
                             </div>
                             <button onclick="getSurvivalResponse()" class="forest-btn btn-purple w-full shadow-lg shadow-purple-900/10"><i class="fas fa-shield-alt"></i> 生成神回覆</button>
+                            
+                            <!-- Survival Response Area -->
                             <div id="survivalResponseArea" class="hidden mt-6 bg-gradient-to-br from-purple-50 to-white border-2 border-purple-100 rounded-2xl p-6 text-left relative shadow-sm">
                                 <div class="flex justify-between items-center mb-3">
                                     <h3 class="text-[#6A1B9A] text-xs font-bold title-font flex items-center"><i class="fas fa-comment-dots mr-2 bg-purple-100 p-1.5 rounded-full"></i> 建議回覆：</h3>
@@ -924,6 +926,22 @@
                                     <button onclick="shareSurvival()" class="text-xs text-[#6A1B9A] font-bold hover:text-purple-700 flex items-center justify-end w-full gap-2 py-1">
                                     複製這句去戰鬥 <i class="fas fa-copy bg-purple-100 p-1.5 rounded-full"></i>
                                     </button>
+                                </div>
+
+                                <!-- Contribution Block (投稿區) -->
+                                <div class="mt-6 pt-5 border-t-2 border-dashed border-purple-200">
+                                    <div class="bg-white/50 rounded-xl p-4 border border-purple-100">
+                                        <h4 class="text-xs font-black text-purple-900 mb-2 flex items-center gap-2">
+                                            <i class="fas fa-lightbulb text-yellow-500"></i> 智慧貢獻與回報
+                                        </h4>
+                                        <p class="text-[11px] text-purple-700 leading-relaxed mb-3">
+                                            沒搜尋到你的難題？或是有更驚艷的神回覆？歡迎點擊下方連結投稿！讓我們集結眾人的智慧，彼此分享，大家一起有智慧的快樂過新年。
+                                        </p>
+                                        <a href="https://line.me/R/ti/p/@469cjlho" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-[11px] font-bold shadow-sm hover:bg-purple-200 transition-all active:scale-95 border border-purple-200">
+                                            <i class="fab fa-line text-lg text-[#06C755]"></i>
+                                            <span>立即前往 LINE 投稿</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
