@@ -1546,7 +1546,8 @@
         const apiKey = "AIzaSyC_lnKs3cIfQsh6_VUY4i9AzdhBOtjcbNU"; // 使用用戶提供的 API Key
         
         async function callGeminiAI(userPrompt, style) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // 切換為穩定的 gemini-1.5-flash 模型
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             const styleGuides = {
                 toxic: "犀利風：毒舌且帶點諷刺，不卑不亢地戳中要害，但保持基督徒的基本修養。",
