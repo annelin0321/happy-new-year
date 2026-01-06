@@ -1494,7 +1494,7 @@
         const YOUR_GOOGLE_SHEET_CSV_URL_VERSES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=0&single=true&output=csv"; 
         const YOUR_GOOGLE_SHEET_CSV_URL_MOOD = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1438404823&single=true&output=csv";
         const YOUR_GOOGLE_SHEET_CSV_URL_PRAYER = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2131834293&single=true&output=csv";
-        // REMOVED: Survival CSV URL (No longer needed)
+        
         // Fixed URL for First Aid
         const YOUR_FIRST_AID_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2001152991&single=true&output=csv";
         // NEW: Heavenly Envelope URL
@@ -1510,7 +1510,6 @@
         let moodDatabase = [{ date: "2025/1/1", keywords: ["被神看見"], title: "神的心意是好的", text: "你很重要...", ref: "馬太福音1:1-25", song: "【開我的雙眼 Open My Eyes】| PPC", link: "https://youtu.be/XdXopI_eld4" }];
         const defaultResponses = [{ title: "耶穌聽見了", text: "親愛的...", ref: "腓立比書 4:6-7", song: "【安靜 Be Still】| 約書亞樂團", link: "https://www.youtube.com/results?search_query=安靜+Be+Still+約書亞樂團" }];
         let randomPrayerDatabase = [{ date: "1/1", title: "新的一年...", ref: "詩篇 118:24", text: "親愛的主...", fullText: "親愛的主..." }];
-        // Removed survivalDatabase as it is no longer used
         let firstAidDatabase = [];
         let heavenlyEnvelopeDatabase = []; // New Database
         // Quiz Data
@@ -1544,7 +1543,7 @@
         ];
 
         // --- GEMINI AI INTEGRATION ---
-        const apiKey = ""; // API Key will be injected by the environment
+        const apiKey = "AIzaSyC_lnKs3cIfQsh6_VUY4i9AzdhBOtjcbNU"; // 使用用戶提供的 API Key
         
         async function callGeminiAI(userPrompt, style) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
@@ -1620,9 +1619,9 @@
             if(YOUR_GOOGLE_SHEET_CSV_URL_VERSES) fetchData('verses', YOUR_GOOGLE_SHEET_CSV_URL_VERSES);
             if(YOUR_GOOGLE_SHEET_CSV_URL_MOOD) fetchData('mood', YOUR_GOOGLE_SHEET_CSV_URL_MOOD);
             if(YOUR_GOOGLE_SHEET_CSV_URL_PRAYER) fetchData('prayer', YOUR_GOOGLE_SHEET_CSV_URL_PRAYER);
-            // REMOVED: fetchData('survival', ...);
+            // 嚴格移除 Survival 舊版資料庫連結讀取
             if(YOUR_FIRST_AID_CSV_URL) fetchFirstAidData(YOUR_FIRST_AID_CSV_URL);
-            if(YOUR_HEAVENLY_ENVELOPE_CSV_URL) fetchData('heavenlyEnvelope', YOUR_HEAVENLY_ENVELOPE_CSV_URL); // New Fetch
+            if(YOUR_HEAVENLY_ENVELOPE_CSV_URL) fetchData('heavenlyEnvelope', YOUR_HEAVENLY_ENVELOPE_CSV_URL); 
             
             // Load Quizzes
             fetchData('quiz1', QUIZ1_URL);
@@ -2839,7 +2838,7 @@
                 content.innerHTML = `
                     <div class="text-4xl mb-4">⏳</div>
                     <h2 class="text-3xl font-bold mb-2">時間到！</h2>
-                    <p class="text-sm opacity-90 mb-6">別氣餒，再試一次吧！</p>
+                    <p class="text-sm opacity-80 mb-6">別氣餒，再試一次吧！</p>
                     <button onclick="startMemoryLevel(${memoryLevel})" class="bg-white text-gray-800 px-6 py-2 rounded-full font-bold shadow-lg mb-3">
                         <i class="fas fa-redo mr-2"></i> 重玩本關
                     </button>
@@ -2993,7 +2992,7 @@
                 } else {
                     // Render placeholder if empty and not completed
                     if (col.length === 0) {
-                       colDiv.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-bold border-2 border-dashed border-white/20 rounded-lg pointer-events-none">${colIndex + 1}</div>`;
+                        colDiv.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-bold border-2 border-dashed border-white/20 rounded-lg pointer-events-none">${colIndex + 1}</div>`;
                     }
    
                     col.forEach((card, cardIndex) => {
@@ -3046,17 +3045,12 @@
                 showSolMessage("👻 哎呀！鬼牌炸掉了這一列！");
                 
                 // Return all cards in this column to stock (bottom)
-                // Note: We need to shuffle them back in? Prompt says "回到牌庫". Usually shuffle is implied or put at bottom.
-                // Let's put at bottom for simplicity.
                 if (targetCol.length > 0) {
                      solStock = [...targetCol, ...solStock];
                      solColumns[colIndex] = []; // Clear column
                 }
                 
-                // The Ghost card itself also goes back to stock? Or is consumed?
-                // "若不小心將鬼牌放到任何一列，則該列已排列的牌將全部回到牌庫" -> Implicitly ghost goes away or stays?
-                // Usually bad cards are traps. Let's put Ghost back into stock to haunt again.
-                solStock.unshift(solActiveCard); // Put ghost at 'bottom' of deck (start of array for unshift, actually wait pop takes from end. unshift adds to start. so start is bottom)
+                solStock.unshift(solActiveCard); 
                 
                 // Remove from holding
                 removeActiveCardFromHolding();
@@ -3067,10 +3061,6 @@
 
             // --- RESURRECTION CARD LOGIC ---
             if (solActiveCard.rank === 13) {
-                 // Must play on a column with at least 1 card to know the color
-                 // Prompt: "復活能將讓該列直接完成"
-                 // If column is empty, we don't know which color to complete.
-                 
                  if (targetCol.length === 0) {
                      showSolMessage("❌ 需先放置一張牌確認顏色！");
                      return;
@@ -3086,11 +3076,6 @@
                  // Remove Resurrection card (Consumed)
                  removeActiveCardFromHolding();
                  solActiveCard = null;
-                 
-                 // Filter out remaining cards of this color from Deck and Holding?
-                 // To prevent confusion, we should probably just leave them. They become junk.
-                 // Or we can leave a visual marker "DONE".
-                 // For simplicity: just score++.
                  
                  renderSolitaireBoard();
                  return;
@@ -3129,10 +3114,6 @@
                     showSolMessage("🌟 該列完成！");
                     solColumnStates[colIndex] = true;
                     solCompletedCols++;
-                    // Optional: Visual cleanup? Or leave 1-12 stack visible?
-                    // Prompt says "直到完成1-12". Keeping them visible is satisfying.
-                    // To prevent overflow, maybe collapse them?
-                    // Let's leave them.
                 }
                 
                 solActiveCard = null;
@@ -3165,13 +3146,11 @@
 
         // --- Limited Version Notice Functions ---
         window.showLimitedNotice = function() {
-            // Check session storage to show only once per session
             if(sessionStorage.getItem('seenLimitedNotice')) return;
             
             const overlay = document.getElementById('limited-notice-overlay');
             if(overlay) {
                 overlay.classList.remove('hidden');
-                // Small delay to allow CSS transition to work
                 setTimeout(() => {
                     overlay.classList.remove('opacity-0');
                     overlay.querySelector('div').classList.remove('scale-95');
@@ -3188,7 +3167,6 @@
                 overlay.querySelector('div').classList.add('scale-95');
                 setTimeout(() => {
                     overlay.classList.add('hidden');
-                    // Set flag in session storage
                     sessionStorage.setItem('seenLimitedNotice', 'true');
                 }, 300);
             }
@@ -3197,14 +3175,11 @@
         // --- Auto Expiration Logic ---
         function checkExpiration() {
             const now = new Date();
-            // Deadline: March 1st, 2026 00:01:00 (Local Time)
             const deadline = new Date('2026-03-01T00:01:00');
 
             if (now >= deadline) {
-                // Show Expiration Overlay
                 document.getElementById('expired-notice-overlay').classList.remove('hidden');
             } else {
-                // If not expired, proceed to show Limited Notice (if applicable)
                 setTimeout(showLimitedNotice, 500); 
             }
         }
@@ -3222,7 +3197,6 @@
             
             showHome(); // 確保邏輯執行
             
-            // Check Expiration first, then show notice if valid
             checkExpiration();
 
             loadAllData();
@@ -3241,10 +3215,8 @@
             canvas.height = 512;
             const ctx = canvas.getContext('2d');
 
-            // Background (Red with rounded corners - imitating squircle)
             ctx.fillStyle = '#8E1E20';
             ctx.beginPath();
-            // Simplified rounded rect path
             const r = 100; const w = 512; const h = 512;
             ctx.moveTo(r, 0); ctx.lineTo(w-r, 0); ctx.quadraticCurveTo(w, 0, w, r);
             ctx.lineTo(w, h-r); ctx.quadraticCurveTo(w, h, w-r, h);
@@ -3252,17 +3224,12 @@
             ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0);
             ctx.fill();
 
-            // Cross (Gold) - Recreating the SVG path geometry
-            // Vert: x=216, y=60, w=80, h=392 
-            // Horz: x=76, y=200, w=360, h=80 
             ctx.fillStyle = '#E6B450';
             ctx.fillRect(216, 60, 80, 392); // Vertical bar
             ctx.fillRect(76, 200, 360, 80); // Horizontal bar
 
-            // Convert to PNG Data URL
             const pngUrl = canvas.toDataURL('image/png');
 
-            // Update Apple Touch Icon Link
             const appleIcon = document.getElementById('dynamic-app-icon');
             if (appleIcon) {
                 appleIcon.href = pngUrl;
