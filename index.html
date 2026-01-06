@@ -177,6 +177,7 @@
 
         .forest-btn { flex: 1; padding: 14px; color: white; border-radius: 16px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom-width: 4px; transition: all 0.1s; letter-spacing: 1px; }
         .forest-btn:active { transform: translateY(3px); border-bottom-width: 1px; }
+        .forest-btn:disabled { opacity: 0.6; cursor: not-allowed; }
           
         .btn-red { background: var(--ny-red-soft); border-bottom-color: #8E1E20; }
         .btn-green { background: var(--ny-green-pine); border-bottom-color: #2F4234; }
@@ -837,13 +838,13 @@
                             <!-- Option 1: Survival Guide (Renamed) -->
                             <div onclick="showSurvivalGuide()" class="bg-white p-5 rounded-2xl border-2 border-purple-200 shadow-md cursor-pointer hover:shadow-lg transition-all active:scale-95 flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl flex-shrink-0">
-                                    <i class="fas fa-scroll"></i>
+                                    <i class="fas fa-magic"></i>
                                 </div>
                                 <div class="text-left w-full">
-                                    <h3 class="font-bold text-purple-900 text-lg mb-1">長輩應對祕籍</h3>
-                                    <p class="text-xs text-gray-500 mb-2">過年必備的話題生存指南</p>
+                                    <h3 class="font-bold text-purple-900 text-lg mb-1">長輩應對祕籍 (AI)</h3>
+                                    <p class="text-xs text-gray-500 mb-2">Gemini AI 即時生成智慧神回覆</p>
                                     <div class="flex justify-start">
-                                        <span id="hub-survival-status" class="text-[10px] bg-purple-50 text-purple-400 px-2 py-0.5 rounded-full border border-purple-100">載入中...</span>
+                                        <span class="text-[10px] bg-purple-50 text-purple-400 px-2 py-0.5 rounded-full border border-purple-100">AI Powered</span>
                                     </div>
                                 </div>
                                 <i class="fas fa-chevron-right ml-auto text-purple-300"></i>
@@ -867,7 +868,7 @@
                       </section>
                 </div>
 
-                <!-- 4.2. Survival Guide (Modified) -->
+                <!-- 4.2. Survival Guide (Modified to use Gemini AI) -->
                 <div id="survival-view" class="hidden view-container">
                     <section id="card-survival" class="ny-card p-6 text-center" style="border-color: #E1BEE7; background: rgba(253, 245, 255, 0.95);">
                         <!-- Back to Hub Button -->
@@ -876,23 +877,18 @@
                         </div>
 
                         <div class="mt-2 mb-2 flex items-center justify-center gap-2">
-                            <h2 class="text-xl font-bold text-[#4A148C] title-font">長輩應對祕籍</h2>
+                            <h2 class="text-xl font-bold text-[#4A148C] title-font">長輩應對祕籍 (AI)</h2>
                         </div>
                         
-                        <!-- Status Display -->
-                        <div class="text-[10px] text-purple-400 mb-4 font-bold tracking-wider">
-                            <i class="fas fa-book-reader mr-1"></i> <span id="survival-count-display">祕籍頁數：0</span>
-                        </div>
-
                         <!-- Disclaimer / Intro -->
                         <div id="survival-intro" class="mt-2">
                             <div class="bg-purple-50 p-6 rounded-2xl border-2 border-purple-100 mb-6">
                                 <i class="fas fa-robot text-4xl text-purple-300 mb-3"></i>
-                                <h3 class="font-bold text-purple-900 text-lg mb-2">使用前請詳閱公開說明書</h3>
+                                <h3 class="font-bold text-purple-900 text-lg mb-2">AI 即時生成智慧對策</h3>
                                 <p class="text-purple-800 text-sm leading-relaxed font-medium">
-                                    本區內容由 AI 生成，僅供娛樂參考。<br>
-                                    若有神回覆請笑納，若不合適笑笑就好。<br>
-                                    <span class="block mt-2 font-bold text-purple-600">過年求生，開心至上，勿太認真！🧧</span>
+                                    不用再擔心關鍵字搜不到！<br>
+                                    輸入長輩的問題，選擇回話風格，AI 將為您即時擬稿。<br>
+                                    <span class="block mt-2 font-bold text-purple-600">過年求生，開心至上！🧧</span>
                                 </p>
                             </div>
                             <button onclick="startSurvival()" class="forest-btn btn-purple shadow-lg w-full">
@@ -907,41 +903,26 @@
                                 <div class="style-pill" onclick="selectStyle(this, 'funny')" data-style="funny">🤣 幽默風</div>
                                 <div class="style-pill" onclick="selectStyle(this, 'pun')" data-style="pun">⚔️ 俠客風</div>
                                 <div class="style-pill" onclick="selectStyle(this, 'gentle')" data-style="gentle">🕊️ 溫柔風</div>
-                                <div class="style-pill" onclick="selectStyle(this, 'drama')" data-style="drama">🎭 八點檔風</div>
+                                <div class="style-pill" onclick="selectStyle(this, 'drama')" data-style="drama">🎭 八點檔</div>
                                 <div class="style-pill" onclick="selectStyle(this, 'ancient')" data-style="ancient">📜 古偶風</div>
                             </div>
                             <div class="relative text-left mt-2" id="survival-input-container">
-                                <textarea id="survivalInput" rows="2" placeholder="請輸入問題「關鍵字」 (例如：結婚、薪水)，字數精簡更準確！" class="story-input text-gray-700 placeholder-purple-300/70" style="border-color: #E1BEE7;"></textarea>
+                                <textarea id="survivalInput" rows="2" placeholder="長輩問了什麼？（例如：薪水多少？什麼時候結婚？）" class="story-input text-gray-700 placeholder-purple-300/70" style="border-color: #E1BEE7;"></textarea>
                             </div>
-                            <button onclick="getSurvivalResponse()" class="forest-btn btn-purple w-full shadow-lg shadow-purple-900/10"><i class="fas fa-shield-alt"></i> 生成神回覆</button>
+                            <!-- Modified Button to call AI function -->
+                            <button id="generateBtn" onclick="getSurvivalResponseAI()" class="forest-btn btn-purple w-full shadow-lg shadow-purple-900/10"><i class="fas fa-magic"></i> 生成神回覆</button>
                             
                             <!-- Survival Response Area -->
                             <div id="survivalResponseArea" class="hidden mt-6 bg-gradient-to-br from-purple-50 to-white border-2 border-purple-100 rounded-2xl p-6 text-left relative shadow-sm">
                                 <div class="flex justify-between items-center mb-3">
                                     <h3 class="text-[#6A1B9A] text-xs font-bold title-font flex items-center"><i class="fas fa-comment-dots mr-2 bg-purple-100 p-1.5 rounded-full"></i> 建議回覆：</h3>
-                                    <span id="styleBadge" class="text-[10px] px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold">毒舌版</span>
+                                    <span id="styleBadge" class="text-[10px] px-2 py-1 rounded bg-purple-200 text-purple-800 font-bold">犀利風</span>
                                 </div>
                                 <p id="survivalText" class="text-[#4A148C] font-bold text-lg leading-relaxed mb-3"></p>
                                 <div class="mt-4 border-t border-purple-200 pt-3">
                                     <button onclick="shareSurvival()" class="text-xs text-[#6A1B9A] font-bold hover:text-purple-700 flex items-center justify-end w-full gap-2 py-1">
                                     複製這句去戰鬥 <i class="fas fa-copy bg-purple-100 p-1.5 rounded-full"></i>
                                     </button>
-                                </div>
-
-                                <!-- Contribution Block (投稿區) -->
-                                <div class="mt-6 pt-5 border-t-2 border-dashed border-purple-200">
-                                    <div class="bg-white/50 rounded-xl p-4 border border-purple-100">
-                                        <h4 class="text-xs font-black text-purple-900 mb-2 flex items-center gap-2">
-                                            <i class="fas fa-lightbulb text-yellow-500"></i> 智慧貢獻與回報
-                                        </h4>
-                                        <p class="text-[11px] text-purple-700 leading-relaxed mb-3">
-                                            沒搜尋到你的難題？或是有更驚艷的神回覆？歡迎點擊下方連結投稿！讓我們集結眾人的智慧，彼此分享，大家一起有智慧的快樂過新年。
-                                        </p>
-                                        <a href="https://line.me/R/ti/p/@469cjlho" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-[11px] font-bold shadow-sm hover:bg-purple-200 transition-all active:scale-95 border border-purple-200">
-                                            <i class="fab fa-line text-lg text-[#06C755]"></i>
-                                            <span>立即前往 LINE 投稿</span>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1195,7 +1176,7 @@
                                 <div class="w-px h-8 bg-gray-300 mx-4"></div>
                                 <div class="flex flex-col items-center">
                                     <span class="text-[10px] text-gray-500 font-bold uppercase">目標</span>
-                                    <span class="text-lg font-bold text-[#BF360C]"><span id="fruit-score" class="text-2xl font-black">0</span>/20</span>
+                                    <span id="fruit-score" class="text-lg font-bold text-[#BF360C]"><span id="fruit-score" class="text-2xl font-black">0</span>/20</span>
                                 </div>
                             </div>
                         </div>
@@ -1513,8 +1494,7 @@
         const YOUR_GOOGLE_SHEET_CSV_URL_VERSES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=0&single=true&output=csv"; 
         const YOUR_GOOGLE_SHEET_CSV_URL_MOOD = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1438404823&single=true&output=csv";
         const YOUR_GOOGLE_SHEET_CSV_URL_PRAYER = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2131834293&single=true&output=csv";
-        // Fixed URL for Survival Guide
-        const YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=712066461&single=true&output=csv";
+        // REMOVED: Survival CSV URL (No longer needed)
         // Fixed URL for First Aid
         const YOUR_FIRST_AID_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2001152991&single=true&output=csv";
         // NEW: Heavenly Envelope URL
@@ -1530,7 +1510,7 @@
         let moodDatabase = [{ date: "2025/1/1", keywords: ["被神看見"], title: "神的心意是好的", text: "你很重要...", ref: "馬太福音1:1-25", song: "【開我的雙眼 Open My Eyes】| PPC", link: "https://youtu.be/XdXopI_eld4" }];
         const defaultResponses = [{ title: "耶穌聽見了", text: "親愛的...", ref: "腓立比書 4:6-7", song: "【安靜 Be Still】| 約書亞樂團", link: "https://www.youtube.com/results?search_query=安靜+Be+Still+約書亞樂團" }];
         let randomPrayerDatabase = [{ date: "1/1", title: "新的一年...", ref: "詩篇 118:24", text: "親愛的主...", fullText: "親愛的主..." }];
-        let survivalDatabase = [];
+        // Removed survivalDatabase as it is no longer used
         let firstAidDatabase = [];
         let heavenlyEnvelopeDatabase = []; // New Database
         // Quiz Data
@@ -1563,21 +1543,84 @@
             "醫治大痲瘋\n路加福音17"
         ];
 
-        // Default Survival Response Fallback
-        const defaultSurvivalResponse = {
-            toxic: ["這題跳過。", "下一題。"], 
-            funny: ["哎呀，訊號不好～"], 
-            pun: ["江湖路遠，此事不必再提。"], 
-            gentle: ["謝謝關心，我們聊點開心的吧。"], 
-            drama: ["你走開！我不想看到你！"], // New Default for Drama
-            ancient: ["天機不可洩漏。"]
-        };
+        // --- GEMINI AI INTEGRATION ---
+        const apiKey = ""; // API Key will be injected by the environment
+        
+        async function callGeminiAI(userPrompt, style) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const styleGuides = {
+                toxic: "犀利風：毒舌且帶點諷刺，不卑不亢地戳中要害，但保持基督徒的基本修養。",
+                funny: "幽默風：開朗、自黑或使用諧音梗，用笑話化解尷尬局面。",
+                pun: "俠客風：豪邁、瀟灑，像武俠小說裡的俠客，快意恩仇但重情重義。",
+                gentle: "溫柔風：充滿愛心、得體且溫暖，展現屬天的平安與包容。",
+                drama: "八點檔風：浮誇、戲劇化，充滿情緒張力，像是家庭電視劇的狗血對白。",
+                ancient: "古偶風：文縐縐、古雅典緻，像古代言情劇或古典小說的口吻。"
+            };
+
+            const systemInstruction = `你是一位「過年生存專家」。當長輩問出一些令人尷尬或不知如何回答的問題（如：薪水、結婚、成績等）時，請針對以下風格提供一句神回覆。
+            風格要求：${styleGuides[style]}
+            規則：回覆必須簡短（40字以內），符合場景，具有機智感。請直接給出對白內容，不要加上「回覆：」或解釋。請使用繁體中文。`;
+
+            const payload = {
+                contents: [{ parts: [{ text: `長輩問：「${userPrompt}」` }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            // Exponential Backoff Retry Logic
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error("API Error");
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "哎呀，靈感斷線了，再試一次吧！";
+                } catch (err) {
+                    if (i === 4) return "AI 休息中，請稍後再試。";
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        async function getSurvivalResponseAI() {
+            const input = document.getElementById('survivalInput').value.trim();
+            if (!input) {
+                showToast("請先輸入長輩的問題喔！");
+                return;
+            }
+            
+            const btn = document.getElementById('generateBtn');
+            const resArea = document.getElementById('survivalResponseArea');
+            const resText = document.getElementById('survivalText');
+            const styleBadge = document.getElementById('styleBadge');
+
+            // Set loading state
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI 思考中...';
+            resArea.classList.add('hidden');
+
+            // Call API
+            const result = await callGeminiAI(input, currentStyle);
+            
+            // Display result
+            resText.innerText = result;
+            styleBadge.innerText = document.querySelector(`.style-pill[data-style="${currentStyle}"]`).innerText;
+            resArea.classList.remove('hidden');
+            
+            // Reset button
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic"></i> 生成神回覆';
+        }
           
         function loadAllData() {
             if(YOUR_GOOGLE_SHEET_CSV_URL_VERSES) fetchData('verses', YOUR_GOOGLE_SHEET_CSV_URL_VERSES);
             if(YOUR_GOOGLE_SHEET_CSV_URL_MOOD) fetchData('mood', YOUR_GOOGLE_SHEET_CSV_URL_MOOD);
             if(YOUR_GOOGLE_SHEET_CSV_URL_PRAYER) fetchData('prayer', YOUR_GOOGLE_SHEET_CSV_URL_PRAYER);
-            if(YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL) fetchData('survival', YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL);
+            // REMOVED: fetchData('survival', ...);
             if(YOUR_FIRST_AID_CSV_URL) fetchFirstAidData(YOUR_FIRST_AID_CSV_URL);
             if(YOUR_HEAVENLY_ENVELOPE_CSV_URL) fetchData('heavenlyEnvelope', YOUR_HEAVENLY_ENVELOPE_CSV_URL); // New Fetch
             
@@ -1690,19 +1733,6 @@
                 }));
             } else if (type === 'prayer') {
                 randomPrayerDatabase = data.map(r => ({ title: getValue(r, ['title', '標題']).trim(), ref: getValue(r, ['ref', '經文']).trim(), text: getValue(r, ['text', '短禱告']).trim(), fullText: getValue(r, ['fullText', '完整禱告']).trim() })).filter(r => r.title);
-            } else if (type === 'survival') {
-                survivalDatabase = data.map(r => ({
-                    keywords: getValue(r, ['keywords', '關鍵字', '問題']).split(/[,，|、\s]+/).filter(k=>k),
-                    toxic: getValue(r, ['犀利風', 'toxic']).split('|').filter(s=>s.trim()),
-                    funny: getValue(r, ['幽默風', 'funny']).split('|').filter(s=>s.trim()),
-                    pun: getValue(r, ['俠客風', 'pun']).split('|').filter(s=>s.trim()),
-                    gentle: getValue(r, ['溫柔風', 'gentle']).split('|').filter(s=>s.trim()),
-                    drama: getValue(r, ['八點檔風', '八點檔', 'drama']).split('|').filter(s=>s.trim()),
-                    ancient: getValue(r, ['古偶風', 'ancient']).split('|').filter(s=>s.trim())
-                }));
-                const count = survivalDatabase.length;
-                document.getElementById('hub-survival-status').innerText = `已載入 ${count} 招`;
-                document.getElementById('survival-count-display').innerText = `祕籍頁數：${count}`;
             } else if (type === 'quiz1' || type === 'quiz2' || type === 'quiz3') {
                 // Process Quiz Data
                 scholarDatabase[type] = data.map(r => {
@@ -1993,71 +2023,6 @@
         function toggleFullPrayer() {
             const el = document.getElementById('prayerBookFullContent'); const btn = document.getElementById('prayerToggleBtn');
             el.classList.toggle('hidden'); btn.innerHTML = el.classList.contains('hidden') ? '<i class="fas fa-book-open mr-1"></i> 📖 閱讀完整禱告' : '<i class="fas fa-chevron-up mr-1"></i> 收起完整禱告';
-        }
-
-        // --- 2. RELAXED SEARCH MATCHING ---
-        function getMatchScore(input, keyword) {
-            let cleanIn = input.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "").toLowerCase(); 
-            let cleanKey = keyword.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "").toLowerCase();
-            if (cleanIn.includes(cleanKey) || cleanKey.includes(cleanIn)) return 1.0;
-            let matchCount = 0; 
-            for (let char of cleanKey) if (cleanIn.includes(char)) matchCount++;
-            return matchCount / cleanKey.length;
-        }
-
-        // NEW: Synonym Expansion (增加同義詞聯想，讓搜尋更聰明)
-        function expandSynonyms(input) {
-            let s = input;
-            const mappings = [
-                // 生育相關
-                { keys: ["小孩", "孩子", "寶寶", "孫", "懷孕", "肚皮", "生", "喜訊", "二胎", "動靜", "不生", "卵子", "精子", "凍卵", "傳宗接代"], add: "生小孩 孩子 孫子 生育 生孩子 懷孕 生不生" },
-                // 感情婚姻 (優化：加入「交」、「談」等核心關聯詞)
-                { keys: ["對象", "男友", "女友", "另一半", "伴侶", "嫁", "娶", "婚", "朋友", "相親", "單身", "沒人要", "眼光", "挑", "交", "談", "帶回", "追", "穩定", "沒交", "男盆友", "女盆友"], add: "結婚 對象 男友 女友 感情 有沒有交 交男朋友 交女朋友" },
-                // 工作薪資
-                { keys: ["薪", "賺", "錢", "年終", "獎金", "月入", "待遇", "發財", "股票", "投資", "包多少", "發紅包"], add: "薪水 錢 收入" },
-                { keys: ["工作", "高就", "職業", "在哪做", "公司", "發展", "升遷", "失業", "待業", "老闆"], add: "工作 職業" },
-                // 外貌身材
-                { keys: ["胖", "瘦", "身材", "重了", "肥", "圓", "減肥", "吃", "腫", "氣色"], add: "胖 瘦 身材 外表" },
-                // 學業成績
-                { keys: ["成績", "考", "名次", "學校", "排名", "班上", "畢業", "第幾名", "台大", "國立"], add: "成績 考試 學業" },
-                // 資產
-                { keys: ["房", "車", "買", "置產", "頭期款"], add: "買房 買車 資產" }
-            ];
-            
-            mappings.forEach(m => {
-                if (m.keys.some(k => input.includes(k))) {
-                    s += " " + m.add;
-                }
-            });
-            return s;
-        }
-
-        function getSurvivalResponse() {
-            const inputVal = document.getElementById('survivalInput').value.trim(); if (!inputVal) return;
-            const styleBadge = document.getElementById('styleBadge'); const textEl = document.getElementById('survivalText');
-            document.getElementById('survivalResponseArea').classList.remove('hidden');
-            const styleNames = { 'toxic': '🐍 犀利風', 'funny': '🤣 幽默風', 'pun': '⚔️ 俠客風', 'gentle': '🕊️ 溫柔風', 'drama': '🎭 八點檔風', 'ancient': '📜 古偶風' };
-            styleBadge.innerText = styleNames[currentStyle]; textEl.innerText = '思考中...';
-            setTimeout(() => {
-                // 使用擴展後的輸入進行匹配
-                const searchInput = expandSynonyms(inputVal); 
-
-                let bestMatch = null; let bestScore = 0;
-                for (const item of survivalDatabase) {
-                    if (!item[currentStyle]) continue;
-                    for (const k of item.keywords) {
-                        const score = getMatchScore(searchInput, k);
-                        if (score > bestScore) { bestScore = score; bestMatch = item; }
-                    }
-                }
-                let result = "";
-                if (bestMatch && bestScore > 0.4) {
-                    const ans = bestMatch[currentStyle]; result = Array.isArray(ans) ? ans[Math.floor(Math.random()*ans.length)] : ans;
-                } else {
-                    const pool = defaultSurvivalResponse[currentStyle]; result = pool[Math.floor(Math.random()*pool.length)];
-                }
-                textEl.innerText = result;
-            }, 800);
         }
 
         /* --------------------------
