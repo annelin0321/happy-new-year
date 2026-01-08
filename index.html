@@ -1195,7 +1195,7 @@
                                 <div class="w-px h-8 bg-gray-300 mx-4"></div>
                                 <div class="flex flex-col items-center">
                                     <span class="text-[10px] text-gray-500 font-bold uppercase">目標</span>
-                                    <span class="text-lg font-bold text-[#BF360C]"><span id="fruit-score" class="text-2xl font-black">0</span>/20</span>
+                                    <span id="fruit-score" class="text-lg font-bold text-[#BF360C]"><span id="fruit-score" class="text-2xl font-black">0</span>/20</span>
                                 </div>
                             </div>
                         </div>
@@ -1427,7 +1427,7 @@
 
     <!-- Expiration Notice Overlay -->
     <div id="expired-notice-overlay" class="fixed inset-0 bg-black/95 z-[300] flex items-center justify-center p-6 hidden">
-        <div class="bg-[#FFFDF5] rounded-2xl p-8 max-w-sm w-full text-center border-4 border-[#8E1E20] relative shadow-2xl">
+        <div class="bg-[#FFFDF5] rounded-2xl p-8 max-sm w-full text-center border-4 border-[#8E1E20] relative shadow-2xl">
             <div class="mb-4 text-6xl">👋</div>
             <h3 class="text-3xl font-bold text-[#8E1E20] title-font mb-4">活動已圓滿結束</h3>
             <div class="space-y-4 text-[#5C2828] text-base leading-relaxed font-medium">
@@ -1510,20 +1510,21 @@
           
         let lastVerseIndex = -1;
         let currentVerseData = null; 
-        const YOUR_GOOGLE_SHEET_CSV_URL_VERSES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=0&single=true&output=csv"; 
-        const YOUR_GOOGLE_SHEET_CSV_URL_MOOD = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1438404823&single=true&output=csv";
-        const YOUR_GOOGLE_SHEET_CSV_URL_PRAYER = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2131834293&single=true&output=csv";
+        // Correcting URLs to direct raw content domain
+        const YOUR_GOOGLE_SHEET_CSV_URL_VERSES = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/blessing-verses.json"; 
+        const YOUR_GOOGLE_SHEET_CSV_URL_MOOD = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/devotionals.json";
+        const YOUR_GOOGLE_SHEET_CSV_URL_PRAYER = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/prayers.json";
         // Fixed URL for Survival Guide
-        const YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=712066461&single=true&output=csv";
+        const YOUR_GOOGLE_SHEET_CSV_URL_SURVIVAL = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/elder-survival-guide.json";
         // Fixed URL for First Aid
-        const YOUR_FIRST_AID_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=2001152991&single=true&output=csv";
+        const YOUR_FIRST_AID_CSV_URL = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/bible-first-aid.json";
         // NEW: Heavenly Envelope URL
-        const YOUR_HEAVENLY_ENVELOPE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=729851481&single=true&output=csv";
+        const YOUR_HEAVENLY_ENVELOPE_CSV_URL = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/red-envelopes.json";
 
         // --- QUIZ URLs ---
-        const QUIZ1_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1484195012&single=true&output=csv"; // 聖經大會考
-        const QUIZ2_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1420570073&single=true&output=csv"; // 聖經冷知識
-        const QUIZ3_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkYqj2VRbom6fM9-afhqWbM3jNlZXdL_dy4k_vL14IuepV4YOBpxyqx732FKIJ7ePjvU4iK49tcAEt/pub?gid=1503258725&single=true&output=csv"; // 遇見彌賽亞
+        const QUIZ1_URL = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/bible-quiz.json"; // 聖經大會考
+        const QUIZ2_URL = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/bible-trivia.json"; // 聖經冷知識
+        const QUIZ3_URL = "https://raw.githubusercontent.com/annelin0321/witty-bible-data/refs/heads/main/life-of-jesus.json"; // 遇見彌賽亞
 
         // Default Data
         let verses = [{ short: "耶和華是我的牧者，我必不致缺乏。(詩篇 23:1)", full: "耶和華是我的牧者，我必不致缺乏。（詩篇 23:1）" }];
@@ -1590,29 +1591,45 @@
         async function fetchData(type, url) {
             try {
                 // Add cache: 'no-store' to ensure fresh data
-                const response = await fetch(url + `&t=${new Date().getTime()}`, { 
-                    redirect: 'follow',
+                const response = await fetch(url, { 
                     cache: 'no-store'
                 });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const text = await response.text();
-                if (text.trim().startsWith('<!DOCTYPE html>')) { updateStatus(type, false); return; }
+                
+                // Robust JSON parsing
+                let text = await response.text();
+                
+                // Attempt to fix common JSON errors (like missing commas between objects in array)
+                // This is a simple heuristic: replace "} {" with "}, {"
+                text = text.replace(/}\s*{/g, '},{');
+                
+                // If it doesn't start with [, wrap it
+                if (text.trim().startsWith('{') && !text.trim().startsWith('[')) {
+                     text = `[${text}]`;
+                }
 
-                Papa.parse(text, {
-                    header: true, skipEmptyLines: true, transformHeader: h => h.trim(),
-                    complete: function(results) { processData(type, results.data); updateStatus(type, true); },
-                    error: function(err) { console.error(`Error parsing ${type}:`, err); updateStatus(type, false); }
-                });
-            } catch (e) { console.error(`Fetch failed for ${type}:`, e); updateStatus(type, false); }
+                try {
+                    const data = JSON.parse(text);
+                    processData(type, data);
+                    updateStatus(type, true);
+                } catch (e) {
+                    console.warn(`JSON Parse Error for ${type}:`, e);
+                    updateStatus(type, false);
+                }
+            } catch (e) { 
+                console.error(`Fetch failed for ${type}:`, e); 
+                updateStatus(type, false); 
+            }
         }
 
         // --- 1. SMART COLUMN MATCHING ---
         function getValue(row, keyOptions) {
+            if (!row) return '';
             const rowKeys = Object.keys(row);
             
             // 1. Try exact match first for all options (Priority)
             for (const option of keyOptions) {
-                if (row[option] !== undefined) return row[option];
+                if (row[option] !== undefined && row[option] !== null) return row[option];
             }
 
             // 2. Try normalized exact match (Case insensitive, trim, BOM removal)
@@ -1624,7 +1641,7 @@
                     const cleanKey = k.replace(/^\uFEFF/, '').trim().toLowerCase().replace(/[()]/g, '');
                     return cleanKey === target;
                 });
-                if (exactMatch) return row[exactMatch];
+                if (exactMatch && row[exactMatch] !== null) return row[exactMatch];
             }
 
             // 3. Try fuzzy match (includes) - ONLY if strict failed
@@ -1634,16 +1651,16 @@
                     const cleanKey = k.replace(/^\uFEFF/, '').trim().toLowerCase().replace(/[()]/g, '');
                     return cleanKey.includes(target);
                 });
-                if (fuzzyMatch) return row[fuzzyMatch];
+                if (fuzzyMatch && row[fuzzyMatch] !== null) return row[fuzzyMatch];
             }
             return '';
         }
 
         // Utility for normalization (Full-width to Half-width and cleanup)
         function normalizeAnswer(str) {
-            if(!str) return '';
-            // Remove BOM and invisible chars first
-            let s = str.replace(/[\uFEFF\u200B\u200C\u200D\u2060\u180E]/g, '');
+            // Fix: ensure input is string before replace
+            if(str === null || str === undefined) return '';
+            let s = String(str).replace(/[\uFEFF\u200B\u200C\u200D\u2060\u180E]/g, '');
             // Full-width to Half-width
             s = s.replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/\u3000/g, ' ');
             s = s.trim().toUpperCase();
@@ -1666,8 +1683,8 @@
 
         // Helper for text comparison (used in double-check)
         function normalizeTextForComparison(str) {
-            if(!str) return '';
-            let s = str.replace(/[\uFEFF\u200B\u200C\u200D\u2060\u180E]/g, '');
+            if(str === null || str === undefined) return '';
+            let s = String(str).replace(/[\uFEFF\u200B\u200C\u200D\u2060\u180E]/g, '');
             s = s.replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/\u3000/g, ' ');
             return s.replace(/[\(\)\.\,\s\"\'\-\_]/g, '').trim().toUpperCase();
         }
@@ -1677,65 +1694,68 @@
             
             if(type === 'verses') {
                 verses = data.map(r => {
-                    let fullT = getValue(r, ['full', '完整', '完整經文']).trim();
+                    let fullT = String(getValue(r, ['full', '完整', '完整經文'])).trim();
                     const match = fullT.match(/[\(\uff08](.*?)[\)\uff09]$/);
                     if (match && match[1] && fullT.startsWith(match[1].trim())) fullT = fullT.substring(match[1].trim().length).replace(/^[:：\s\.,]+/, '').trim();
-                    return { short: getValue(r, ['short', '短句', '經文']).trim(), full: fullT };
+                    return { short: String(getValue(r, ['short', '短句', '經文'])).trim(), full: fullT };
                 }).filter(r => r.short && r.full);
             } else if (type === 'mood') {
                 moodDatabase = data.map(r => ({
-                    date: getValue(r, ['date', '日期']).trim(),
-                    keywords: getValue(r, ['keywords', '關鍵字']) ? getValue(r, ['keywords', '關鍵字']).split(/[,，|、\s]+/).filter(k=>k) : [],
-                    title: getValue(r, ['title', '標題']).trim(), text: getValue(r, ['text', '內容', '回應']).trim(), ref: getValue(r, ['ref', '經文', '出處']).trim(), song: getValue(r, ['song', '詩歌']).trim() || "遇見你，我就遇見幸福", link: getValue(r, ['link', '連結']).trim() || "https://youtu.be/XdXopI_eld4"
+                    date: String(getValue(r, ['date', '日期'])).trim(),
+                    keywords: getValue(r, ['keywords', '關鍵字']) ? String(getValue(r, ['keywords', '關鍵字'])).split(/[,，|、\s]+/).filter(k=>k) : [],
+                    title: String(getValue(r, ['title', '標題'])).trim(), 
+                    text: String(getValue(r, ['text', '內容', '回應'])).trim(), 
+                    ref: String(getValue(r, ['ref', '經文', '出處'])).trim(), 
+                    song: String(getValue(r, ['song', '詩歌'])).trim() || "遇見你，我就遇見幸福", 
+                    link: String(getValue(r, ['link', '連結'])).trim() || "https://youtu.be/XdXopI_eld4"
                 }));
             } else if (type === 'prayer') {
-                randomPrayerDatabase = data.map(r => ({ title: getValue(r, ['title', '標題']).trim(), ref: getValue(r, ['ref', '經文']).trim(), text: getValue(r, ['text', '短禱告']).trim(), fullText: getValue(r, ['fullText', '完整禱告']).trim() })).filter(r => r.title);
+                randomPrayerDatabase = data.map(r => ({ 
+                    title: String(getValue(r, ['title', '標題'])).trim(), 
+                    ref: String(getValue(r, ['ref', '經文'])).trim(), 
+                    text: String(getValue(r, ['text', '短禱告', '內容'])).trim(), 
+                    fullText: String(getValue(r, ['fullText', '完整禱告'])).trim() 
+                })).filter(r => r.title);
             } else if (type === 'survival') {
                 survivalDatabase = data.map(r => ({
-                    keywords: getValue(r, ['keywords', '關鍵字', '問題']).split(/[,，|、\s]+/).filter(k=>k),
-                    toxic: getValue(r, ['犀利風', 'toxic']).split('|').filter(s=>s.trim()),
-                    funny: getValue(r, ['幽默風', 'funny']).split('|').filter(s=>s.trim()),
-                    pun: getValue(r, ['俠客風', 'pun']).split('|').filter(s=>s.trim()),
-                    gentle: getValue(r, ['溫柔風', 'gentle']).split('|').filter(s=>s.trim()),
-                    drama: getValue(r, ['八點檔風', '八點檔', 'drama']).split('|').filter(s=>s.trim()),
-                    ancient: getValue(r, ['古偶風', 'ancient']).split('|').filter(s=>s.trim())
+                    keywords: String(getValue(r, ['keywords', '關鍵字', '問題'])).split(/[,，|、\s]+/).filter(k=>k),
+                    toxic: String(getValue(r, ['犀利風', 'toxic'])).split('|').filter(s=>s.trim()),
+                    funny: String(getValue(r, ['幽默風', 'funny'])).split('|').filter(s=>s.trim()),
+                    pun: String(getValue(r, ['俠客風', 'pun'])).split('|').filter(s=>s.trim()),
+                    gentle: String(getValue(r, ['溫柔風', 'gentle'])).split('|').filter(s=>s.trim()),
+                    drama: String(getValue(r, ['八點檔風', '八點檔', 'drama'])).split('|').filter(s=>s.trim()),
+                    ancient: String(getValue(r, ['古偶風', 'ancient'])).split('|').filter(s=>s.trim())
                 }));
                 const count = survivalDatabase.length;
                 document.getElementById('hub-survival-status').innerText = `已載入 ${count} 招`;
                 document.getElementById('survival-count-display').innerText = `祕籍頁數：${count}`;
             } else if (type === 'quiz1' || type === 'quiz2' || type === 'quiz3') {
-                // Process Quiz Data
                 scholarDatabase[type] = data.map(r => {
                     let answerRaw = getValue(r, ['正確答案', 'Correct Answer', 'Answer', 'ans']);
-                    
-                    // Fallback Logic
-                    if (answerRaw.length > 5) {
+                    if (String(answerRaw).length > 5) {
                         if (r['正確答案']) answerRaw = r['正確答案'];
                         else if (r['Correct Answer']) answerRaw = r['Correct Answer'];
                         else if (r['Answer']) answerRaw = r['Answer'];
                     }
-
                     return {
-                        category: getValue(r, ['類別', 'category']),
-                        question: getValue(r, ['題目', 'question', 'q']),
+                        category: String(getValue(r, ['類別', 'category'])),
+                        question: String(getValue(r, ['題目', 'question', 'q'])),
                         options: [
-                            getValue(r, ['選項A', 'Option A', 'A']) || '',
-                            getValue(r, ['選項B', 'Option B', 'B']) || '',
-                            getValue(r, ['選項C', 'Option C', 'C']) || '',
-                            getValue(r, ['選項D', 'Option D', 'D']) || ''
+                            String(getValue(r, ['選項A', 'Option A', 'A']) || ''),
+                            String(getValue(r, ['選項B', 'Option B', 'B']) || ''),
+                            String(getValue(r, ['選項C', 'Option C', 'C']) || ''),
+                            String(getValue(r, ['選項D', 'Option D', 'D']) || '')
                         ], 
-                        // Fix: Normalize answer (Full-width to Half-width, Trim, Upper)
                         answer: normalizeAnswer(answerRaw),
-                        note: getValue(r, ['備註', 'Note', 'Explanation', '解析', '正確答案解析'])
+                        note: String(getValue(r, ['備註', 'Note', 'Explanation', '解析', '正確答案解析']))
                     };
                 }).filter(q => q.question && q.answer);
             } else if (type === 'heavenlyEnvelope') {
-                // New Processing Logic
                 heavenlyEnvelopeDatabase = data.map(r => ({
-                    ref: getValue(r, ['經文出處', 'Reference', 'ref']),
-                    category: getValue(r, ['分類', 'Category', 'cat']),
-                    chinese: getValue(r, ['中文經文(和合本)', '中文經文', 'Chinese Verse']),
-                    english: getValue(r, ['EnglishVerse(KJV)', 'EnglishVerse', 'English'])
+                    ref: String(getValue(r, ['經文出處', 'Reference', 'ref'])),
+                    category: String(getValue(r, ['分類', 'Category', 'cat'])),
+                    chinese: String(getValue(r, ['中文經文(和合本)', '中文經文', 'Chinese Verse'])),
+                    english: String(getValue(r, ['EnglishVerse(KJV)', 'EnglishVerse', 'English']))
                 })).filter(r => r.chinese);
             }
         }
@@ -1746,44 +1766,36 @@
             if(!dot) { dot = document.createElement('div'); dot.id = dotId; dot.className = 'status-dot'; statusDiv.appendChild(dot); }
             dot.className = `status-dot ${success ? 'status-success' : 'status-error'}`;
         }
-         
-        function updateDebugInfo(msg) {
-            const debugEl = document.getElementById('debugInfo');
-            if(debugEl) {
-                const current = debugEl.innerText;
-                debugEl.innerText = current ? `${current} | ${msg}` : msg;
-            }
-        }
           
-        // -------------------------
-        // 4. View Navigation Logic
-        // -------------------------
-
         let currentStyle = 'toxic';
+        // 手動定義視圖變數，避免自動化邏輯錯誤
         let views = { 
-            menu: document.getElementById('home-menu'), 
-            scratch: document.getElementById('scratch-view'), 
-            talk: document.getElementById('talk-view'),
-            prayer: document.getElementById('prayer-view'),
-            survivalHub: document.getElementById('survival-hub-view'),
-            survivalGuide: document.getElementById('survival-view'),
-            firstAid: document.getElementById('first-aid-view'),
-            scholarHub: document.getElementById('scholar-hub-view'),
-            gameHub: document.getElementById('game-hub-view'),
-            quizView: document.getElementById('quiz-view'),
-            fruitGame: document.getElementById('fruit-game-view'), 
-            memoryGame: document.getElementById('memory-game-view'), 
-            solitaireGame: document.getElementById('solitaire-game-view'), // New Solitaire View
-            heavenlyEnvelope: document.getElementById('heavenly-envelope-view')
+            menu: null, 
+            scratch: null, 
+            talk: null,
+            prayer: null,
+            survivalHub: null,
+            survivalGuide: null,
+            firstAid: null,
+            scholarHub: null,
+            gameHub: null,
+            quizView: null,
+            fruitGame: null, 
+            memoryGame: null, 
+            solitaireGame: null, 
+            heavenlyEnvelope: null
         };
         const homeHeader = document.getElementById('home-header');
         const innerNavBar = document.getElementById('inner-nav-bar');
 
-        function hideAllViews() { Object.values(views).forEach(el => { if(el) { el.classList.add('hidden'); el.classList.remove('fade-in'); } }); }
+        function hideAllViews() { 
+            Object.values(views).forEach(el => { if(el) { el.classList.add('hidden'); el.classList.remove('fade-in'); } }); 
+        }
         function forceScrollReset() { const wrapper = document.getElementById('scroll-wrapper'); if(wrapper) wrapper.scrollTop = 0; }
 
         function showHome() { 
-            hideAllViews(); views.menu.classList.remove('hidden'); views.menu.classList.add('fade-in'); 
+            hideAllViews(); 
+            if(views.menu) { views.menu.classList.remove('hidden'); views.menu.classList.add('fade-in'); }
             homeHeader.style.display = 'block'; innerNavBar.style.display = 'none'; forceScrollReset(); 
             document.querySelector('.lantern-container').classList.remove('hide-lanterns');
         }
@@ -1798,7 +1810,6 @@
             hideAllViews(); views.prayer.classList.remove('hidden'); views.prayer.classList.add('fade-in'); 
             homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
             document.querySelector('.lantern-container').classList.add('hide-lanterns');
-            // Reset Prayer View
             document.getElementById('bookCover').classList.remove('hidden'); document.getElementById('bookPage').classList.add('hidden'); document.getElementById('prayerActionButtons').classList.add('hidden'); document.getElementById('prayerToggleBtn').innerHTML = '<i class="fas fa-book-open mr-1"></i> 📖 閱讀完整禱告';
         }
           
@@ -1808,7 +1819,6 @@
             document.querySelector('.lantern-container').classList.add('hide-lanterns'); initPokeGame();
         }
 
-        // --- NEW: Survival Hub Logic ---
         function showSurvivalHub() {
             hideAllViews(); views.survivalHub.classList.remove('hidden'); views.survivalHub.classList.add('fade-in');
             homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
@@ -1828,7 +1838,6 @@
             initFirstAidUI();
         }
         
-        // --- NEW: Scholar & Game Hub Logic ---
         function showScholarHub() {
             hideAllViews(); views.scholarHub.classList.remove('hidden'); views.scholarHub.classList.add('fade-in');
             homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset(); 
@@ -1846,49 +1855,29 @@
             document.getElementById('survival-content').classList.remove('hidden');
         }
 
-        // --- NEW: Heavenly Envelope Logic ---
         function showHeavenlyEnvelope() {
             hideAllViews(); views.heavenlyEnvelope.classList.remove('hidden'); views.heavenlyEnvelope.classList.add('fade-in');
             homeHeader.style.display = 'none'; innerNavBar.style.display = 'flex'; forceScrollReset();
             document.querySelector('.lantern-container').classList.add('hide-lanterns');
-            
-            // Reset Envelope State
             const card = document.getElementById('redEnvelopeCard');
             const actions = document.getElementById('envelope-actions');
             card.classList.remove('opened');
             actions.classList.add('hidden');
         }
 
-        function simulateGameWin(gameName) {
-            showToast(`🎮 正在載入 ${gameName}...`);
-            setTimeout(() => {
-                showToast("🎉 遊戲通關！準備領取大紅包！");
-                setTimeout(showHeavenlyEnvelope, 1500);
-            }, 1000);
-        }
-
         function openRedEnvelope() {
             const card = document.getElementById('redEnvelopeCard');
-            if(card.classList.contains('opened')) return; // Prevent re-opening
-            
-            // Pick a random verse
+            if(card.classList.contains('opened')) return; 
             if(!heavenlyEnvelopeDatabase.length) {
                 showToast("紅包資料載入中，請稍後...");
                 return;
             }
-            
             const verse = heavenlyEnvelopeDatabase[Math.floor(Math.random() * heavenlyEnvelopeDatabase.length)];
-            
-            // Fill Data
             document.getElementById('env-category').innerText = verse.category || "祝福";
             document.getElementById('env-chinese').innerText = verse.chinese || "願主賜福保護你";
             document.getElementById('env-english').innerText = verse.english || "";
             document.getElementById('env-ref').innerText = verse.ref || "";
-
-            // Animate
             card.classList.add('opened');
-            
-            // Show actions after animation
             setTimeout(() => {
                 document.getElementById('envelope-actions').classList.remove('hidden');
             }, 800);
@@ -1899,15 +1888,12 @@
             const chi = document.getElementById('env-chinese').innerText;
             const eng = document.getElementById('env-english').innerText;
             const ref = document.getElementById('env-ref').innerText;
-            
             document.getElementById('shareEnvCategory').innerText = cat;
             document.getElementById('shareEnvChinese').innerText = chi;
             document.getElementById('shareEnvEnglish').innerText = eng;
             document.getElementById('shareEnvRef').innerText = ref;
-            
             const shareCard = document.getElementById('envelopeShareHidden');
             shareCard.style.opacity = '1';
-            
             captureAndShare('envelopeShareHidden', 'Jesus Vibes 2026', `🧧 我的天國大紅包 🧧\n\n【${cat}】\n${chi}\n\n${eng}\n\n📖 ${ref}`).then(() => {
                 shareCard.style.opacity = '0';
             });
@@ -1919,9 +1905,6 @@
             el.classList.add('active');
         }
 
-        /* --------------------------
-            EXISTING LOGIC: Scratch, Poke, Prayer, Survival Guide
-            -------------------------- */
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         const verseTextDiv = document.getElementById('verseText');
@@ -1962,13 +1945,11 @@
             document.getElementById('scroll-wrapper').scrollTo({ top: area.getBoundingClientRect().top + document.getElementById('scroll-wrapper').scrollTop - 80, behavior: 'smooth' });
             document.getElementById('responseText').innerText = '...';
             setTimeout(() => {
-                const item = (moodDatabase && moodDatabase.length) ? moodDatabase[Math.floor(Math.random() * moodDatabase.length)] : defaultResponses[0];
+                const item = (moodDatabase && moodDatabase.length > 1) ? moodDatabase[Math.floor(Math.random() * moodDatabase.length)] : defaultResponses[0];
                 document.getElementById('responseTitle').innerText = item.title;
                 document.getElementById('responseDate').innerText = item.date || 'Today';
                 document.getElementById('responseText').innerText = item.text;
                 document.getElementById('responseRef').innerText = item.ref;
-                
-                // Modified logic for song link
                 const songEl = document.getElementById('responseSong');
                 if (item.link) {
                     songEl.innerHTML = `<a href="${item.link}" target="_blank" class="flex items-center gap-1 hover:text-green-600 transition-colors cursor-pointer">
@@ -1995,160 +1976,30 @@
             el.classList.toggle('hidden'); btn.innerHTML = el.classList.contains('hidden') ? '<i class="fas fa-book-open mr-1"></i> 📖 閱讀完整禱告' : '<i class="fas fa-chevron-up mr-1"></i> 收起完整禱告';
         }
 
-        // --- 2. RELAXED SEARCH MATCHING ---
-        function getMatchScore(input, keyword) {
-            let cleanIn = input.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "").toLowerCase(); 
-            let cleanKey = keyword.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "").toLowerCase();
-            if (cleanIn.includes(cleanKey) || cleanKey.includes(cleanIn)) return 1.0;
-            let matchCount = 0; 
-            for (let char of cleanKey) if (cleanIn.includes(char)) matchCount++;
-            return matchCount / cleanKey.length;
-        }
-
-        // NEW: Synonym Expansion (增加同義詞聯想，讓搜尋更聰明)
-        function expandSynonyms(input) {
-            let s = input;
-            const mappings = [
-                // 生育相關
-                { keys: ["小孩", "孩子", "寶寶", "孫", "懷孕", "肚皮", "生", "喜訊", "二胎", "動靜", "不生", "卵子", "精子", "凍卵", "傳宗接代"], add: "生小孩 孩子 孫子 生育 生孩子 懷孕 生不生" },
-                // 感情婚姻 (優化：加入「交」、「談」等核心關聯詞)
-                { keys: ["對象", "男友", "女友", "另一半", "伴侶", "嫁", "娶", "婚", "朋友", "相親", "單身", "沒人要", "眼光", "挑", "交", "談", "帶回", "追", "穩定", "沒交", "男盆友", "女盆友"], add: "結婚 對象 男友 女友 感情 有沒有交 交男朋友 交女朋友" },
-                // 工作薪資
-                { keys: ["薪", "賺", "錢", "年終", "獎金", "月入", "待遇", "發財", "股票", "投資", "包多少", "發紅包"], add: "薪水 錢 收入" },
-                { keys: ["工作", "高就", "職業", "在哪做", "公司", "發展", "升遷", "失業", "待業", "老闆"], add: "工作 職業" },
-                // 外貌身材
-                { keys: ["胖", "瘦", "身材", "重了", "肥", "圓", "減肥", "吃", "腫", "氣色"], add: "胖 瘦 身材 外表" },
-                // 學業成績
-                { keys: ["成績", "考", "名次", "學校", "排名", "班上", "畢業", "第幾名", "台大", "國立"], add: "成績 考試 學業" },
-                // 資產
-                { keys: ["房", "車", "買", "置產", "頭期款"], add: "買房 買車 資產" }
-            ];
-            
-            mappings.forEach(m => {
-                if (m.keys.some(k => input.includes(k))) {
-                    s += " " + m.add;
-                }
-            });
-            return s;
-        }
-
-        function getSurvivalResponse() {
-            const inputVal = document.getElementById('survivalInput').value.trim(); if (!inputVal) return;
-            const styleBadge = document.getElementById('styleBadge'); const textEl = document.getElementById('survivalText');
-            document.getElementById('survivalResponseArea').classList.remove('hidden');
-            const styleNames = { 'toxic': '🐍 犀利風', 'funny': '🤣 幽默風', 'pun': '⚔️ 俠客風', 'gentle': '🕊️ 溫柔風', 'drama': '🎭 八點檔風', 'ancient': '📜 古偶風' };
-            styleBadge.innerText = styleNames[currentStyle]; textEl.innerText = '思考中...';
-            setTimeout(() => {
-                // 使用擴展後的輸入進行匹配
-                const searchInput = expandSynonyms(inputVal); 
-
-                let bestMatch = null; let bestScore = 0;
-                for (const item of survivalDatabase) {
-                    if (!item[currentStyle]) continue;
-                    for (const k of item.keywords) {
-                        const score = getMatchScore(searchInput, k);
-                        if (score > bestScore) { bestScore = score; bestMatch = item; }
-                    }
-                }
-                let result = "";
-                if (bestMatch && bestScore > 0.4) {
-                    const ans = bestMatch[currentStyle]; result = Array.isArray(ans) ? ans[Math.floor(Math.random()*ans.length)] : ans;
-                } else {
-                    const pool = defaultSurvivalResponse[currentStyle]; result = pool[Math.floor(Math.random()*pool.length)];
-                }
-                textEl.innerText = result;
-            }, 800);
-        }
-
-        /* --------------------------
-            NEW MODULE: Bible First Aid Kit Logic (FIXED)
-            -------------------------- */
-        const customSearchLogic = {
-            "沒錢": (item) => item.category === "職場財富" || item.keywords.some(k => ["錢", "富足", "供應", "缺乏", "財物"].some(w => k.includes(w))),
-            "水逆": (item) => ["逆境翻盤", "新年轉運", "出入平安"].includes(item.category) || item.keywords.some(k => ["順利", "平安", "災害", "保守", "運氣"].some(w => k.includes(w))),
-            "睡不著": (item) => ["睡眠安息", "情緒急救"].includes(item.category) || item.keywords.some(k => ["失眠", "安息", "躺臥", "睡眠"].some(w => k.includes(w))),
-            "被催婚": (item) => item.category === "單身應對" || item.keywords.some(k => ["催婚", "等候", "定時", "結婚"].some(w => k.includes(w))),
-            "孤單": (item) => item.category === "面對孤單" || item.keywords.some(k => ["孤單", "同在", "朋友", "邊緣"].some(w => k.includes(w))),
-            "不想上班": (item) => ["職場智慧", "未來方向"].includes(item.category) || item.keywords.some(k => ["工作", "能力", "老闆", "懶惰"].some(w => k.includes(w))),
-            "胖": (item) => ["飲食健康", "節制自律", "自我接納"].includes(item.category) || item.keywords.some(k => ["減肥", "身體", "肚腹"].some(w => k.includes(w))),
-            "小人": (item) => ["人際界線", "逆境翻盤"].includes(item.category) || item.keywords.some(k => ["小人", "仇敵", "陷害", "被罵"].some(w => k.includes(w))),
-            "麻將輸": (item) => ["職場財富", "逆境翻盤"].includes(item.category) || item.keywords.some(k => ["運氣", "富足"].some(w => k.includes(w))),
-            "手氣背": (item) => item.category === "新年轉運" || item.keywords.some(k => ["機會", "得勝", "新事"].some(w => k.includes(w))),
-            "塞車": (item) => ["忍耐等候", "出入平安"].includes(item.category) || item.keywords.some(k => ["忍耐", "保守", "道路"].some(w => k.includes(w))),
-            "暈車": (item) => item.category === "平安健康" || item.keywords.some(k => ["醫治", "健壯"].some(w => k.includes(w))),
-            "紅包太多": (item) => ["慷慨給予", "財務智慧"].includes(item.category) || item.keywords.some(k => ["施捨", "給予", "種"].some(w => k.includes(w))),
-            "沒紅包": (item) => item.category === "經濟供應" || item.keywords.some(k => ["賞賜", "禮物", "產業"].some(w => k.includes(w))),
-            "大掃除": (item) => item.keywords.some(k => ["懶惰", "力量", "做工", "疲乏"].some(w => k.includes(w))),
-            "爛在沙發": (item) => item.category === "節制自律" || item.keywords.some(k => ["休息", "光陰"].some(w => k.includes(w))),
-            "親戚吵": (item) => item.category === "人際界線" || item.keywords.some(k => ["閉嘴", "安靜", "言語", "口舌"].some(w => k.includes(w))),
-            "問成績": (item) => item.category === "拒絕比較" || item.keywords.some(k => ["價值", "比較", "為首"].some(w => k.includes(w))),
-            "小孩尖叫": (item) => item.category === "家庭教養" || item.keywords.some(k => ["忍耐", "教養", "兒女"].some(w => k.includes(w))),
-            "吃太撐": (item) => item.category === "飲食健康" || item.keywords.some(k => ["肚腹", "節制"].some(w => k.includes(w))),
-            "喝掛": (item) => item.keywords.some(k => ["酒", "清醒", "醉"].some(w => k.includes(w)))
-        };
-
-        const hotTags = [
-            { label: "💸 缺錢", query: "沒錢", class: "tag-money" },
-            { label: "😰 水逆", query: "水逆", class: "tag-money" },
-            { label: "🐼 睡不著", query: "睡不著", class: "tag-tired" },
-            { label: "💍 被催婚", query: "被催婚", class: "tag-lonely" },
-            { label: "🍂 覺得孤單", query: "孤單", class: "tag-lonely" },
-            { label: "👋 想離職", query: "不想上班", class: "tag-lost" },
-            { label: "🐷 減肥失敗", query: "胖", class: "tag-full" },
-            { label: "😤 遇到小人", query: "小人", class: "tag-gray" },
-            { label: "🀄️ 麻將一直輸", query: "麻將輸", class: "tag-money" },
-            { label: "🃏 手氣背到爆", query: "手氣背", class: "tag-money" },
-            { label: "🚗 塞車好痛苦", query: "塞車", class: "tag-tired" },
-            { label: "🤢 暈車想吐", query: "暈車", class: "tag-tired" },
-            { label: "💸 紅包包太多", query: "紅包太多", class: "tag-money" },
-            { label: "🧧 沒領到紅包", query: "沒紅包", class: "tag-money" },
-            { label: "🧹 大掃除好累", query: "大掃除", class: "tag-tired" },
-            { label: "🛌 只想爛在沙發", query: "爛在沙發", class: "tag-tired" },
-            { label: "🙉 親戚太吵", query: "親戚吵", class: "tag-gray" },
-            { label: "🎓 被問成績/薪水", query: "問成績", class: "tag-lonely" },
-            { label: "👶 小孩失控尖叫", query: "小孩尖叫", class: "tag-gray" },
-            { label: "🍖 吃太撐", query: "吃太撐", class: "tag-full" },
-            { label: "🍺 喝掛了", query: "喝掛", class: "tag-full" }
-        ];
-
-        const categoryVisuals = {
-            "職場財富": { icon: "fa-coins", bg: "bg-yellow-100", text: "text-yellow-700", border: "border-yellow-200" },
-            "人際家庭": { icon: "fa-users", bg: "bg-pink-100", text: "text-pink-700", border: "border-pink-200" },
-            "情緒急救": { icon: "fa-heart-pulse", bg: "bg-red-100", text: "text-red-700", border: "border-red-200" },
-            "未來方向": { icon: "fa-compass", bg: "bg-blue-100", text: "text-blue-700", border: "border-blue-200" },
-            "平安健康": { icon: "fa-shield-heart", bg: "bg-green-100", text: "text-green-700", border: "border-green-200" },
-            "信心勇氣": { icon: "fa-crown", bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200" }
-        };
-
-        function initFirstAidUI() {
-            const list = document.getElementById('hotTagsList');
-            if(list && list.children.length === 0) {
-                list.innerHTML = hotTags.map(tag => `<div class="hot-tag-btn ${tag.class}" onclick="renderSearchResults('${tag.query}', false, true)">${tag.label}</div>`).join('');
-            }
-        }
-
         async function fetchFirstAidData(url) {
             try {
                 if(!url) { updateStatus('first-aid', false); return; }
-                const response = await fetch(url + `&t=${new Date().getTime()}`, { redirect: 'follow', cache: 'no-store' });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const text = await response.text();
-                if (text.trim().startsWith('<!DOCTYPE html>')) { updateStatus('first-aid', false); return; }
-                Papa.parse(text, {
-                    header: true, skipEmptyLines: true, transformHeader: h => h.trim(),
-                    complete: function(results) { processFirstAidData(results.data); updateStatus('first-aid', true); },
-                    error: function(err) { updateStatus('first-aid', false); }
+                const response = await fetch(url + `?t=${new Date().getTime()}`, { 
+                    cache: 'no-store'
                 });
-            } catch (e) { updateStatus('first-aid', false); }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                processFirstAidData(data); 
+                updateStatus('first-aid', true);
+            } catch (e) { 
+                console.error("Error loading First Aid data:", e);
+                updateStatus('first-aid', false); 
+            }
         }
 
         function processFirstAidData(data) {
+            if (!data) return;
             firstAidDatabase = data.map(r => {
-                let cat = (getValue(r, ['歸屬六大類', 'category', 'Main Category'])).trim();
-                let txt = (getValue(r, ['經文內容 (Content)', '經文內容', 'content', 'text'])).trim();
-                let rawCat = (getValue(r, ['分類 (Category)', '分類', 'category', 'title'])).trim(); 
-                let ref = (getValue(r, ['出處 (Reference)', '出處', 'reference', 'ref'])).trim();
-                let kw = (getValue(r, ['關鍵字 (Keywords)', '關鍵字', 'keywords'])).trim();
+                let cat = String(getValue(r, ['歸屬六大類', 'category', 'Main Category'])).trim();
+                let txt = String(getValue(r, ['經文內容 (Content)', '經文內容', 'content', 'text'])).trim();
+                let rawCat = String(getValue(r, ['分類 (Category)', '分類', 'category', 'title'])).trim(); 
+                let ref = String(getValue(r, ['出處 (Reference)', '出處', 'reference', 'ref'])).trim();
+                let kw = String(getValue(r, ['關鍵字 (Keywords)', '關鍵字', 'keywords'])).trim();
                 if (!txt) return null;
                 if (!ref) {
                       const match = txt.match(/[\(\（](.*?)[\)\維持]$/);
@@ -2162,12 +2013,6 @@
             document.getElementById('first-aid-count-display').innerText = `藥局庫存：${count} 帖`;
         }
 
-        window.openFirstAidKit = function() {
-            document.getElementById('firstAidKitClosed').classList.add('hidden');
-            document.getElementById('firstAidKitOpened').classList.remove('hidden');
-            renderFirstAidCategories();
-        }
-
         function renderFirstAidCategories() {
             const listContainer = document.getElementById('categoryList');
             if (!firstAidDatabase.length) { listContainer.innerHTML = '<div class="col-span-2 text-center text-red-400">藥局補貨中...</div>'; return; }
@@ -2175,8 +2020,8 @@
             listContainer.innerHTML = categories.map(cat => {
                 const visual = categoryVisuals[cat] || { icon: 'fa-pills', bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' };
                 return `<div class="medicine-item ${visual.bg} ${visual.border} group" onclick="renderSearchResults('${cat}', true)">
-                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center ${visual.text} text-xl mb-2 shadow-sm group-hover:scale-110 transition-transform"><i class="fas ${visual.icon}"></i></div>
-                        <span class="text-xs font-bold ${visual.text} tracking-wide">${cat}</span></div>`;
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center ${visual.text} text-xl mb-2 shadow-sm group-hover:scale-110 transition-transform"><i class="fas ${visual.icon}"></i></div>
+                    <span class="text-xs font-bold ${visual.text} tracking-wide">${cat}</span></div>`;
             }).join('');
         }
 
@@ -2236,9 +2081,6 @@
             else { verseTextDiv.innerText = currentVerseData.short; btn.innerHTML = '<i class="fas fa-book-open mr-1"></i> 顯示完整經文'; }
         }
 
-        /* --------------------------
-            QUIZ LOGIC
-            -------------------------- */
         let currentQuizData = [];
         let currentQuizIndex = 0;
         let quizScore = 0;
@@ -2250,35 +2092,25 @@
         window.startQuiz = function(quizKey, quizName) {
             activeQuizType = quizKey;
             currentQuizData = scholarDatabase[quizKey];
-            
             if (!currentQuizData || currentQuizData.length === 0) {
                 showToast("考卷運送中，請稍後再試！");
                 return;
             }
-            
-            // Randomize Question Pool
             currentQuizData = currentQuizData.sort(() => 0.5 - Math.random());
             currentQuizIndex = 0;
             quizScore = 0;
-            quizHistory = []; // Reset history
-
+            quizHistory = []; 
             hideAllViews();
             views.quizView.classList.remove('hidden');
             views.quizView.classList.add('fade-in');
-            
-            // Reset UI
             document.getElementById('quiz-result').classList.add('hidden');
             document.getElementById('quiz-content').classList.remove('hidden');
             document.querySelector('.nav-title').innerText = quizName || "測驗進行中";
-            document.getElementById('quiz-review-list').classList.add('hidden'); // Hide review initially
-            
-            // Mode Specific Setup
+            document.getElementById('quiz-review-list').classList.add('hidden'); 
             if (activeQuizType === 'quiz1') {
-                // Time Attack Mode
                 document.getElementById('quiz-progress').classList.add('hidden');
                 document.getElementById('quiz-timer').classList.remove('hidden');
                 document.getElementById('quiz-timer').innerText = "60";
-                
                 quizTimeLeft = 60;
                 clearInterval(quizTimerInterval);
                 quizTimerInterval = setInterval(() => {
@@ -2286,50 +2118,36 @@
                     document.getElementById('quiz-timer').innerText = quizTimeLeft;
                     if(quizTimeLeft <= 10) document.getElementById('quiz-timer').classList.add('animate-pulse');
                     else document.getElementById('quiz-timer').classList.remove('animate-pulse');
-
                     if (quizTimeLeft <= 0) {
                         clearInterval(quizTimerInterval);
                         showQuizResult();
                     }
                 }, 1000);
             } else {
-                // Standard Mode
                 document.getElementById('quiz-progress').classList.remove('hidden');
                 document.getElementById('quiz-timer').classList.add('hidden');
-                currentQuizData = currentQuizData.slice(0, 10); // Limit to 10 questions for non-exam mode
+                currentQuizData = currentQuizData.slice(0, 10); 
             }
-            
             renderQuestion();
         };
 
         function renderQuestion() {
-            // Check index for Standard Mode
             if (activeQuizType !== 'quiz1' && currentQuizIndex >= currentQuizData.length) {
                 showQuizResult();
                 return;
             }
-            
-            // For Time Attack, if we run out of unique questions, reshuffle? 
-            // Or just check bounds. The pool is usually large enough. 
-            // If index overflows in exam mode, wrap around.
             let qIndex = currentQuizIndex;
             if (activeQuizType === 'quiz1') {
                  qIndex = currentQuizIndex % currentQuizData.length;
             }
-
             const q = currentQuizData[qIndex];
-            
             if (activeQuizType !== 'quiz1') {
                 document.getElementById('quiz-progress').innerText = `${currentQuizIndex + 1} / 10`;
             }
-            
             document.getElementById('quiz-category-tag').innerText = q.category || '綜合';
             document.getElementById('quiz-question').innerText = q.question;
-            
-            // Render Options
             const optionsContainer = document.getElementById('quiz-options');
             optionsContainer.innerHTML = '';
-            
             const labels = ['A', 'B', 'C', 'D'];
             q.options.forEach((opt, idx) => {
                 if(!opt) return;
@@ -2342,8 +2160,6 @@
                 `;
                 optionsContainer.appendChild(btn);
             });
-
-            // Hide Feedback
             document.getElementById('quiz-feedback').classList.add('hidden');
             if (activeQuizType !== 'quiz1') {
                 document.getElementById('next-q-btn').innerText = (currentQuizIndex === 9) ? '查看成績' : '下一題';
@@ -2352,19 +2168,14 @@
 
         function checkAnswer(selectedIndex, btnElement) {
             if (document.querySelector('.quiz-option.selected-correct') || document.querySelector('.quiz-option.selected-wrong')) return;
-
             let qIndex = currentQuizIndex;
             if (activeQuizType === 'quiz1') qIndex = currentQuizIndex % currentQuizData.length;
-            
             const q = currentQuizData[qIndex];
             const labels = ['A', 'B', 'C', 'D'];
             const selectedLabel = labels[selectedIndex];
             const selectedText = (q.options[selectedIndex] || '').trim();
-            
             let correctLabel = (q.answer || '').trim(); 
-
             let isCorrect = (selectedLabel === correctLabel);
-
             if (!isCorrect) {
                  const normSelectedText = normalizeTextForComparison(selectedText);
                  const normCorrectLabel = normalizeTextForComparison(correctLabel);
@@ -2373,18 +2184,15 @@
                      correctLabel = selectedLabel; 
                  }
             }
-
-            // Record History
             quizHistory.push({
                 q: q.question,
                 userAns: selectedText,
-                correctAns: isCorrect ? selectedText : q.options[labels.indexOf(correctLabel)] || correctLabel, // Try to find text of correct label
+                correctAns: isCorrect ? selectedText : q.options[labels.indexOf(correctLabel)] || correctLabel, 
                 isCorrect: isCorrect
             });
-
             if (isCorrect) {
                 btnElement.classList.add('selected-correct');
-                quizScore += (activeQuizType === 'quiz1' ? 1 : 10); // 1 point per Q in exam, 10 pts in standard
+                quizScore += (activeQuizType === 'quiz1' ? 1 : 10); 
             } else {
                 btnElement.classList.add('selected-wrong');
                 const options = document.querySelectorAll('.quiz-option');
@@ -2392,21 +2200,15 @@
                     if (labels[idx] === correctLabel) opt.classList.add('selected-correct');
                 });
             }
-
-            // Mode Specific Post-Answer Logic
             if (activeQuizType === 'quiz1') {
-                // Time Attack: Auto Advance after short delay
                 setTimeout(() => {
                     currentQuizIndex++;
                     renderQuestion();
-                }, 500); // 0.5s delay
+                }, 500); 
             } else {
-                // Standard Mode: Show Feedback Button
-                // Get Full Correct Answer Text
                 const correctIndex = labels.indexOf(correctLabel);
                 const correctOptionText = q.options[correctIndex] || '';
                 const fullAnswerString = `${correctLabel}. ${correctOptionText}`;
-                
                 showFeedback(isCorrect, q.note, fullAnswerString);
             }
         }
@@ -2416,25 +2218,17 @@
             const iconEl = document.getElementById('feedback-icon');
             const titleEl = document.getElementById('feedback-title');
             const contentEl = document.getElementById('feedback-content');
-
             feedbackEl.classList.remove('hidden');
             feedbackEl.className = `mt-4 p-4 rounded-xl text-left border-2 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`;
-            
             iconEl.className = `w-6 h-6 rounded-full flex items-center justify-center text-white text-xs ${isCorrect ? 'bg-green-500' : 'bg-red-500'}`;
             iconEl.innerHTML = isCorrect ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
-            
             titleEl.innerHTML = isCorrect ? '答對了！' : '答錯了！';
             titleEl.className = `font-bold text-sm ${isCorrect ? 'text-green-700' : 'text-red-700'}`;
-            
-            // 構建顯示內容：正確答案 + 解析
             let htmlContent = `<div class="mt-2 font-bold text-base text-gray-800">正確答案：<span class="text-[#006064]">${fullCorrectAnswer}</span></div>`;
-            
             if (note) {
                 htmlContent += `<div class="mt-2 text-xs text-gray-500 border-t border-gray-200 pt-2 leading-relaxed">💡 ${note}</div>`;
             }
-            
             contentEl.innerHTML = htmlContent;
-            
             setTimeout(() => {
                 feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
@@ -2449,14 +2243,13 @@
             clearInterval(quizTimerInterval);
             document.getElementById('quiz-content').classList.add('hidden');
             document.getElementById('quiz-result').classList.remove('hidden');
-            
             const scoreEl = document.getElementById('final-score');
             if (activeQuizType === 'quiz1') {
-                scoreEl.innerText = `${quizScore} 題`; // Show count
+                scoreEl.innerText = `${quizScore} 題`; 
                 renderReviewList();
             } else {
-                scoreEl.innerText = quizScore; // Show points
-                document.getElementById('quiz-review-list').classList.add('hidden'); // Hide review for standard mode (optional)
+                scoreEl.innerText = quizScore; 
+                document.getElementById('quiz-review-list').classList.add('hidden'); 
             }
         }
 
@@ -2464,7 +2257,6 @@
             const list = document.getElementById('quiz-review-list');
             list.classList.remove('hidden');
             list.innerHTML = `<h4 class="text-sm font-bold text-gray-500 mb-3 border-b pb-2">📜 考卷檢討</h4>`;
-            
             quizHistory.forEach((item, i) => {
                 list.innerHTML += `
                     <div class="quiz-review-item">
@@ -2482,42 +2274,29 @@
             startQuiz(activeQuizType, document.querySelector('.nav-title').innerText);
         }
 
-        /* --------------------------
-            FRUIT GAME LOGIC
-            -------------------------- */
         let fruitGameScore = 0;
         let fruitGameTime = 60;
         let fruitGameActive = false;
         let fruitInterval = null;
         let timerInterval = null;
-        
-        // Definition of fruits (Good vs Bad pairs)
         const fruitsData = [
             { id: 1, type: 'good', icon: 'fa-heart', color: 'text-red-500', name: '仁愛' },
             { id: 1, type: 'bad', icon: 'fa-heart-crack', color: 'text-red-600', name: '破碎' },
-            
             { id: 2, type: 'good', icon: 'fa-face-laugh-beam', color: 'text-yellow-400', name: '喜樂' },
             { id: 2, type: 'bad', icon: 'fa-face-angry', color: 'text-yellow-500', name: '生氣' },
-            
             { id: 3, type: 'good', icon: 'fa-dove', color: 'text-blue-400', name: '和平' },
-            { id: 3, type: 'bad', icon: 'fa-crow', color: 'text-blue-500', name: '紛爭' }, // using crow as dark bird
-            
+            { id: 3, type: 'bad', icon: 'fa-crow', color: 'text-blue-500', name: '紛爭' }, 
             { id: 4, type: 'good', icon: 'fa-hourglass-half', color: 'text-purple-400', name: '忍耐' },
             { id: 4, type: 'bad', icon: 'fa-bomb', color: 'text-purple-600', name: '暴躁' },
-            
             { id: 5, type: 'good', icon: 'fa-hand-holding-heart', color: 'text-pink-400', name: '恩慈' },
-            { id: 5, type: 'bad', icon: 'fa-hand-middle-finger', color: 'text-pink-600', name: '刻薄' }, // Not in FA free, use fist
+            { id: 5, type: 'bad', icon: 'fa-hand-middle-finger', color: 'text-pink-600', name: '刻薄' }, 
             { id: 5, type: 'bad', icon: 'fa-hand-fist', color: 'text-pink-600', name: '暴力' },
-
             { id: 6, type: 'good', icon: 'fa-star', color: 'text-orange-400', name: '良善' },
             { id: 6, type: 'bad', icon: 'fa-virus', color: 'text-orange-500', name: '邪惡' },
-            
             { id: 7, type: 'good', icon: 'fa-handshake', color: 'text-teal-400', name: '信實' },
             { id: 7, type: 'bad', icon: 'fa-mask', color: 'text-teal-600', name: '虛假' },
-            
             { id: 8, type: 'good', icon: 'fa-feather', color: 'text-gray-400', name: '溫柔' },
             { id: 8, type: 'bad', icon: 'fa-gavel', color: 'text-gray-600', name: '定罪' },
-            
             { id: 9, type: 'good', icon: 'fa-user-shield', color: 'text-green-500', name: '節制' },
             { id: 9, type: 'bad', icon: 'fa-pizza-slice', color: 'text-green-600', name: '放縱' }
         ];
@@ -2529,27 +2308,10 @@
             homeHeader.style.display = 'none'; 
             innerNavBar.style.display = 'flex'; 
             document.querySelector('.nav-title').innerText = "聖靈果子大作戰";
-            
-            // Reset UI
             document.getElementById('fruit-start-overlay').classList.remove('hidden');
             document.getElementById('fruit-gameover-overlay').classList.add('hidden');
             document.getElementById('fruit-score').innerText = '0';
             document.getElementById('fruit-timer').innerText = '60';
-            document.getElementById('fruit-game-area').innerHTML = `
-                <div id="fruit-start-overlay" class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center text-white p-6 text-center">
-                    <div class="w-20 h-20 bg-[#FFCCBC] rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce text-[#D84315] border-4 border-white">
-                        <i class="fas fa-apple-alt"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold mb-2 title-font text-[#FFAB91]">聖靈果子大作戰</h2>
-                    <p class="text-sm opacity-90 mb-6 leading-relaxed">
-                        在 60 秒內收集 20 顆聖靈果子！<br>
-                        <span class="text-yellow-300 font-bold">小心！</span> 點到壞果子會扣 5 秒喔！
-                    </p>
-                    <button onclick="startGameLoop()" class="bg-[#D84315] text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform">
-                        <i class="fas fa-play mr-2"></i> 開始挑戰
-                    </button>
-                </div>
-            `; // Re-inject start overlay to be sure
         }
 
         window.startGameLoop = function() {
@@ -2559,57 +2321,40 @@
             fruitGameActive = true;
             document.getElementById('fruit-score').innerText = '0';
             document.getElementById('fruit-timer').innerText = '60';
-            
-            // Timer Loop
             timerInterval = setInterval(() => {
                 if(!fruitGameActive) return;
                 fruitGameTime--;
                 document.getElementById('fruit-timer').innerText = fruitGameTime;
                 if(fruitGameTime <= 10) document.getElementById('fruit-timer').classList.add('text-red-600', 'animate-pulse');
                 else document.getElementById('fruit-timer').classList.remove('text-red-600', 'animate-pulse');
-                
                 if(fruitGameTime <= 0) {
                     endFruitGame();
                 }
             }, 1000);
-
-            // Spawner Loop
-            fruitInterval = setInterval(spawnFruit, 700); // Spawn every 0.7s
+            fruitInterval = setInterval(spawnFruit, 700); 
         }
 
         function spawnFruit() {
             if(!fruitGameActive) return;
             const gameArea = document.getElementById('fruit-game-area');
             const fruitData = fruitsData[Math.floor(Math.random() * fruitsData.length)];
-            
             const fruit = document.createElement('div');
             fruit.className = `fruit-item bg-white ${fruitData.color}`;
-            
-            // Updated innerHTML to include text
             fruit.innerHTML = `
                 <div class="flex flex-col items-center justify-center pointer-events-none w-full h-full">
                     <i class="fas ${fruitData.icon} text-2xl mb-0.5"></i>
                     <span class="text-[10px] font-bold leading-none">${fruitData.name}</span>
                 </div>
             `;
-            
-            // Random Position
-            const startX = Math.random() * (gameArea.offsetWidth - 72); // Adjusted for wider fruit
+            const startX = Math.random() * (gameArea.offsetWidth - 72); 
             fruit.style.left = `${startX}px`;
-            
-            // Random Fall Speed (3.5s to 6.5s) - Slower speed
             const duration = 3.5 + Math.random() * 3;
             fruit.style.animationDuration = `${duration}s`;
-            
-            // Click Handler
             fruit.onmousedown = (e) => handleFruitClick(e, fruit, fruitData);
             fruit.ontouchstart = (e) => handleFruitClick(e, fruit, fruitData);
-            
-            // Cleanup after animation
             fruit.addEventListener('animationend', () => {
                 if(fruit.parentNode) fruit.remove();
             });
-
             gameArea.appendChild(fruit);
         }
 
@@ -2617,29 +2362,22 @@
             if(!fruitGameActive) return;
             e.preventDefault();
             e.stopPropagation();
-            
             if(el.classList.contains('clicked')) return;
             el.classList.add('clicked');
-            
-            // Visual Feedback
-            el.style.animation = 'none'; // Stop falling
-            el.classList.add('fruit-pop'); // Pop animation
-            
+            el.style.animation = 'none'; 
+            el.classList.add('fruit-pop'); 
             if(data.type === 'good') {
                 fruitGameScore++;
                 document.getElementById('fruit-score').innerText = fruitGameScore;
-                el.style.backgroundColor = '#E8F5E9'; // Light Green bg
-                // Removed immediate win condition
+                el.style.backgroundColor = '#E8F5E9'; 
             } else {
-                // Bad Fruit
                 fruitGameTime -= 5;
                 showToast("⚠️ 踩到地雷！時間 -5秒");
                 document.getElementById('fruit-timer').innerText = fruitGameTime;
                 document.getElementById('fruit-timer').classList.add('text-red-600');
                 if(navigator.vibrate) navigator.vibrate(200);
-                el.style.backgroundColor = '#FFEBEE'; // Light Red bg
+                el.style.backgroundColor = '#FFEBEE'; 
             }
-            
             setTimeout(() => { if(el.parentNode) el.remove(); }, 300);
         }
 
@@ -2647,14 +2385,11 @@
             fruitGameActive = false;
             clearInterval(fruitInterval);
             clearInterval(timerInterval);
-            
             const area = document.getElementById('fruit-game-area');
             const overlay = document.createElement('div');
             overlay.id = "fruit-gameover-overlay";
             overlay.className = "absolute inset-0 bg-black/80 z-30 flex flex-col items-center justify-center text-white p-6 text-center fade-in";
-            
             if(fruitGameScore >= 20) {
-                // Win
                 overlay.innerHTML = `
                     <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce border-4 border-white text-red-600 shadow-xl">
                         <i class="fas fa-trophy"></i>
@@ -2667,7 +2402,6 @@
                     <button onclick="exitFruitGame()" class="text-sm text-gray-400 underline mt-2">回遊戲大廳</button>
                 `;
             } else {
-                // Fail
                 overlay.innerHTML = `
                     <i class="fas fa-hourglass-end text-5xl text-gray-400 mb-4"></i>
                     <h2 class="text-2xl font-bold mb-2">時間到！</h2>
@@ -2682,13 +2416,10 @@
         }
 
         window.resetFruitGame = function() {
-            // Clear existing fruits
             const fruits = document.querySelectorAll('.fruit-item');
             fruits.forEach(f => f.remove());
-            // Remove overlays
             const overlays = document.querySelectorAll('#fruit-gameover-overlay');
             overlays.forEach(o => o.remove());
-            
             startGameLoop();
         }
 
@@ -2699,9 +2430,6 @@
             showGameHub();
         }
 
-        /* --------------------------
-            MEMORY GAME LOGIC (3 Levels)
-            -------------------------- */
         let memoryLevel = 1;
         let memoryTime = 30;
         let memoryTimer = null;
@@ -2717,7 +2445,6 @@
             homeHeader.style.display = 'none';
             innerNavBar.style.display = 'flex';
             document.querySelector('.nav-title').innerText = "腦力全開翻翻樂";
-            
             memoryLevel = 1;
             startMemoryLevel(1);
         }
@@ -2726,17 +2453,13 @@
             memoryLevel = level;
             memoryFlipped = [];
             memoryMatched = 0;
-            memoryActive = false; // Wait for user to start or simple delay? Let's auto start with overlay
-            
+            memoryActive = false; 
             let cardCount, timeLimit;
             if(level === 1) { cardCount = 8; timeLimit = 30; }
             else if(level === 2) { cardCount = 16; timeLimit = 60; }
             else { cardCount = 32; timeLimit = 120; }
-            
             memoryTotalPairs = cardCount / 2;
             memoryTime = timeLimit;
-            
-            // Show Overlay
             const overlay = document.getElementById('memory-overlay');
             const content = document.getElementById('memory-overlay-content');
             overlay.classList.remove('hidden');
@@ -2751,24 +2474,16 @@
                     <i class="fas fa-play mr-2"></i> 開始記憶
                 </button>
             `;
-            
-            // Prepare Grid
             const grid = document.getElementById('memory-game-grid');
             grid.innerHTML = '';
-            
-            // Select random books
             const shuffledBooks = BIBLE_BOOKS.sort(() => 0.5 - Math.random()).slice(0, memoryTotalPairs);
             const gameCards = [...shuffledBooks, ...shuffledBooks].sort(() => 0.5 - Math.random());
-            
-            // Set grid cols based on level
             if(level === 1) grid.className = "grid grid-cols-4 gap-2 w-full max-w-sm mx-auto";
             else if(level === 2) grid.className = "grid grid-cols-4 gap-2 w-full max-w-sm mx-auto";
-            else grid.className = "grid grid-cols-4 gap-2 w-full max-w-md mx-auto mb-20"; // Add margin for scroll
-            
-            // Render Cards
+            else grid.className = "grid grid-cols-4 gap-2 w-full max-w-md mx-auto mb-20"; 
             gameCards.forEach((book, index) => {
                 const card = document.createElement('div');
-                card.className = 'flip-card aspect-[3/4]'; // Aspect ratio for card shape
+                card.className = 'flip-card aspect-[3/4]'; 
                 card.innerHTML = `
                     <div class="flip-card-inner" id="card-${index}" onclick="flipCard(${index}, '${book}')">
                         <div class="flip-card-front"><i class="fas fa-book-bible"></i></div>
@@ -2777,7 +2492,6 @@
                 `;
                 grid.appendChild(card);
             });
-            
             document.getElementById('memory-level-display').innerText = `${level}/3`;
             document.getElementById('memory-timer').innerText = timeLimit;
         }
@@ -2785,16 +2499,13 @@
         window.runMemoryLevel = function() {
             document.getElementById('memory-overlay').classList.add('hidden');
             memoryActive = true;
-            
             clearInterval(memoryTimer);
             memoryTimer = setInterval(() => {
                 if(!memoryActive) return;
                 memoryTime--;
                 document.getElementById('memory-timer').innerText = memoryTime;
-                
                 if(memoryTime <= 10) document.getElementById('memory-timer').classList.add('text-red-600', 'animate-pulse');
                 else document.getElementById('memory-timer').classList.remove('text-red-600', 'animate-pulse');
-                
                 if(memoryTime <= 0) {
                     endMemoryGame(false);
                 }
@@ -2804,16 +2515,11 @@
         window.flipCard = function(index, book) {
             if(!memoryActive) return;
             const cardInner = document.getElementById(`card-${index}`);
-            
-            // Prevent flipping matched or currently flipped cards, or if 2 cards already flipped
             if(cardInner.parentElement.classList.contains('flipped') || 
                cardInner.querySelector('.flip-card-back').classList.contains('matched') ||
                memoryFlipped.length >= 2) return;
-               
-            // Flip it
             cardInner.parentElement.classList.add('flipped');
             memoryFlipped.push({ index, book });
-            
             if(memoryFlipped.length === 2) {
                 checkMemoryMatch();
             }
@@ -2821,19 +2527,15 @@
 
         function checkMemoryMatch() {
             const [card1, card2] = memoryFlipped;
-            
             if(card1.book === card2.book) {
-                // Match
                 memoryMatched++;
                 document.getElementById(`card-${card1.index}`).querySelector('.flip-card-back').classList.add('matched');
                 document.getElementById(`card-${card2.index}`).querySelector('.flip-card-back').classList.add('matched');
                 memoryFlipped = [];
-                
                 if(memoryMatched === memoryTotalPairs) {
                     endMemoryGame(true);
                 }
             } else {
-                // No Match
                 setTimeout(() => {
                     document.getElementById(`card-${card1.index}`).parentElement.classList.remove('flipped');
                     document.getElementById(`card-${card2.index}`).parentElement.classList.remove('flipped');
@@ -2845,11 +2547,9 @@
         function endMemoryGame(win) {
             memoryActive = false;
             clearInterval(memoryTimer);
-            
             const overlay = document.getElementById('memory-overlay');
             const content = document.getElementById('memory-overlay-content');
             overlay.classList.remove('hidden');
-            
             if(win) {
                 if(memoryLevel < 3) {
                     content.innerHTML = `
@@ -2891,17 +2591,13 @@
             showGameHub();
         }
 
-        /* --------------------------
-            SOLITAIRE GAME LOGIC
-            -------------------------- */
         let solDeck = [];
         let solColumns = [[], [], [], []];
         let solStock = [];
-        let solHolding = []; // The 3 cards currently visible for play
-        let solActiveCard = null; // Currently selected card from HOLDING
+        let solHolding = []; 
+        let solActiveCard = null; 
         let solCompletedCols = 0;
         let solColumnStates = [false, false, false, false];
-        
         const SOL_COLORS = ['red', 'blue', 'green', 'gold'];
 
         window.initMiracleSolitaire = function() {
@@ -2911,7 +2607,6 @@
             homeHeader.style.display = 'none';
             innerNavBar.style.display = 'flex';
             document.querySelector('.nav-title').innerText = "神蹟奇事連連看";
-            
             document.getElementById('solitaire-start-overlay').classList.remove('hidden');
         }
 
@@ -2923,13 +2618,11 @@
             solHolding = [];
             solCompletedCols = 0;
             createSolitaireDeck();
-            
             renderSolitaireBoard();
         }
 
         function createSolitaireDeck() {
             solDeck = [];
-            // Create 1-12 for each color
             SOL_COLORS.forEach(color => {
                 for(let i=1; i<=12; i++) {
                     solDeck.push({
@@ -2940,106 +2633,74 @@
                     });
                 }
             });
-            // Add Resurrection Card (Rank 13)
             solDeck.push({
                 id: 'card-resurrection',
                 color: 'resurrection',
                 rank: 13,
                 text: '復活得勝\n👑'
             });
-             // Add Ghost Card (Rank 0)
             solDeck.push({
                 id: 'card-ghost',
                 color: 'joker',
                 rank: 0,
                 text: '撒旦破壞\n👻'
             });
-            
-            // Shuffle
             solDeck.sort(() => 0.5 - Math.random());
-            
-            // All goes to stock pile (face down)
             solStock = [...solDeck];
         }
 
         window.dealSolitaireCards = function() {
-            // Check if stock is empty
             if(solStock.length === 0 && solHolding.length === 0) {
                  showSolMessage("沒有牌了！");
                  return;
             }
-
-            // Recycle current holding cards to bottom of stock
             if (solHolding.length > 0) {
-                // Put them back at the bottom of the deck (or random insertion?)
-                // Standard practice: recycle to bottom
                 solStock = [...solHolding, ...solStock]; 
                 solHolding = [];
             }
-            
-            // Draw up to 3 cards
             let drawCount = Math.min(3, solStock.length);
             for(let i=0; i<drawCount; i++) {
-                solHolding.push(solStock.pop()); // Take from "top" (end of array)
+                solHolding.push(solStock.pop()); 
             }
-            
-            // Deselect any active card
             solActiveCard = null;
-            
             renderSolitaireBoard();
         }
 
         function renderSolitaireBoard() {
-            // Update Deck Count
             document.getElementById('sol-deck-count').innerText = solStock.length;
-            
-            // Render Holding Area
             const holdingDiv = document.getElementById('sol-holding');
             holdingDiv.innerHTML = '';
             solHolding.forEach((card, idx) => {
                 const cardEl = document.createElement('div');
                 cardEl.className = `sol-card sol-card-holding sol-card-${card.color} ${solActiveCard && solActiveCard.id === card.id ? 'selected' : ''}`;
                 cardEl.onclick = () => selectHoldingCard(card);
-                
                 let rankDisplay = card.rank;
                 if(card.rank === 13) rankDisplay = '👑';
                 if(card.rank === 0) rankDisplay = '👻';
-                
                 cardEl.innerHTML = `
                     <div class="sol-number">${rankDisplay}</div>
                     <div class="sol-text text-[9px] leading-tight">${card.text}</div>
                 `;
                 holdingDiv.appendChild(cardEl);
             });
-
-            // Render Board Columns
             const board = document.getElementById('solitaire-board');
             board.innerHTML = '';
-            
             solColumns.forEach((col, colIndex) => {
                 const colDiv = document.createElement('div');
                 colDiv.className = 'sol-col';
-                // Add click listener to column to receive card
                 colDiv.onclick = () => handleColumnClick(colIndex);
-                
-                // If column is completed, add class
                 if (solColumnStates[colIndex]) {
                     colDiv.classList.add('completed');
                 } else {
-                    // Render placeholder if empty and not completed
                     if (col.length === 0) {
                        colDiv.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-bold border-2 border-dashed border-white/20 rounded-lg pointer-events-none">${colIndex + 1}</div>`;
                     }
-   
                     col.forEach((card, cardIndex) => {
                         const cardDiv = document.createElement('div');
                         let rankDisplay = card.rank;
-                        
                         cardDiv.className = `sol-card sol-card-${card.color}`;
-                        // Stack spacing
                         cardDiv.style.top = `${cardIndex * 28}px`; 
                         cardDiv.style.zIndex = cardIndex;
-                        
                         cardDiv.innerHTML = `
                             <div class="sol-number">${rankDisplay}</div>
                             <div class="sol-text">${card.text}</div>
@@ -3047,19 +2708,16 @@
                         colDiv.appendChild(cardDiv);
                     });
                 }
-                
                 board.appendChild(colDiv);
             });
-            
-            // Check Win
-            if(solCompletedCols >= 4) { // 4 Colors
+            if(solCompletedCols >= 4) { 
                 setTimeout(showHeavenlyEnvelope, 1000);
             }
         }
 
         function selectHoldingCard(card) {
             if (solActiveCard && solActiveCard.id === card.id) {
-                solActiveCard = null; // Deselect
+                solActiveCard = null; 
             } else {
                 solActiveCard = card;
             }
@@ -3067,82 +2725,43 @@
         }
 
         function handleColumnClick(colIndex) {
-            // Check if completed
             if (solColumnStates[colIndex]) return;
-
-            if (!solActiveCard) return; // No card selected to move
-
+            if (!solActiveCard) return; 
             const targetCol = solColumns[colIndex];
             const topCard = targetCol.length > 0 ? targetCol[targetCol.length - 1] : null;
-            
-            // --- GHOST CARD LOGIC ---
             if (solActiveCard.rank === 0) {
-                // Ghost Card played on ANY column
                 showSolMessage("👻 哎呀！鬼牌炸掉了這一列！");
-                
-                // Return all cards in this column to stock (bottom)
-                // Note: We need to shuffle them back in? Prompt says "回到牌庫". Usually shuffle is implied or put at bottom.
-                // Let's put at bottom for simplicity.
                 if (targetCol.length > 0) {
                      solStock = [...targetCol, ...solStock];
-                     solColumns[colIndex] = []; // Clear column
+                     solColumns[colIndex] = []; 
                 }
-                
-                // The Ghost card itself also goes back to stock? Or is consumed?
-                // "若不小心將鬼牌放到任何一列，則該列已排列的牌將全部回到牌庫" -> Implicitly ghost goes away or stays?
-                // Usually bad cards are traps. Let's put Ghost back into stock to haunt again.
-                solStock.unshift(solActiveCard); // Put ghost at 'bottom' of deck (start of array for unshift, actually wait pop takes from end. unshift adds to start. so start is bottom)
-                
-                // Remove from holding
+                solStock.unshift(solActiveCard); 
                 removeActiveCardFromHolding();
                 solActiveCard = null;
                 renderSolitaireBoard();
                 return;
             }
-
-            // --- RESURRECTION CARD LOGIC ---
             if (solActiveCard.rank === 13) {
-                 // Must play on a column with at least 1 card to know the color
-                 // Prompt: "復活能將讓該列直接完成"
-                 // If column is empty, we don't know which color to complete.
-                 
                  if (targetCol.length === 0) {
                      showSolMessage("❌ 需先放置一張牌確認顏色！");
                      return;
                  }
-                 
-                 // Complete this column!
                  showSolMessage("👑 復活大能！該列完成！");
-                 
-                 // Mark column as completed
                  solColumnStates[colIndex] = true;
                  solCompletedCols++;
-                 
-                 // Remove Resurrection card (Consumed)
                  removeActiveCardFromHolding();
                  solActiveCard = null;
-                 
-                 // Filter out remaining cards of this color from Deck and Holding?
-                 // To prevent confusion, we should probably just leave them. They become junk.
-                 // Or we can leave a visual marker "DONE".
-                 // For simplicity: just score++.
-                 
                  renderSolitaireBoard();
                  return;
             }
-
-            // --- NORMAL CARD LOGIC ---
             let isValid = false;
-
             if (targetCol.length === 0) {
-                // Empty column: Must start with Rank 1
                 if (solActiveCard.rank === 1) {
                     isValid = true;
                 } else {
                     showSolMessage("❌ 必須從 1 開始！");
                 }
             } else {
-                // Non-empty: Must match Color AND be Rank + 1
                 if (solActiveCard.color === topCard.color) {
                     if (solActiveCard.rank === topCard.rank + 1) {
                         isValid = true;
@@ -3153,23 +2772,14 @@
                     showSolMessage("❌ 顏色不符！");
                 }
             }
-
             if (isValid) {
-                // Move card
                 targetCol.push(solActiveCard);
                 removeActiveCardFromHolding();
-                
-                // Check if column completed (12)
                 if (solActiveCard.rank === 12) {
                     showSolMessage("🌟 該列完成！");
                     solColumnStates[colIndex] = true;
                     solCompletedCols++;
-                    // Optional: Visual cleanup? Or leave 1-12 stack visible?
-                    // Prompt says "直到完成1-12". Keeping them visible is satisfying.
-                    // To prevent overflow, maybe collapse them?
-                    // Let's leave them.
                 }
-                
                 solActiveCard = null;
                 renderSolitaireBoard();
             }
@@ -3194,19 +2804,15 @@
         }
 
         window.exitMiracleSolitaire = function() {
-            solColumns = [[], [], [], []]; // Clear
+            solColumns = [[], [], [], []]; 
             showGameHub();
         }
 
-        // --- Limited Version Notice Functions ---
         window.showLimitedNotice = function() {
-            // Check session storage to show only once per session
             if(sessionStorage.getItem('seenLimitedNotice')) return;
-            
             const overlay = document.getElementById('limited-notice-overlay');
             if(overlay) {
                 overlay.classList.remove('hidden');
-                // Small delay to allow CSS transition to work
                 setTimeout(() => {
                     overlay.classList.remove('opacity-0');
                     overlay.querySelector('div').classList.remove('scale-95');
@@ -3223,28 +2829,21 @@
                 overlay.querySelector('div').classList.add('scale-95');
                 setTimeout(() => {
                     overlay.classList.add('hidden');
-                    // Set flag in session storage
                     sessionStorage.setItem('seenLimitedNotice', 'true');
                 }, 300);
             }
         }
 
-        // --- Auto Expiration Logic ---
         function checkExpiration() {
             const now = new Date();
-            // Deadline: March 1st, 2026 00:01:00 (Local Time)
             const deadline = new Date('2026-03-01T00:01:00');
-
             if (now >= deadline) {
-                // Show Expiration Overlay
                 document.getElementById('expired-notice-overlay').classList.remove('hidden');
             } else {
-                // If not expired, proceed to show Limited Notice (if applicable)
                 setTimeout(showLimitedNotice, 500); 
             }
         }
 
-        // --- 1. 核心修復：視覺補償法與畫面閃爍修復 (Moved to Bottom) ---
         window.addEventListener('load', () => {
             if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
             const wrapper = document.getElementById('scroll-wrapper');
@@ -3252,14 +2851,27 @@
             const appRoot = document.getElementById('app-root');
             if(appRoot) appRoot.style.opacity = '1';
             
-            // --- FIX: Generate PNG Icon for iOS Home Screen ---
-            generateAppIcons();
-            
-            showHome(); // 確保邏輯執行
-            
-            // Check Expiration first, then show notice if valid
-            checkExpiration();
+            // Re-initialize views map inside onload to ensure elements exist
+            views = { 
+                menu: document.getElementById('home-menu'), 
+                scratch: document.getElementById('scratch-view'), 
+                talk: document.getElementById('talk-view'),
+                prayer: document.getElementById('prayer-view'),
+                survivalHub: document.getElementById('survival-hub-view'),
+                survivalGuide: document.getElementById('survival-view'),
+                firstAid: document.getElementById('first-aid-view'),
+                scholarHub: document.getElementById('scholar-hub-view'),
+                gameHub: document.getElementById('game-hub-view'),
+                quizView: document.getElementById('quiz-view'),
+                fruitGame: document.getElementById('fruit-game-view'), 
+                memoryGame: document.getElementById('memory-game-view'), 
+                solitaireGame: document.getElementById('solitaire-game-view'), 
+                heavenlyEnvelope: document.getElementById('heavenly-envelope-view')
+            };
 
+            generateAppIcons();
+            showHome(); 
+            checkExpiration();
             loadAllData();
             initStars();
         });
@@ -3269,35 +2881,23 @@
             if(bgLayer) { bgLayer.style.height = window.innerHeight + 'px'; }
         });
 
-        // Function to generate PNG icon from Canvas for iOS Home Screen support
         function generateAppIcons() {
             const canvas = document.createElement('canvas');
             canvas.width = 512;
             canvas.height = 512;
             const ctx = canvas.getContext('2d');
-
-            // Background (Red with rounded corners - imitating squircle)
             ctx.fillStyle = '#8E1E20';
             ctx.beginPath();
-            // Simplified rounded rect path
             const r = 100; const w = 512; const h = 512;
             ctx.moveTo(r, 0); ctx.lineTo(w-r, 0); ctx.quadraticCurveTo(w, 0, w, r);
             ctx.lineTo(w, h-r); ctx.quadraticCurveTo(w, h, w-r, h);
             ctx.lineTo(r, h); ctx.quadraticCurveTo(0, h, 0, h-r);
             ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0);
             ctx.fill();
-
-            // Cross (Gold) - Recreating the SVG path geometry
-            // Vert: x=216, y=60, w=80, h=392 
-            // Horz: x=76, y=200, w=360, h=80 
             ctx.fillStyle = '#E6B450';
-            ctx.fillRect(216, 60, 80, 392); // Vertical bar
-            ctx.fillRect(76, 200, 360, 80); // Horizontal bar
-
-            // Convert to PNG Data URL
+            ctx.fillRect(216, 60, 80, 392); 
+            ctx.fillRect(76, 200, 360, 80); 
             const pngUrl = canvas.toDataURL('image/png');
-
-            // Update Apple Touch Icon Link
             const appleIcon = document.getElementById('dynamic-app-icon');
             if (appleIcon) {
                 appleIcon.href = pngUrl;
